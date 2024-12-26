@@ -22,17 +22,43 @@ export const Meter = ({ stats, goal = 200 }: MeterProps) => {
   const remainderAmount = stats
     ? Object.values(stats).reduce((acc, cv) => (cv ? acc : acc + 1), 0)
     : 4;
+
+  const distanceFromGoal = goal - total;
+  const DistanceRemaining = () =>
+    distanceFromGoal > 0 ? (
+      <div className="lining-num text-sm font-mono">
+        <span>{distanceFromGoal}</span>
+        <span className="opacity-70">g</span>
+        <span> remaining</span>
+      </div>
+    ) : (
+      <div className="lining-num text-sm font-mono font-semibold text-green-600">
+        <span>{distanceFromGoal * -1}</span>
+        <span className="opacity-70">g</span> <span>over target</span>
+      </div>
+    );
+
+  const targetMeter = distanceFromGoal > 0 ? (total / goal) * 100 : ratio * 100;
+  const targetMeterClass = distanceFromGoal > 0 ? 'bg-shadow' : 'bg-green-500';
+
   return (
-    <div className="p-4 flex flex-col gap-2">
-      <div className="flex flex-row items-center justify-between">
+    <div className="p-4 flex flex-col gap-0.5">
+      <div className="flex flex-row items-center justify-between mb-1">
         <div className="lining-num text-md font-mono inline-flex gap-0.5">
           <span>{total || 0}</span>
           <span className="opacity-70">g</span>
         </div>
+        <DistanceRemaining />
         <div className="lining-nums text-md font-mono inline-flex gap-0.5">
           <span>{goal || 200}</span>
           <span className="opacity-70">g</span>
         </div>
+      </div>
+      <div className={`w-full rounded-full ${targetMeterClass}`}>
+        <div
+          style={{ width: targetMeter + '%', height: '2px' }}
+          className="bg-slate-600 rounded-full"
+        />
       </div>
       <div className="flex flex-row gap-px items-center">
         <MeterBar
