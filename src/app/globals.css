@@ -3,19 +3,43 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --color-foreground: 33, 33, 33;
+  --color-background: 237, 237, 237;
+  --color-highlight: 255, 255, 255;
+  --color-shadow: 200, 200, 200;
+  --color-breakfast: 0 0.545098 0.545098;
+  --color-lunch: 0.752941 0.498039 0;
+  --color-dinner: 0.886275 0.372549 0;
+  --color-snacks: 0.462745 0.05098 0.87451;
+  --color-proteins: 0 0.6 0.6;
+  --color-fats: 0.8353 0.475 0;
+  --color-carbs: 0.9409 0.3507 0.2;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --color-foreground: 237, 237, 237;
+    --color-background: 33, 33, 33;
+    --color-highlight: 48, 48, 48;
+    --color-shadow: 0, 0, 0;
+    --color-breakfast: 0.717647 0.913725 0.796078;
+    --color-lunch: 0.968627 0.878431 0.552941;
+    --color-dinner: 0.980392 0.74902 0.580392;
+    --color-snacks: 0.784314 0.756863 0.941176;
+    --color-proteins: 0 0.9961 0.6196;
+    --color-fats: 1 0.8431 0.0863;
+    --color-carbs: 1 0.6314 0.3333;
   }
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: rgb(var(--color-foreground));
+  background: rgb(var(--color-background));
+  font-family: var(--font-geist-sans);
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 }
