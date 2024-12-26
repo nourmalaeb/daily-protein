@@ -45,7 +45,6 @@ export interface UncontrolledInputProps extends InputProps {
 export const Input: React.FC<UncontrolledInputProps> = ({
   className,
   intent,
-  initialValue,
   ...props
 }: UncontrolledInputProps) => {
   return <input className={input({ intent, className })} {...props} />;

@@ -5,7 +5,7 @@ import {
   type TargetAndTransition,
   type AnimationControls,
   type VariantLabels,
-} from 'framer-motion';
+} from 'motion/react';
 
 export function SplitLetters({
   text,

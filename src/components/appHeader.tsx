@@ -14,7 +14,7 @@ export const AppHeader = () => {
           daily protein
         </h1>
       </Link>
-      {user && (
+      {/* {user && (
         <Link
           href="/profile"
           className="rounded-full bg-zinc-500 w-8 h-8 overflow-hidden hover:bg-zinc-600 flex items-center justify-center"
@@ -27,7 +27,7 @@ export const AppHeader = () => {
             </span>
           )}
         </Link>
-      )}
+      )} */}
     </header>
   );
 };
