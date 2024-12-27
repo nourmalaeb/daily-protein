@@ -3,7 +3,7 @@
 import { login } from '@/app/(auth)/login/actions';
 import { Button } from './button';
 import { ControlledInput } from './controlledInput';
-import { useActionState, useEffect, useRef, useState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 
 export const LoginForm = () => {
   const [state, loginAction, isPending] = useActionState(login, {
@@ -11,15 +11,7 @@ export const LoginForm = () => {
     data: { email: '', password: '' },
   });
   const [clearError, setClearError] = useState(false);
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
-
   useEffect(() => {
-    if (emailRef.current && passwordRef.current) {
-      emailRef.current.value = state.data.email;
-      passwordRef.current.value = state.data.password;
-    }
-
     if (state.error) {
       setClearError(false);
     }
@@ -30,23 +22,23 @@ export const LoginForm = () => {
       <div className="flex flex-col gap-1">
         <label htmlFor="email">Email</label>
         <ControlledInput
-          ref={emailRef}
           type="email"
           name="email"
           id="email"
           required
           onChange={() => setClearError(true)}
+          defaultValue={state.data.email}
         />
       </div>
       <div className="flex flex-col gap-1">
         <label htmlFor="password">Password</label>
         <ControlledInput
-          ref={passwordRef}
           name="password"
           type="password"
           id="password"
           required
           onChange={() => setClearError(true)}
+          defaultValue={state.data.password}
         />
       </div>
       <Button type="submit" disabled={isPending}>
