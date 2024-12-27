@@ -5,36 +5,41 @@ import { redirect } from 'next/navigation';
 
 import { createClient } from '@/lib/utils/supabase/server';
 import dayjs from 'dayjs';
+import { zfd } from 'zod-form-data';
+import { z } from 'zod';
 
-export async function login(formData: FormData) {
+const createLoginFormSchema = zfd.formData({
+  email: zfd.text(z.string().trim().email()),
+  password: zfd.text(z.string().trim()),
+});
+
+export async function login(
+  _prevState: { error: string; data: { email: string; password: string } },
+  formData: FormData
+) {
   const supabase = await createClient();
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-  };
+  const data = createLoginFormSchema.parse(formData);
 
   const { error } = await supabase.auth.signInWithPassword(data);
 
   if (error) {
-    redirect('/error');
+    return { error: error.message, data };
   }
 
-  revalidatePath('/', 'layout');
+  revalidatePath('/on/' + dayjs().format('YYYY-MM-DD'), 'layout');
   redirect('/on/' + dayjs().format('YYYY-MM-DD'));
 }
+
+const createSignupFormSchema = zfd.formData({
+  email: zfd.text(z.string().trim().email()),
+  password: zfd.text(z.string().trim()),
+});
 
 export async function signup(formData: FormData) {
   const supabase = await createClient();
 
-  // type-casting here for convenience
-  // in practice, you should validate your inputs
-  const data = {
-    email: formData.get('email') as string,
-    password: formData.get('password') as string,
-  };
+  const data = createSignupFormSchema.parse(formData);
 
   const { error } = await supabase.auth.signUp(data);
 
@@ -42,6 +47,6 @@ export async function signup(formData: FormData) {
     redirect('/error');
   }
 
-  revalidatePath('/', 'layout');
-  redirect('/account');
+  revalidatePath('/');
+  redirect('/');
 }

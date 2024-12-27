@@ -14,7 +14,7 @@ export default async function Index() {
 
   return user ? (
     <MainWrapper>
-      <AppHeader />
+      <AppHeader user={user} />
       <div className="relative p-4 flex flex-col gap-2 items-center justify-center h-full grow">
         <ButtonLink href={'/on/' + dayjs().format('YYYY-MM-DD')}>
           Log today’s macros!

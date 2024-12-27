@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import { MainWrapper } from '@/components/mainWrapper';
-import { AppHeader } from '@/components/appHeader';
 
 export const metadata: Metadata = {
   title: 'daily proteins',
@@ -14,10 +13,7 @@ export default function RootLayout({
 }) {
   return (
     <>
-      <MainWrapper>
-        <AppHeader />
-        {children}
-      </MainWrapper>
+      <MainWrapper>{children}</MainWrapper>
       <div id="modal-root" />
     </>
   );

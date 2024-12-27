@@ -42,7 +42,7 @@ export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement>,
     VariantProps<typeof input> {}
 export interface UncontrolledInputProps extends InputProps {
-  initialValue?: string;
+  initialValue?: string | FormDataEntryValue | null;
 }
 
 export const Input: React.FC<UncontrolledInputProps> = ({
@@ -54,7 +54,7 @@ export const Input: React.FC<UncontrolledInputProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     if (inputRef.current && initialValue) {
-      inputRef.current.value = initialValue;
+      inputRef.current.value = String(initialValue);
     }
   }, [initialValue]);
 

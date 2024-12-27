@@ -7,6 +7,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/utils/supabase/server';
+import { AppHeader } from '@/components/appHeader';
 dayjs.extend(customParseFormat);
 dayjs.extend(LocalizedFormat);
 
@@ -43,6 +44,7 @@ export default async function Page({
 
   return (
     <>
+      <AppHeader user={user} />
       <DayNav currentDate={date} />
       <div>
         <Meter goal={200} stats={parsedItems?.stats} />
