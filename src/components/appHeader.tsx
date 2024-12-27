@@ -2,7 +2,7 @@ import { User } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
 import Link from 'next/link';
 
-export const AppHeader = ({ user }: { user: User }) => {
+export const AppHeader = ({ user }: { user?: User }) => {
   const today = dayjs().format('YYYY-MM-DD');
 
   return (
