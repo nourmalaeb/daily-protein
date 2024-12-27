@@ -4,7 +4,7 @@ import { cva, type VariantProps } from 'class-variance-authority';
 const proteinChip = cva(
   [
     'select-none',
-    // 'font-medium',
+    'font-medium',
     'rounded-md',
     'border',
     'bg-transparent',
