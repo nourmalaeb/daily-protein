@@ -84,7 +84,7 @@ export const getDailyTotals = async (
         const { date, dailyTotal, meals } = day;
         const goal = protein_goal_grams;
         const goalMet = dailyTotal >= goal;
-        const isToday = dayjs(date).isSame(dayjs(), 'day');
+        const isToday = dayjs().isSame(dayjs(date), 'day');
 
         return {
           date,
