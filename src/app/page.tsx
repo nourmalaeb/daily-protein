@@ -92,7 +92,7 @@ async function StatsPage({
   console.log(dailyTotals);
 
   return (
-    <div className="relative p-4 flex flex-col gap-2 items-stretch justify-center h-full grow">
+    <div className="relative p-4 flex flex-col gap-1 items-stretch justify-center h-full grow">
       {dailyTotals.map(dayData => {
         const { date, isToday } = dayData;
         const stats = Object.fromEntries(
@@ -125,6 +125,7 @@ async function StatsPage({
                 <p>No data for {date}</p>{' '}
               </div>
             )}
+            <div className="h-1" />
           </AnimatedBorderDiv>
         );
       })}
