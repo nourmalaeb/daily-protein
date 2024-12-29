@@ -4,6 +4,11 @@ import { ButtonLink } from '@/components/buttonLink';
 import { MainWrapper } from '@/components/mainWrapper';
 import Link from 'next/link';
 import { createClient } from '@/lib/utils/supabase/server';
+import { SupabaseClient, User } from '@supabase/supabase-js';
+import { getDailyTotals } from '@/lib/utils/supabase/queries';
+import { Meter } from '@/components/meter';
+import { ArrowRight } from 'lucide-react';
+import { AnimatedBorderDiv } from '@/components/specialContainers';
 
 export default async function Index() {
   const supabase = await createClient();
@@ -15,11 +20,7 @@ export default async function Index() {
   return user ? (
     <MainWrapper>
       <AppHeader user={user} />
-      <div className="relative p-4 flex flex-col gap-2 items-center justify-center h-full grow">
-        <ButtonLink href={'/on/' + dayjs().format('YYYY-MM-DD')}>
-          Log today’s macros!
-        </ButtonLink>
-      </div>
+      <StatsPage supabase={supabase} user={user} />
     </MainWrapper>
   ) : (
     <Homepage />
@@ -61,3 +62,81 @@ const Homepage = () => {
     </main>
   );
 };
+
+async function StatsPage({
+  supabase,
+  user,
+}: {
+  supabase: SupabaseClient;
+  user: User;
+}) {
+  const dateRange = [];
+  for (let i = 0; i < 7; i++) {
+    dateRange.push(dayjs().subtract(i, 'day').format('YYYY-MM-DD'));
+  }
+  const { dailyTotals, errors } = await getDailyTotals(
+    supabase,
+    user,
+    dateRange
+  );
+
+  if (errors.mealsError || errors.goalsError) {
+    return (
+      <div>
+        <h4>Errors</h4>
+        <pre>{JSON.stringify(errors, null, 2)}</pre>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative p-4 flex flex-col gap-2 items-stretch justify-center h-full grow">
+      {dailyTotals.map(dayData => {
+        const { date, isToday } = dayData;
+        const stats = Object.fromEntries(
+          dayData.meals.map(meal => [meal.meal, meal.total_protein_grams])
+        );
+        return (
+          <AnimatedBorderDiv
+            key={date}
+            animate={!!dayData?.goalMet}
+            borderClasses="border-zinc-500/30 hover:border-zinc-500/80"
+            className="rounded-xl border p-1"
+          >
+            <div className="px-3 pt-4">
+              <ButtonLink href={`/on/${date}`} className="justify-between">
+                <span className="w-1/3">
+                  {isToday ? 'Today' : dayjs(date).format('ddd')}
+                </span>
+                <span className="font-mono text-sm opacity-80 w-1/3 text-center">
+                  {date}
+                </span>
+                <div className="w-1/3 flex justify-end">
+                  <ArrowRight size={16} className="opacity-80" />
+                </div>
+              </ButtonLink>
+            </div>
+            {dayData.meals.length ? (
+              <Meter goal={dayData.goal} stats={stats} />
+            ) : (
+              <div className="p-4">
+                <p>No data for {date}</p>{' '}
+              </div>
+            )}
+          </AnimatedBorderDiv>
+        );
+      })}
+      <AnimatedBorderDiv
+        animate
+        borderClasses="border-zinc-500/30 hover:border-zinc-500/80"
+        className="rounded-xl border p-5 flex flex-col gap-3 items-center mt-auto"
+      >
+        <p>🌱</p>
+        <p className="text-center text-teal-700 dark:text-teal-200 font-mono uppercase text-xs opacity-80 font-medium tracking-widest">
+          Account created on{' '}
+          {dayjs(user.created_at).format('ddd MMMM DD, YYYY')}
+        </p>
+      </AnimatedBorderDiv>
+    </div>
+  );
+}

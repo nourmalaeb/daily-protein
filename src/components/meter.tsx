@@ -10,7 +10,7 @@ type MeterProps = {
   goal: number;
 };
 
-export const Meter = ({ stats, goal = 200 }: MeterProps) => {
+export const Meter = ({ stats, goal }: MeterProps) => {
   const total =
     (stats?.breakfast || 0) +
     (stats?.lunch || 0) +
@@ -19,8 +19,8 @@ export const Meter = ({ stats, goal = 200 }: MeterProps) => {
 
   const ratio = goal / total < 1 ? goal / total : 1;
 
-  const remainderAmount = stats
-    ? Object.values(stats).reduce((acc, cv) => (cv ? acc : acc + 1), 0)
+  const numberOfRemainingMeals = stats
+    ? 4 - Object.values(stats).reduce((acc, cv) => acc + (cv > 0 ? 1 : 0), 0)
     : 4;
 
   const distanceFromGoal = goal - total;
@@ -64,29 +64,33 @@ export const Meter = ({ stats, goal = 200 }: MeterProps) => {
         <MeterBar
           category="breakfast"
           amount={stats?.breakfast ? stats.breakfast * ratio : 0}
-          remainderAmount={remainderAmount * ratio}
+          numberOfRemainingMeals={numberOfRemainingMeals * ratio}
           total={total * ratio}
         />
         <MeterBar
           category="lunch"
           amount={stats?.lunch ? stats.lunch * ratio : 0}
-          remainderAmount={remainderAmount * ratio}
+          numberOfRemainingMeals={numberOfRemainingMeals * ratio}
           total={total * ratio}
         />
         <MeterBar
           category="dinner"
           amount={stats?.dinner ? stats.dinner * ratio : 0}
-          remainderAmount={remainderAmount * ratio}
+          numberOfRemainingMeals={numberOfRemainingMeals * ratio}
           total={total * ratio}
         />
         <MeterBar
           category="snacks"
           amount={stats?.snacks ? stats.snacks * ratio : 0}
-          remainderAmount={remainderAmount * ratio}
+          numberOfRemainingMeals={numberOfRemainingMeals * ratio}
           total={total * ratio}
         />
-        {remainderAmount === 0 && total < goal && (
-          <MeterBar category="snacks" remainderAmount={1} total={total} />
+        {numberOfRemainingMeals === 0 && total < goal && (
+          <MeterBar
+            category="snacks"
+            numberOfRemainingMeals={1}
+            total={total}
+          />
         )}
       </div>
     </div>
@@ -96,7 +100,7 @@ export const Meter = ({ stats, goal = 200 }: MeterProps) => {
 type MeterBarProps = {
   category: 'breakfast' | 'lunch' | 'dinner' | 'snacks';
   total?: number;
-  remainderAmount: number;
+  numberOfRemainingMeals: number;
   amount?: number;
 };
 
@@ -104,7 +108,7 @@ const MeterBar = ({
   amount,
   category,
   total,
-  remainderAmount,
+  numberOfRemainingMeals,
   ...props
 }: MeterBarProps) => {
   const categoryColors = () => ({
@@ -130,7 +134,9 @@ const MeterBar = ({
       style={{
         flexBasis: amount
           ? `calc(${amount / 2 + '%'} - 1px)`
-          : `calc(${(200 - (total || 0)) / (remainderAmount * 2) + '%'} - 1px)`,
+          : `calc(${
+              (200 - (total || 0)) / (numberOfRemainingMeals * 2) + '%'
+            } - 1px)`,
       }}
     />
   );

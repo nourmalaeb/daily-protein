@@ -4,7 +4,6 @@ import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 import { createClient } from '@/lib/utils/supabase/server';
-import dayjs from 'dayjs';
 import { zfd } from 'zod-form-data';
 import { z } from 'zod';
 
@@ -27,8 +26,8 @@ export async function login(
     return { error: error.message, data };
   }
 
-  revalidatePath('/on/' + dayjs().format('YYYY-MM-DD'), 'layout');
-  redirect('/on/' + dayjs().format('YYYY-MM-DD'));
+  revalidatePath('/', 'layout');
+  redirect('/');
 }
 
 const createSignupFormSchema = zfd.formData({

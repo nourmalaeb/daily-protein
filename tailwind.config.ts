@@ -9,8 +9,8 @@ export default {
   ],
   theme: {
     fontFamily: {
-      sans: 'var(--font-geist-sans)',
-      mono: 'var(--font-geist-mono)',
+      sans: 'var(--font-sans)',
+      mono: 'var(--font-mono)',
     },
     extend: {
       backgroundImage: {
@@ -44,11 +44,15 @@ export default {
           from: { opacity: '0', marginTop: '2rem' },
           to: { opacity: '1', marginTop: '0' },
         },
+        border: {
+          to: { '--border-angle': '360deg' },
+        },
       },
       animation: {
         overlayShow: 'overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1)',
         modalContentShow:
           'modalContentShow 300ms cubic-bezier(0.16, 1, 0.3, 1)',
+        border: 'border 8s linear infinite',
       },
     },
   },

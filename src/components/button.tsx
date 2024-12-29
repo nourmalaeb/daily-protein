@@ -22,6 +22,7 @@ const button = cva(
     'normal-case',
     'font-normal',
     'transition-all',
+    'duration-400',
     'hover:from-45%',
     'hover:drop-shadow-md',
     'active:to-background',
@@ -99,7 +100,7 @@ const button = cva(
       intent: 'default',
       size: 'medium',
     },
-  },
+  }
 );
 
 export interface ButtonProps

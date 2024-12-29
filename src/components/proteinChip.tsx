@@ -1,5 +1,6 @@
 import { Item, MealType } from '@/lib/types';
 import { cva, type VariantProps } from 'class-variance-authority';
+import { Plus } from 'lucide-react';
 
 const proteinChip = cva(
   [
@@ -14,7 +15,8 @@ const proteinChip = cva(
     'px-2',
     'py-1',
     'inline-flex',
-    'gap-2',
+    'items-center',
+    'gap-1',
     'active:translate-y-px',
   ],
   {
@@ -25,28 +27,32 @@ const proteinChip = cva(
           'hover:bg-breakfast/10',
           'hover:shadow-glow',
           'hover:shadow-breakfast',
+          'bg-breakfast/5',
         ],
         lunch: [
           'border-lunch',
           'hover:bg-lunch/10',
           'hover:shadow-glow',
           'hover:shadow-lunch',
+          'bg-lunch/5',
         ],
         dinner: [
           'border-dinner',
           'hover:bg-dinner/10',
           'hover:shadow-glow',
           'hover:shadow-dinner',
+          'bg-dinner/5',
         ],
         snacks: [
           'border-snacks',
           'hover:bg-snacks/10',
           'hover:shadow-glow',
           'hover:shadow-snacks',
+          'bg-snacks/5',
         ],
       },
       intent: {
-        add: ['border-dashed', 'font-light'],
+        add: ['border-dashed'],
       },
     },
     compoundVariants: [
@@ -59,7 +65,7 @@ const proteinChip = cva(
 );
 
 const proteinChipUnits = cva(
-  ['font-normal', 'font-mono', 'inline-flex', 'gap-0.5'],
+  ['font-semibold', 'font-mono', 'inline-flex', 'gap-[1.5px]', 'ml-1'],
   {
     variants: {
       meal: {
@@ -97,7 +103,7 @@ export const AddButton: React.FC<AddButtonProps> = ({
 }: AddButtonProps) => {
   return (
     <span className={proteinChip({ meal, intent: 'add', className })}>
-      + Add
+      <Plus size={16} /> Add
     </span>
   );
 };

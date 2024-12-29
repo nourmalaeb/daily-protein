@@ -19,3 +19,22 @@ export type MealItemsProps = {
   category: 'breakfast' | 'lunch' | 'dinner' | 'snacks';
   date: string;
 };
+
+export interface DailyTotal {
+  date: string;
+  meal: string;
+  total_protein_grams: number;
+  item_count: number;
+}
+
+export interface MealData {
+  meal: string;
+  total_protein_grams: number;
+  item_count: number;
+}
+
+export interface GroupedDailyTotal {
+  date: string;
+  dailyTotal: number;
+  meals: MealData[];
+}

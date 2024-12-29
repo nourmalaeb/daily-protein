@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@property --border-angle {
+  inherits: false;
+  initial-value: 0deg;
+  syntax: '<angle>';
+}
+
 :root {
   --color-foreground: 33, 33, 33;
   --color-background: 237, 237, 237;
@@ -22,10 +28,10 @@
     --color-background: 33, 33, 33;
     --color-highlight: 48, 48, 48;
     --color-shadow: 0, 0, 0;
-    --color-breakfast: 0.717647 0.913725 0.796078;
-    --color-lunch: 0.968627 0.878431 0.552941;
-    --color-dinner: 0.980392 0.74902 0.580392;
-    --color-snacks: 0.784314 0.756863 0.941176;
+    --color-breakfast: 0.470588 0.913725 0.796078;
+    --color-lunch: 1 0.866667 0.376471;
+    --color-dinner: 1 0.623529 0.372549;
+    --color-snacks: 0.811765 0.568627 1;
     --color-proteins: 0 0.9961 0.6196;
     --color-fats: 1 0.8431 0.0863;
     --color-carbs: 1 0.6314 0.3333;
@@ -35,7 +41,7 @@
 body {
   color: rgb(var(--color-foreground));
   background: rgb(var(--color-background));
-  font-family: var(--font-geist-sans);
+  font-family: var(--font-sans);
 }
 
 @layer utilities {

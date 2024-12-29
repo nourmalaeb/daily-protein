@@ -20,6 +20,7 @@ const buttonLink = cva(
     'normal-case',
     'font-normal',
     'transition-all',
+    'duration-400',
     'flex',
     'items-center',
     'justify-center',

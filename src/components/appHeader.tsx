@@ -1,13 +1,10 @@
 import { User } from '@supabase/supabase-js';
-import dayjs from 'dayjs';
 import Link from 'next/link';
 
 export const AppHeader = ({ user }: { user?: User }) => {
-  const today = dayjs().format('YYYY-MM-DD');
-
   return (
     <header className="flex flex-row items-center justify-between py-4 border-b border-gray-500 mx-4">
-      <Link href={user ? '/on/' + today : '/'}>
+      <Link href={'/'}>
         <h1 className="w-min leading-none text-sm text-foreground">
           daily protein
         </h1>

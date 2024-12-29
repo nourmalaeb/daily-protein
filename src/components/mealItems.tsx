@@ -7,7 +7,7 @@ const MealItems = ({ category, items, date }: MealItemsProps) => {
     ? items.reduce((acc, item) => acc + (item.protein_grams || 0), 0)
     : 0;
   return (
-    <div className="flex flex-col items-stretch gap-1 p-4">
+    <div className="flex flex-col items-stretch gap-1 p-4 ">
       <div className="flex flex-row gap-2 items-center">
         <h3 className="uppercase text-xs font-semibold tracking-widest">
           {category}
@@ -18,7 +18,7 @@ const MealItems = ({ category, items, date }: MealItemsProps) => {
           <span className="opacity-70">g</span>
         </span>
       </div>
-      <div className="flex flex-row gap-0.5 flex-wrap">
+      <div className="flex flex-row gap-1 flex-wrap">
         {items &&
           items.map(item => (
             <EditEntryModal
