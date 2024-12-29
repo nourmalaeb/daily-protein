@@ -91,8 +91,9 @@ export const Meter = ({ stats, goal }: MeterProps) => {
           <div className="w-6 h-2 relative -left-3">
             <div className="absolute blur-sm grow-0 shrink-0 bg-gradient-to-r from-transparent via-white to-transparent w-6 h-2" />
             <div className="absolute blur-sm grow-0 shrink-0 bg-gradient-to-r from-transparent via-white to-transparent w-6 h-2" />
-            <div className="absolute grow-0 shrink-0 bg-gradient-to-r from-transparent to-accent dark:to-white w-5 h-2 -left-3" />
-            <div className="absolute grow-0 shrink-0 bg-gradient-to-r from-transparent via-white to-transparent w-5 h-2" />
+            <div className="absolute blur-sm grow-0 shrink-0 bg-gradient-to-r from-transparent via-white to-transparent w-5 h-2 left-2" />
+            <div className="absolute grow-0 shrink-0 bg-gradient-to-r from-transparent to-accent w-6 h-2 -left-3" />
+            <div className="absolute grow-0 shrink-0 bg-gradient-to-r from-transparent via-70% via-white to-transparent w-5 h-2" />
           </div>
         )}
       </div>
