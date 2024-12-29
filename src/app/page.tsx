@@ -71,7 +71,7 @@ async function StatsPage({
   user: User;
 }) {
   const dateRange = [];
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 14; i++) {
     dateRange.push(dayjs().subtract(i, 'day').format('YYYY-MM-DD'));
   }
   const { dailyTotals, errors } = await getDailyTotals(
