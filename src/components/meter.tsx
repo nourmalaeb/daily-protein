@@ -32,14 +32,11 @@ export const Meter = ({ stats, goal }: MeterProps) => {
         <span> remaining</span>
       </div>
     ) : (
-      <div className="lining-num text-sm font-mono font-semibold text-green-600">
+      <div className="lining-num text-sm font-mono font-bold text-green-600 dark:text-green-300 drop-shadow-[0_0_3px_theme(colors.green.500/.50)]">
         <span>{distanceFromGoal * -1}</span>
-        <span className="opacity-70">g</span> <span>over target</span>
+        <span className="opacity-80">g</span> <span>over target</span>
       </div>
     );
-
-  const targetMeter = distanceFromGoal > 0 ? (total / goal) * 100 : ratio * 100;
-  const targetMeterClass = distanceFromGoal > 0 ? 'bg-shadow' : 'bg-green-500';
 
   return (
     <div className="p-4 flex flex-col gap-0.5">
@@ -54,36 +51,34 @@ export const Meter = ({ stats, goal }: MeterProps) => {
           <span className="opacity-70">g</span>
         </div>
       </div>
-      <div className={`w-full rounded-full ${targetMeterClass}`}>
-        <div
-          style={{ width: targetMeter + '%', height: '2px' }}
-          className="bg-slate-600 rounded-full"
-        />
-      </div>
       <div className="flex flex-row gap-px items-center">
         <MeterBar
           category="breakfast"
           amount={stats?.breakfast ? stats.breakfast * ratio : 0}
           numberOfRemainingMeals={numberOfRemainingMeals * ratio}
           total={total * ratio}
+          goalMet={distanceFromGoal <= 0}
         />
         <MeterBar
           category="lunch"
           amount={stats?.lunch ? stats.lunch * ratio : 0}
           numberOfRemainingMeals={numberOfRemainingMeals * ratio}
           total={total * ratio}
+          goalMet={distanceFromGoal <= 0}
         />
         <MeterBar
           category="dinner"
           amount={stats?.dinner ? stats.dinner * ratio : 0}
           numberOfRemainingMeals={numberOfRemainingMeals * ratio}
           total={total * ratio}
+          goalMet={distanceFromGoal <= 0}
         />
         <MeterBar
           category="snacks"
           amount={stats?.snacks ? stats.snacks * ratio : 0}
           numberOfRemainingMeals={numberOfRemainingMeals * ratio}
           total={total * ratio}
+          goalMet={distanceFromGoal <= 0}
         />
         {numberOfRemainingMeals === 0 && total < goal && (
           <MeterBar
@@ -91,6 +86,14 @@ export const Meter = ({ stats, goal }: MeterProps) => {
             numberOfRemainingMeals={1}
             total={total}
           />
+        )}
+        {distanceFromGoal < 0 && (
+          <div className="w-6 h-2 relative -left-3">
+            <div className="absolute blur-sm grow-0 shrink-0 bg-gradient-to-r from-transparent via-white to-transparent w-6 h-2" />
+            <div className="absolute blur-sm grow-0 shrink-0 bg-gradient-to-r from-transparent via-white to-transparent w-6 h-2" />
+            <div className="absolute grow-0 shrink-0 bg-gradient-to-r from-transparent to-accent dark:to-white w-5 h-2 -left-3" />
+            <div className="absolute grow-0 shrink-0 bg-gradient-to-r from-transparent via-white to-transparent w-5 h-2" />
+          </div>
         )}
       </div>
     </div>
@@ -102,12 +105,14 @@ type MeterBarProps = {
   total?: number;
   numberOfRemainingMeals: number;
   amount?: number;
+  goalMet?: boolean;
 };
 
 const MeterBar = ({
   amount,
   category,
   total,
+  goalMet,
   numberOfRemainingMeals,
   ...props
 }: MeterBarProps) => {
@@ -125,9 +130,13 @@ const MeterBar = ({
       amount && amount > 0 && 'bg-snacks w-[' + amount / 2 + '%]'
     }`,
   });
+
+  const glowClasses = goalMet
+    ? 'shadow-accent/40 dark:shadow-white/40 shadow-glow border-white/30'
+    : '';
   return (
     <div
-      className={`h-2 border grow-0 shrink-0 rounded-full ${
+      className={`h-2 border grow-0 shrink-0 rounded-full ${glowClasses} ${
         categoryColors()[category]
       }`}
       {...props}
