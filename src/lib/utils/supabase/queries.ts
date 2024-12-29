@@ -1,7 +1,6 @@
 import { GroupedDailyTotal } from '@/lib/types';
 import { SupabaseClient, User } from '@supabase/supabase-js';
 import dayjs from 'dayjs';
-import { date } from 'zod';
 
 export const getDailyTotals = async (
   supabase: SupabaseClient,
