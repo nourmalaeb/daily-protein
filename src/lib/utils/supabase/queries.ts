@@ -57,11 +57,13 @@ export const getDailyTotals = async (
         dateObj.dailyTotal += total_protein_grams;
 
         // Add the meal information in the meals array
-        dateObj.meals.push({
-          meal,
-          total_protein_grams,
-          item_count,
-        });
+        if (item_count > 0) {
+          dateObj.meals.push({
+            meal,
+            total_protein_grams,
+            item_count,
+          });
+        }
         return acc;
       },
       []

@@ -8,6 +8,7 @@ import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/utils/supabase/server';
 import { AppHeader } from '@/components/appHeader';
+import { AnimatedBorderDiv } from '@/components/specialContainers';
 dayjs.extend(customParseFormat);
 dayjs.extend(LocalizedFormat);
 
@@ -40,6 +41,17 @@ export default async function Page({
     .eq('date', date)
     .eq('user_id', user?.id);
 
+  const { data: goalData } = await supabase
+    .from('daily_goals')
+    .select()
+    .eq('user_id', user?.id)
+    .eq('date', date);
+
+  const { data: dayData } = await supabase
+    .from('daily_totals')
+    .select()
+    .eq('user_id', user?.id)
+    .eq('date', date);
   const parsedItems = data ? itemsParser(data) : undefined;
 
   return (
@@ -47,7 +59,16 @@ export default async function Page({
       <AppHeader user={user} />
       <DayNav currentDate={date} />
       <div>
-        <Meter goal={200} stats={parsedItems?.stats} />
+        <AnimatedBorderDiv
+          animate={dayData ? dayData[0].goal_met : false}
+          borderClasses="border-zinc-500/30 hover:border-zinc-500/80"
+          className="rounded-xl border p-1"
+        >
+          <Meter
+            goal={goalData?.[0].protein_goal_grams}
+            stats={parsedItems?.stats}
+          />
+        </AnimatedBorderDiv>
         <MealItems
           items={parsedItems?.breakfastItems}
           category={'breakfast'}

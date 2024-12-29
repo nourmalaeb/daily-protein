@@ -26,32 +26,51 @@ export const Meter = ({ stats, goal }: MeterProps) => {
   const distanceFromGoal = goal - total;
   const DistanceRemaining = () =>
     distanceFromGoal > 0 ? (
-      <div className="lining-num text-sm font-mono">
-        <span>{distanceFromGoal}</span>
-        <span className="opacity-70">g</span>
-        <span> remaining</span>
+      <div className="px-3 py-2 rounded-lg bg-highlight/50 dark:bg-shadow/20 flex-grow w-1/3">
+        <p className="uppercase text-xs font-bold tracking-widest opacity-65">
+          Remaining
+        </p>
+        <div className="lining-num text-md font-mono flex gap-0.5">
+          <span>{distanceFromGoal}</span>
+          <span className="opacity-70">g</span>
+        </div>
       </div>
     ) : (
-      <div className="lining-num text-sm font-mono font-semibold text-green-600 dark:text-green-300 drop-shadow-[0_0_3px_theme(colors.green.500/.50)]">
-        <span>{distanceFromGoal * -1}</span>
-        <span className="opacity-80">g</span> <span>over target</span>
+      <div className="px-3 py-2 rounded-lg bg-highlight/50 dark:bg-shadow/20 flex-grow w-1/3">
+        <p className="uppercase text-xs font-bold tracking-widest opacity-65">
+          Exceeded
+        </p>
+        <div className="lining-num font-mono text-md font-semibold flex gap-0.5 text-green-600 dark:text-green-300 drop-shadow-[0_0_3px_theme(colors.green.500/.50)]">
+          <span>{distanceFromGoal * -1}</span>
+          <span className="opacity-70">g</span>
+        </div>
       </div>
     );
 
   return (
-    <div className="p-4 flex flex-col gap-0.5">
-      <div className="flex flex-row items-center justify-between mb-1">
-        <div className="lining-num text-md font-mono inline-flex gap-0.5">
-          <span>{total || 0}</span>
-          <span className="opacity-70">g</span>
+    <div className="p-3 flex flex-col gap-2">
+      <div className="flex flex-row items-center gap-1 mb-1">
+        <div className="px-3 py-2 rounded-lg bg-highlight/50 dark:bg-shadow/20 flex-grow w-1/3">
+          <p className="uppercase text-xs font-bold tracking-widest opacity-65">
+            Goal
+          </p>
+          <div className="lining-nums text-md font-mono inline-flex gap-0.5">
+            <span>{goal || 200}</span>
+            <span className="opacity-70">g</span>
+          </div>
+        </div>
+        <div className="px-3 py-2 rounded-lg bg-highlight/50 dark:bg-shadow/20 flex-grow w-1/3">
+          <p className="uppercase text-xs font-bold tracking-widest opacity-65">
+            Total
+          </p>
+          <div className="lining-num text-md font-mono inline-flex gap-0.5">
+            <span>{total || 0}</span>
+            <span className="opacity-70">g</span>
+          </div>
         </div>
         <DistanceRemaining />
-        <div className="lining-nums text-md font-mono inline-flex gap-0.5">
-          <span>{goal || 200}</span>
-          <span className="opacity-70">g</span>
-        </div>
       </div>
-      <div className="flex flex-row gap-px items-center">
+      <div className="flex flex-row gap-px items-center px-2">
         <MeterBar
           category="breakfast"
           amount={stats?.breakfast ? stats.breakfast * ratio : 0}

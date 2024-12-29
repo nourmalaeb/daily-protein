@@ -89,6 +89,8 @@ async function StatsPage({
     );
   }
 
+  console.log(dailyTotals);
+
   return (
     <div className="relative p-4 flex flex-col gap-2 items-stretch justify-center h-full grow">
       {dailyTotals.map(dayData => {
@@ -103,9 +105,9 @@ async function StatsPage({
             borderClasses="border-zinc-500/30 hover:border-zinc-500/80"
             className="rounded-xl border p-1"
           >
-            <div className="px-3 pt-4">
+            <div className="px-3 pt-3">
               <ButtonLink href={`/on/${date}`} className="justify-between">
-                <span className="w-1/3">
+                <span className="w-1/3 font-semibold">
                   {isToday ? 'Today' : dayjs(date).format('ddd')}
                 </span>
                 <span className="font-mono text-sm opacity-80 w-1/3 text-center">
