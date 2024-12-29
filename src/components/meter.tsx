@@ -32,7 +32,7 @@ export const Meter = ({ stats, goal }: MeterProps) => {
         <span> remaining</span>
       </div>
     ) : (
-      <div className="lining-num text-sm font-mono font-bold text-green-600 dark:text-green-300 drop-shadow-[0_0_3px_theme(colors.green.500/.50)]">
+      <div className="lining-num text-sm font-mono font-semibold text-green-600 dark:text-green-300 drop-shadow-[0_0_3px_theme(colors.green.500/.50)]">
         <span>{distanceFromGoal * -1}</span>
         <span className="opacity-80">g</span> <span>over target</span>
       </div>

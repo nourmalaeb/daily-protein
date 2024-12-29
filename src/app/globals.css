@@ -38,6 +38,10 @@
   }
 }
 
+* {
+  font-synthesis: none !important;
+}
+
 body {
   color: rgb(var(--color-foreground));
   background: rgb(var(--color-background));
