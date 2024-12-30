@@ -4,13 +4,11 @@ import { useEffect, useState } from 'react';
 import { RadioInput } from '@/components/radioGroup';
 
 export const ColorModeSelector = () => {
-  const savedTheme = localStorage.getItem('colorMode');
-
-  const [activeTheme, setActiveTheme] = useState<string>(
-    savedTheme || 'system'
-  );
+  const [activeTheme, setActiveTheme] = useState<string>();
 
   useEffect(() => {
+    const savedTheme = localStorage.getItem('colorMode');
+
     if (savedTheme === 'system' || !savedTheme) {
       applySystemTheme();
       setActiveTheme('system');
@@ -31,7 +29,7 @@ export const ColorModeSelector = () => {
     return () => {
       mediaQuery.removeEventListener('change', handleSystemThemeChange);
     };
-  }, [savedTheme]);
+  }, []);
 
   const applyTheme = (theme: string) => {
     if (theme === 'dark') {

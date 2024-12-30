@@ -34,7 +34,7 @@ export const getDailyTotals = async (
     .lte('date', dateRange[0])
     .order('date', { ascending: false });
 
-  console.log({ dailyMealTotals, dailyGoals });
+  // console.log({ dailyMealTotals, dailyGoals });
 
   if (!dailyMealTotals?.length || !dailyGoals?.length) {
     return { dailyTotals: [], errors: { mealsError, goalsError } };
