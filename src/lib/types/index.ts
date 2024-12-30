@@ -38,3 +38,23 @@ export interface GroupedDailyTotal {
   dailyTotal: number;
   meals: MealData[];
 }
+
+// Define the type for a JSON value
+export type JSONValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JSONValue[]
+  | { [key: string]: JSONValue };
+
+// Define the type for the key-value pair
+export interface UserPreference {
+  preference_key: string;
+  preference_value: JSONValue;
+}
+
+export interface UserPreferences {
+  goal: number;
+  appearance: { appearance: string };
+}

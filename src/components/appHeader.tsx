@@ -1,7 +1,7 @@
 import { User } from '@supabase/supabase-js';
 import Link from 'next/link';
 
-export const AppHeader = ({ user }: { user?: User }) => {
+export const AppHeader = ({ user }: { user?: User | null }) => {
   return (
     <header className="flex flex-row items-center justify-between py-4 border-b border-gray-500 mx-4">
       <Link href={'/'}>

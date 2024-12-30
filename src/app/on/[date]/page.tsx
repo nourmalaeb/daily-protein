@@ -45,13 +45,33 @@ export default async function Page({
     .from('daily_goals')
     .select()
     .eq('user_id', user?.id)
-    .eq('date', date);
+    .eq('date', date)
+    .single();
+
+  console.log({ goalData });
+
+  if (!goalData) {
+    const { data: goalPreference } = await supabase
+      .from('user_preferences')
+      .select()
+      .eq('user_id', user?.id)
+      .eq('preference_key', 'goal')
+      .single();
+
+    await supabase.from('daily_goals').insert({
+      protein_goal_grams: goalPreference.preference_value,
+      date: date,
+      user_id: user?.id,
+    });
+  }
 
   const { data: dayData } = await supabase
     .from('daily_totals')
     .select()
     .eq('user_id', user?.id)
-    .eq('date', date);
+    .eq('date', date)
+    .single();
+
   const parsedItems = data ? itemsParser(data) : undefined;
 
   return (
@@ -60,12 +80,12 @@ export default async function Page({
       <DayNav currentDate={date} />
       <div>
         <AnimatedBorderDiv
-          animate={dayData ? dayData[0].goal_met : false}
+          animate={dayData?.length ? dayData.goal_met : false}
           borderClasses="border-zinc-500/30 hover:border-zinc-500/80"
           className="rounded-xl border p-1"
         >
           <Meter
-            goal={goalData?.[0].protein_goal_grams}
+            goal={goalData?.protein_goal_grams}
             stats={parsedItems?.stats}
           />
         </AnimatedBorderDiv>
