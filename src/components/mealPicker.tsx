@@ -1,9 +1,11 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 
-const radioItemClasses = `relative bg-background border border border-shadow rounded-md block text-center
+const radioItemClasses = `relative bg-background dark:bg-background-dark border border-shadow dark:border-shadow-dark 
+    rounded-md block text-center
      grow drop-shadow transition data-[state='checked']:shadow-[0_0_4px_2px_rgba(0,0,0,0.3)]
-     bg-gradient-to-b from-background from-65% to-highlight shadow-inner shadow-highlight
-     hover:from-45% hover:drop-shadow-md active:to-background active:translate-y-px active:drop-shadow-sm
+     bg-linear-to-b from-background dark:from-background-dark from-65% to-highlight dark:to-highlight-dark
+    shadow-inner shadow-highlight dark:shadow-highlight-dark
+     hover:from-45% hover:drop-shadow-md active:to-background dark:active:to-background-dark active:translate-y-px active:drop-shadow-xs
   `;
 
 const indicatorClasses = `absolute inset-0 w-full h-full shadow-[0_0_4px_2px_rgba(0,0,0,0.3)] rounded-md
@@ -28,7 +30,9 @@ export const MealPicker = ({ mealValue }: { mealValue?: string }) => {
             forceMount
             className={
               indicatorClasses +
-              `bg-breakfast/15 shadow-breakfast/35 border border-breakfast`
+              `bg-breakfast/15 shadow-breakfast/35 border border-breakfast
+              dark:border-breakfast-dark dark:bg-breakfast-dark/15 dark:shadow-breakfast-dark/35
+              `
             }
           />
         </RadioGroup.Item>
@@ -42,7 +46,9 @@ export const MealPicker = ({ mealValue }: { mealValue?: string }) => {
             forceMount
             className={
               indicatorClasses +
-              `bg-lunch/15 shadow-lunch/35 border border-lunch`
+              `bg-lunch/15 shadow-lunch/35 border border-lunch
+              dark:border-lunch-dark dark:bg-lunch-dark/15 dark:shadow-lunch-dark/35
+              `
             }
           />
         </RadioGroup.Item>
@@ -56,7 +62,9 @@ export const MealPicker = ({ mealValue }: { mealValue?: string }) => {
             forceMount
             className={
               indicatorClasses +
-              `bg-dinner/15 shadow-dinner/35 border border-dinner`
+              `bg-dinner/15 shadow-dinner/35 border border-dinner
+              dark:border-dinner-dark dark:bg-dinner-dark/15 dark:shadow-dinner-dark/35
+              `
             }
           />
         </RadioGroup.Item>
@@ -70,7 +78,9 @@ export const MealPicker = ({ mealValue }: { mealValue?: string }) => {
             forceMount
             className={
               indicatorClasses +
-              `bg-snacks/15 shadow-snacks/35 border border-snacks`
+              `bg-snacks/15 shadow-snacks/35 border border-snacks
+              dark:border-snacks-dark dark:bg-snacks-dark/15 dark:shadow-snacks-dark/35
+              `
             }
           />
         </RadioGroup.Item>

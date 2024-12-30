@@ -47,7 +47,7 @@ export const LoginForm = () => {
       {state.error && !clearError && (
         <p
           aria-live="polite"
-          className="text-red-500 font-mono px-3 py-1 bg-red-500/10 rounded text-wrap"
+          className="text-red-500 font-mono px-3 py-1 bg-red-500/10 rounded-sm text-wrap"
         >
           {`Error: ${state.error}`}
         </p>

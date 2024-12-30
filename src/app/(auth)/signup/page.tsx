@@ -73,7 +73,7 @@ const SignupPage = () => {
             required
           />
         </div>
-        <pre className="text-red-500 text-sm px-2 py-1 bg-red-500/10 rounded text-wrap">
+        <pre className="text-red-500 text-sm px-2 py-1 bg-red-500/10 rounded-sm text-wrap">
           {`Error:`}
         </pre>
         <Button type="submit">Sign up</Button>

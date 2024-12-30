@@ -64,7 +64,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${sansFont.variable} ${monoFont.variable} antialiased`}>
+      <body
+        className={`${sansFont.variable} ${monoFont.variable} antialiased 
+        bg-background dark:bg-background-dark text-foreground dark:text-foreground-dark`}
+      >
         {children}
       </body>
     </html>

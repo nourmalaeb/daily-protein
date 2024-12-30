@@ -63,9 +63,9 @@ export default async function Page({
       <DayNav currentDate={date} />
       <div>
         <AnimatedBorderDiv
-          animate={dayData?.length ? dayData.goal_met : false}
+          animate={dayData ? dayData.goal_met : false}
           borderClasses="border-zinc-500/30 hover:border-zinc-500/80"
-          className="rounded-xl border p-1"
+          className="rounded-xl border mx-2"
         >
           <Meter
             goal={goalData?.protein_goal_grams}

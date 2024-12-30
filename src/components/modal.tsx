@@ -29,9 +29,9 @@ export function Modal({
         onClick={() => dialogRef.current?.close()}
       />
       <div
-        className="bg-background fixed transform overflow-hidden
+        className="bg-background dark:bg-background-dark fixed transform overflow-hidden
              left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-             p-4 border border-highlight rounded-xl shadow-xl
+             p-4 border border-highlight dark:border-highlight-dark rounded-xl shadow-xl
              w-11/12 max-w-sm
              flex flex-col gap-4 items-stretch
              transition animate-modalContentShow"

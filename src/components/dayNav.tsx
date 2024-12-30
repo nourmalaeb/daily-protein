@@ -14,7 +14,7 @@ const DayNav = ({ currentDate }: { currentDate: string }) => {
     <div className="flex flex-row gap-1 w-full p-4">
       <ButtonLink
         href={`/on/${prevDate}`}
-        className={`!px-1.5`}
+        className={`px-1.5!`}
         // status={navigation.state === 'loading' ? 'disabled' : undefined}
       >
         <ChevronLeft size={20} />
@@ -29,7 +29,7 @@ const DayNav = ({ currentDate }: { currentDate: string }) => {
       <ButtonLink
         status={dayjs(nextDate).isAfter(dayjs()) ? 'disabled' : undefined}
         href={`/on/${nextDate}`}
-        className="!px-1.5"
+        className="px-1.5!"
       >
         <ChevronRight size={20} />
       </ButtonLink>
