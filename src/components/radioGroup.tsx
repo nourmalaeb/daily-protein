@@ -23,7 +23,7 @@ export const RadioInput = ({
   defaultValue?: string;
   name: string;
   options: string[];
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   props?: React.InputHTMLAttributes<HTMLInputElement>;
 }) => {
   return (

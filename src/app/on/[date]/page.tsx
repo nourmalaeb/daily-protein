@@ -48,23 +48,6 @@ export default async function Page({
     .eq('date', date)
     .single();
 
-  console.log({ goalData });
-
-  if (!goalData) {
-    const { data: goalPreference } = await supabase
-      .from('user_preferences')
-      .select()
-      .eq('user_id', user?.id)
-      .eq('preference_key', 'goal')
-      .single();
-
-    await supabase.from('daily_goals').insert({
-      protein_goal_grams: goalPreference.preference_value,
-      date: date,
-      user_id: user?.id,
-    });
-  }
-
   const { data: dayData } = await supabase
     .from('daily_totals')
     .select()

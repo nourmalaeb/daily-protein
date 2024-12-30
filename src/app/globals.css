@@ -46,6 +46,7 @@ body {
   color: rgb(var(--color-foreground));
   background: rgb(var(--color-background));
   font-family: var(--font-sans);
+  color-scheme: light;
 }
 
 @layer utilities {

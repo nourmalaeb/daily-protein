@@ -1,7 +1,38 @@
 import { type NextRequest } from 'next/server';
 import { updateSession } from '@/lib/utils/supabase/middleware';
+import { createClient } from './lib/utils/supabase/server';
+import dayjs from 'dayjs';
 
 export async function middleware(request: NextRequest) {
+  const supabase = await createClient();
+  const date = dayjs().format('YYYY-MM-DD');
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  // update the user's daily goal for today
+  const { data: goalData } = await supabase
+    .from('daily_goals')
+    .select()
+    .eq('user_id', user?.id)
+    .eq('date', date)
+    .single();
+
+  if (!goalData) {
+    const { data: goalPreference } = await supabase
+      .from('user_preferences')
+      .select()
+      .eq('user_id', user?.id)
+      .eq('preference_key', 'goal')
+      .single();
+
+    await supabase.from('daily_goals').insert({
+      protein_goal_grams: goalPreference.preference_value,
+      date: date,
+      user_id: user?.id,
+    });
+  }
+
   // update user's auth session
   return await updateSession(request);
 }

@@ -1,12 +1,13 @@
 'use client';
 
 import { Button } from '@/components/button';
-import { RadioInput } from '@/components/radioGroup';
+// import { RadioInput } from '@/components/radioGroup';
 import { UserPreferences } from '@/lib/types';
 import { useActionState, useState } from 'react';
 import { updatePreferences } from './actions';
 import { ControlledInput } from '@/components/controlledInput';
 import dayjs from 'dayjs';
+import { ColorModeSelector } from './colorModeSelector';
 
 export default function AccountForm({ data }: { data: UserPreferences }) {
   const [currentGoal, setCurrentGoal] = useState(data.goal);
@@ -15,11 +16,13 @@ export default function AccountForm({ data }: { data: UserPreferences }) {
     { payload: { appearance: data.appearance?.appearance, goal: data.goal } }
   );
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    console.log(e);
-    e.currentTarget.form?.requestSubmit();
-  };
+  // const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   e.preventDefault();
+  //   console.log(e);
+  //   e.currentTarget.form?.requestSubmit();
+  // };
+
+  const defaultColorMode = localStorage.getItem('colorMode');
 
   return (
     <div className="flex flex-col gap-12 px-4 pt-8">
@@ -66,18 +69,13 @@ export default function AccountForm({ data }: { data: UserPreferences }) {
           <label className="font-bold" htmlFor="appearance">
             Appearance
           </label>
-          <RadioInput
-            name="appearance"
-            options={['System', 'Light', 'Dark']}
-            defaultValue={
-              actionState.payload?.appearance || data.appearance?.appearance
-            }
-            onChange={onChange}
-          />
-          {isPending && <div>Saving...</div>}
+          <ColorModeSelector />
+          <p>This setting is saved locally on each device.</p>
         </div>
+        {isPending && <div>Saving...</div>}
       </form>
 
+      <pre>{JSON.stringify(actionState?.error, null, 2)}</pre>
       {/* <pre>{JSON.stringify(actionState?.payload, null, 2)}</pre>
       <pre>{JSON.stringify(data, null, 2)}</pre> */}
 

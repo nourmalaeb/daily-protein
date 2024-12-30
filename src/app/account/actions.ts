@@ -66,15 +66,17 @@ export const updatePreferences = async (
     .single();
 
   // Update the goal for today
-  const { error: todaysGoalError } = await supabase.from('daily_goals').upsert({
-    protein_goal_grams: goal,
-    date: dayjs().format('YYYY-MM-DD'),
-    user_id: user?.id,
-  });
+  const { error: todaysGoalError } = await supabase
+    .from('daily_goals')
+    .update({
+      protein_goal_grams: goal,
+    })
+    .eq('user_id', user?.id)
+    .eq('date', dayjs().format('YYYY-MM-DD'));
 
   if (todaysGoalError) {
     return {
-      error: todaysGoalError.message,
+      error: "Today's Goal Error: " + todaysGoalError.message,
       payload: { appearance: String(appearance), goal: Number(goal) },
     };
   }
@@ -92,14 +94,14 @@ export const updatePreferences = async (
 
   if (appearanceError) {
     return {
-      error: appearanceError.message,
+      error: 'Appearance Error: ' + appearanceError.message,
       payload: { appearance: String(appearance), goal: Number(goal) },
     };
   }
 
   if (goalError) {
     return {
-      error: goalError.message,
+      error: 'Goal Error: ' + goalError.message,
       payload: { appearance: String(appearance), goal: Number(goal) },
     };
   }

@@ -7,6 +7,7 @@ export default {
     './app/**/*.{ts,tsx}',
     './src/**/*.{ts,tsx}',
   ],
+  darkMode: 'selector',
   theme: {
     fontFamily: {
       sans: 'var(--font-sans)',
@@ -57,5 +58,4 @@ export default {
     },
   },
   plugins: [],
-  darkMode: 'selector',
 } satisfies Config;
