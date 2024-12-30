@@ -10,27 +10,30 @@ export async function middleware(request: NextRequest) {
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  // update the user's daily goal for today
-  const { data: goalData } = await supabase
-    .from('daily_goals')
-    .select()
-    .eq('user_id', user?.id)
-    .eq('date', date)
-    .single();
 
-  if (!goalData) {
-    const { data: goalPreference } = await supabase
-      .from('user_preferences')
+  if (user) {
+    // update the user's daily goal for today
+    const { data: goalData } = await supabase
+      .from('daily_goals')
       .select()
       .eq('user_id', user?.id)
-      .eq('preference_key', 'goal')
+      .eq('date', date)
       .single();
 
-    await supabase.from('daily_goals').insert({
-      protein_goal_grams: goalPreference.preference_value,
-      date: date,
-      user_id: user?.id,
-    });
+    if (!goalData) {
+      const { data: goalPreference } = await supabase
+        .from('user_preferences')
+        .select()
+        .eq('user_id', user?.id)
+        .eq('preference_key', 'goal')
+        .single();
+
+      await supabase.from('daily_goals').insert({
+        protein_goal_grams: goalPreference.preference_value,
+        date: date,
+        user_id: user?.id,
+      });
+    }
   }
 
   // update user's auth session
