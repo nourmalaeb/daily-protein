@@ -20,11 +20,11 @@ export const getPreferences = async (supabase: SupabaseClient, user: User) => {
   }
 
   const preferences = data.reduce(
-    (acc: UserPreferences, cv: UserPreference) => {
-      acc[cv.preference_key] = cv.preference_value;
+    (acc: UserPreferences, { preference_key, preference_value }) => {
+      acc[preference_key] = preference_value;
       return acc;
     },
-    {} as UserPreferences
+    {}
   );
 
   return { data: preferences, error };
