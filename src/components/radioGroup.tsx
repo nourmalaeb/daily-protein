@@ -1,17 +1,19 @@
-const radioItemClasses = `relative bg-background border border border-shadow rounded-md block text-center
-     grow
-     bg-gradient-to-b from-background from-65% to-highlight shadow-inner shadow-highlight
-     hover:from-45% hover:drop-shadow-md active:to-background active:translate-y-px active:drop-shadow-sm
-     has-[:checked]:shadow-[0_0_4px_2px_rgba(0,0,0,0.3)]
+const radioItemClasses = `relative bg-background dark:bg-background-dark border border-shadow dark:border-shadow-dark 
+     rounded-md block text-center grow
+     bg-linear-to-b from-background dark:from-background-dark from-65% to-highlight dark:to-highlight-dark
+     shadow-inner shadow-highlight dark:shadow-highlight-dark
+     hover:from-45% hover:drop-shadow-md
+     active:to-background dark:active:to-background-dark active:translate-y-px active:drop-shadow-xs
+     has-checked:shadow-[0_0_4px_2px_rgba(0,0,0,0.3)] dark:has-checked:shadow-[0_0_4px_2px_rgba(1,1,1,0.3)]
   `;
 
 const indicatorClasses = `absolute inset-0 w-full h-full pointer-events-none
-    shadow-[0_0_4px_2px_rgba(0,0,0,0.3)] rounded-md
+    shadow-[0_0_4px_2px_rgba(0,0,0,0.3)] dark:shadow-[0_0_4px_2px_rgba(1,1,1,0.3)] rounded-md
     transition duration-300 opacity-0 peer-checked:opacity-100 bg-accent/15 shadow-accent/35 border border-accent
   `;
 
 const labelClasses = `px-3 py-1 flex items-center justify-center select-none cursor-pointer
-drop-shadow transition peer-checked:shadow-[0_0_4px_2px_rgba(0,0,0,0.3)]`;
+drop-shadow transition`;
 
 export const RadioInput = ({
   defaultValue,

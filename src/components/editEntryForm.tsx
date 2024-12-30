@@ -48,7 +48,7 @@ export default function EditEntryModal({
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="bg-shadow/30 fixed inset-0 transition backdrop-blur-[8px] animate-overlayShow" />
         <DialogPrimitive.Content
-          className="bg-background fixed transform overflow-hidden
+          className="bg-background dark:bg-background-dark fixed transform overflow-hidden
                  left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
                  p-4 border border-highlight rounded-xl shadow-xl
                  w-11/12 max-w-sm
@@ -91,7 +91,7 @@ export default function EditEntryModal({
                 autoFocus
               />
               <Button
-                className="col-span-1 !px-1"
+                className="col-span-1 px-1!"
                 value="delete"
                 onClick={() => setShowConfirm(true)}
               >
@@ -118,12 +118,12 @@ export default function EditEntryModal({
             <AnimatePresence>
               {showConfirm && (
                 <motion.div
-                  className="isolate fixed inset-0 bg-shadow/50 backdrop-blur-sm z-50"
+                  className="isolate fixed inset-0 bg-shadow/50 backdrop-blur-xs z-50"
                   initial={{ opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.96 }}
                 >
-                  <div className="absolute top-1/2 -translate-y-1/2 inset-x-2 bg-highlight/50 rounded-lg flex flex-col gap-4 items-center justify-between transition backdrop-blur-lg animate-overlayShow p-6 text-center border border-highlight shadow-xl">
+                  <div className="absolute top-1/2 -translate-y-1/2 inset-x-2 bg-highlight/50 dark:bg-highlight-dark/50 rounded-lg flex flex-col gap-4 items-center justify-between transition backdrop-blur-lg animate-overlayShow p-6 text-center border border-highlight shadow-xl">
                     <div className="flex items-center gap-2 w-full text-left">
                       <TriangleAlert className="w-4" strokeWidth={2.5} />
                       <h3 className="font-semibold">
@@ -131,10 +131,10 @@ export default function EditEntryModal({
                       </h3>
                     </div>
                     <div className="flex gap-1 w-full text-left">
-                      <span className="px-2 py-1 bg-highlight/75 rounded-md grow">
+                      <span className="px-2 py-1 bg-highlight/75 dark:bg-highlight-dark/75 rounded-md grow">
                         {item.food_name}
                       </span>
-                      <span className="px-2 py-1 bg-highlight/75 rounded-md flex gap-0.5">
+                      <span className="px-2 py-1 bg-highlight/75 dark:bg-highlight-dark/75 rounded-md flex gap-0.5">
                         <span className="font-mono">{item.protein_grams}</span>
                         <span className="opacity-70">g</span>
                       </span>

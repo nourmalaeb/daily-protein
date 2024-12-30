@@ -46,7 +46,7 @@ export default function AddEntryModal({
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="bg-shadow/30 fixed inset-0 transition backdrop-blur-[8px] animate-overlayShow" />
         <DialogPrimitive.Content
-          className="bg-background fixed transform overflow-hidden
+          className="bg-background dark:bg-background-dark fixed transform overflow-hidden
              left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
              p-4 border border-highlight rounded-xl shadow-xl
              w-11/12 max-w-sm
@@ -84,7 +84,7 @@ export default function AddEntryModal({
                     step={1}
                   />
                   <Button
-                    className="col-span-1 !px-1"
+                    className="col-span-1 px-1!"
                     onClick={() =>
                       setItems(items => items.filter(i => i.index !== index))
                     }

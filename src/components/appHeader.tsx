@@ -7,7 +7,7 @@ export const AppHeader = ({ user }: { user?: User | null }) => {
   return (
     <header className="flex flex-row items-center justify-between py-4 border-b border-gray-500 mx-4">
       <Link href={'/'}>
-        <h1 className="w-min leading-none text-sm text-foreground">
+        <h1 className="w-min leading-none text-sm text-foreground dark:text-foreground-dark">
           daily protein
         </h1>
       </Link>
