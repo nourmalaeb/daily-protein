@@ -16,14 +16,6 @@ export default function AccountForm({ data }: { data: UserPreferences }) {
     { payload: { appearance: data.appearance?.appearance, goal: data.goal } }
   );
 
-  // const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   e.preventDefault();
-  //   console.log(e);
-  //   e.currentTarget.form?.requestSubmit();
-  // };
-
-  const defaultColorMode = localStorage.getItem('colorMode');
-
   return (
     <div className="flex flex-col gap-12 px-4 pt-8">
       <form className="flex flex-col gap-12" action={updatePreferencesAction}>
