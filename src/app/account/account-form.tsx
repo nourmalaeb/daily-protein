@@ -1,6 +1,5 @@
 'use client';
 
-import { Input } from '@/components/input';
 import { Button } from '@/components/button';
 import { RadioInput } from '@/components/radioGroup';
 import { UserPreferences } from '@/lib/types';

@@ -3,7 +3,7 @@
 import { UserPreference, UserPreferences } from '@/lib/types';
 import { createClient } from '@/lib/utils/supabase/server';
 import { SupabaseClient, User } from '@supabase/supabase-js';
-import { date, z } from 'zod';
+import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { revalidatePath } from 'next/cache';
 import dayjs from 'dayjs';
@@ -63,13 +63,18 @@ export const updatePreferences = async (
     .single();
 
   // Update the goal for today
-  const { data: todaysGoalData, error: todaysGoalError } = await supabase
-    .from('daily_goals')
-    .upsert({
-      protein_goal_grams: goal,
-      date: dayjs().format('YYYY-MM-DD'),
-      user_id: user?.id,
-    });
+  const { error: todaysGoalError } = await supabase.from('daily_goals').upsert({
+    protein_goal_grams: goal,
+    date: dayjs().format('YYYY-MM-DD'),
+    user_id: user?.id,
+  });
+
+  if (todaysGoalError) {
+    return {
+      error: todaysGoalError.message,
+      payload: { appearance: String(appearance), goal: Number(goal) },
+    };
+  }
 
   // Update the user's appearance preference
   const { data: appearanceData, error: appearanceError } = await supabase
