@@ -38,7 +38,7 @@ const createUpdatePreferencesFormSchema = zfd.formData({
 export const updatePreferences = async (
   _actionState: {
     error?: string;
-    payload: { appearance: string; goal: number };
+    payload: { appearance?: string; goal?: number };
   },
   formData: FormData
 ) => {
@@ -105,8 +105,8 @@ export const updatePreferences = async (
 
   return {
     payload: {
-      appearance: appearanceData.preference_value.appearance as string,
-      goal: goalData.preference_value as number,
+      appearance: appearanceData.preference_value.appearance,
+      goal: goalData.preference_value,
     },
   };
 };

@@ -12,7 +12,7 @@ export default function AccountForm({ data }: { data: UserPreferences }) {
   const [currentGoal, setCurrentGoal] = useState(data.goal);
   const [actionState, updatePreferencesAction, isPending] = useActionState(
     updatePreferences,
-    { payload: { appearance: data.appearance.appearance, goal: data.goal } }
+    { payload: { appearance: data.appearance?.appearance, goal: data.goal } }
   );
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +70,7 @@ export default function AccountForm({ data }: { data: UserPreferences }) {
             name="appearance"
             options={['System', 'Light', 'Dark']}
             defaultValue={
-              actionState.payload?.appearance || data.appearance.appearance
+              actionState.payload?.appearance || data.appearance?.appearance
             }
             onChange={onChange}
           />

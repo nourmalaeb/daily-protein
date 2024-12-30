@@ -46,7 +46,8 @@ export type JSONValue =
   | boolean
   | null
   | JSONValue[]
-  | { [key: string]: JSONValue };
+  | { [key: string]: JSONValue }
+  | undefined;
 
 // Define the type for the key-value pair
 export interface UserPreference {
@@ -56,6 +57,6 @@ export interface UserPreference {
 
 export interface UserPreferences {
   [key: string]: JSONValue;
-  appearance: { appearance: string };
-  goal: number;
+  appearance?: { appearance: string };
+  goal?: number;
 }
