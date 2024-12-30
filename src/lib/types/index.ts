@@ -56,4 +56,6 @@ export interface UserPreference {
 
 export interface UserPreferences {
   [key: string]: JSONValue;
+  appearance: { appearance: string };
+  goal: number;
 }
