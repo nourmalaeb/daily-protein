@@ -8,7 +8,10 @@ import { zfd } from 'zod-form-data';
 import { revalidatePath } from 'next/cache';
 import dayjs from 'dayjs';
 
-export const getPreferences = async (supabase: SupabaseClient, user: User) => {
+export const getPreferences = async (
+  supabase: SupabaseClient,
+  user: User | null
+) => {
   const { data, error } = await supabase
     .from('user_preferences')
     .select(`preference_key, preference_value`)

@@ -18,7 +18,7 @@ export default async function Account() {
 
   const { data, error } = await getPreferences(supabase, user);
 
-  if (error) {
+  if (error || !data) {
     return <div>Error: {error}</div>;
   }
 
