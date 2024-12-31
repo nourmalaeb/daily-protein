@@ -57,8 +57,6 @@ export default async function Page({
 
   const parsedItems = data ? itemsParser(data) : undefined;
 
-  console.log({ dayData, goalData });
-
   return (
     <>
       <AppHeader user={user} />
