@@ -23,7 +23,6 @@ const buttonLink = cva(
     'dark:shadow-highlight-dark',
     'drop-shadow-sm',
     'normal-case',
-    'font-normal',
     'transition-all',
     'duration-400',
     'flex',

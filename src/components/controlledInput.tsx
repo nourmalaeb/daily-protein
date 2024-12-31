@@ -9,6 +9,7 @@ const input = cva(
     'rounded-lg',
     'border',
     'bg-shadow/5',
+    'dark:bg-shadow-dark/10',
     'text-foreground/90',
     'border-highlight',
     'dark:border-highlight-dark',
@@ -47,6 +48,7 @@ export interface InputProps
     VariantProps<typeof input> {}
 export interface UncontrolledInputProps extends InputProps {
   initialValue?: string | FormDataEntryValue | null;
+  className?: string;
 }
 
 export const Input: React.FC<UncontrolledInputProps> = ({

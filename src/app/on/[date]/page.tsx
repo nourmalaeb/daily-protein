@@ -57,13 +57,19 @@ export default async function Page({
 
   const parsedItems = data ? itemsParser(data) : undefined;
 
+  console.log({ dayData, goalData });
+
   return (
     <>
       <AppHeader user={user} />
       <DayNav currentDate={date} />
       <div>
         <AnimatedBorderDiv
-          animate={dayData ? dayData.goal_met : false}
+          animate={
+            dayData
+              ? dayData.total_protein_grams >= goalData.protein_goal_grams
+              : false
+          }
           borderClasses="border-zinc-500/30 hover:border-zinc-500/80"
           className="rounded-xl border mx-2"
         >

@@ -6,6 +6,7 @@ const input = cva(
     'rounded-lg',
     'border',
     'bg-shadow/5',
+    'dark:bg-shadow-dark/10',
     'text-foreground/90',
     'dark:text-foreground-dark/90',
     'border-highlight',

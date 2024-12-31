@@ -14,7 +14,7 @@ const mainWrapper = cva(
   {
     variants: {
       debug: {
-        true: ['border', 'border-gray-700'],
+        true: ['border', 'border-zinc-700'],
       },
     },
   }

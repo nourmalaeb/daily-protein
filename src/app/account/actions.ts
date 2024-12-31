@@ -7,6 +7,8 @@ import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { revalidatePath } from 'next/cache';
 import dayjs from 'dayjs';
+import { today } from '@/lib/utils';
+import { redirect } from 'next/navigation';
 
 export const getPreferences = async (
   supabase: SupabaseClient,
@@ -34,14 +36,13 @@ export const getPreferences = async (
 };
 
 const createUpdatePreferencesFormSchema = zfd.formData({
-  appearance: zfd.text(z.string().trim()),
   goal: zfd.numeric(z.number().positive()),
 });
 
-export const updatePreferences = async (
+export const createGoalPreference = async (
   _actionState: {
     error?: string;
-    payload: { appearance?: string; goal?: number };
+    payload: { goal?: number };
   },
   formData: FormData
 ) => {
@@ -51,8 +52,54 @@ export const updatePreferences = async (
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { appearance, goal } =
-    createUpdatePreferencesFormSchema.parse(formData);
+  const { goal } = createUpdatePreferencesFormSchema.parse(formData);
+
+  // Create the user's goal
+  const { error: goalError } = await supabase.from('user_preferences').insert({
+    preference_key: 'goal',
+    preference_value: goal,
+    user_id: user?.id,
+  });
+
+  if (goalError) {
+    return {
+      error: 'Goal Error: ' + goalError.message,
+      payload: { goal: Number(goal) },
+    };
+  }
+
+  // Create the goal for today
+  const { error: todaysGoalError } = await supabase.from('daily_goals').upsert({
+    protein_goal_grams: goal,
+    user_id: user?.id,
+    date: today(),
+  });
+
+  if (todaysGoalError) {
+    return {
+      error: "Today's Goal Error: " + todaysGoalError.message,
+      payload: { goal: Number(goal) },
+    };
+  }
+
+  revalidatePath('/');
+  redirect('/');
+};
+
+export const updatePreferences = async (
+  _actionState: {
+    error?: string;
+    payload: { goal?: number };
+  },
+  formData: FormData
+) => {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  const { goal } = createUpdatePreferencesFormSchema.parse(formData);
 
   // Update the user's goal
   const { data: goalData, error: goalError } = await supabase
@@ -64,6 +111,13 @@ export const updatePreferences = async (
     .eq('preference_key', 'goal')
     .select()
     .single();
+
+  if (goalError) {
+    return {
+      error: 'Goal Error: ' + goalError.message,
+      payload: { goal: Number(goal) },
+    };
+  }
 
   // Update the goal for today
   const { error: todaysGoalError } = await supabase
@@ -77,32 +131,7 @@ export const updatePreferences = async (
   if (todaysGoalError) {
     return {
       error: "Today's Goal Error: " + todaysGoalError.message,
-      payload: { appearance: String(appearance), goal: Number(goal) },
-    };
-  }
-
-  // Update the user's appearance preference
-  const { data: appearanceData, error: appearanceError } = await supabase
-    .from('user_preferences')
-    .update({
-      preference_value: { appearance },
-    })
-    .eq('user_id', user?.id)
-    .eq('preference_key', 'appearance')
-    .select()
-    .single();
-
-  if (appearanceError) {
-    return {
-      error: 'Appearance Error: ' + appearanceError.message,
-      payload: { appearance: String(appearance), goal: Number(goal) },
-    };
-  }
-
-  if (goalError) {
-    return {
-      error: 'Goal Error: ' + goalError.message,
-      payload: { appearance: String(appearance), goal: Number(goal) },
+      payload: { goal: Number(goal) },
     };
   }
 
@@ -110,7 +139,6 @@ export const updatePreferences = async (
 
   return {
     payload: {
-      appearance: appearanceData.preference_value.appearance,
       goal: goalData.preference_value,
     },
   };

@@ -25,7 +25,7 @@ export function Modal({
   return createPortal(
     <dialog ref={dialogRef} className="backdrop:bg-transparent text-foreground">
       <div
-        className="bg-shadow/30 fixed inset-0 transition backdrop-blur-[8px] animate-overlayShow"
+        className="bg-shadow/30 dark:bg-shadow-dark/30 fixed inset-0 transition backdrop-blur-[8px] animate-overlayShow"
         onClick={() => dialogRef.current?.close()}
       />
       <div

@@ -6,6 +6,8 @@
   --font-*: initial;
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
+  --font-monoitalic: var(--font-mono);
+  --font-monoitalic--font-variation-settings: 'ital' 1;
 
   --background-image-gradient-radial: radial-gradient(var(--tw-gradient-stops));
   --background-image-gradient-conic: conic-gradient(
@@ -25,7 +27,7 @@
   --color-accent: color(display-p3 1 0.6 0.5);
   --color-foreground-dark: rgb(237, 237, 237);
   --color-background-dark: rgb(33, 33, 33);
-  --color-highlight-dark: rgb(48, 48, 48);
+  --color-highlight-dark: rgb(56, 56, 56);
   --color-shadow-dark: rgb(0, 0, 0);
   --color-breakfast-dark: color(display-p3 0.470588 0.913725 0.796078);
   --color-lunch-dark: color(display-p3 1 0.866667 0.376471);
@@ -35,11 +37,17 @@
 
   --shadow-glow: 0 0 4px 0 rgba(0, 0, 0, 0.5);
 
-  --animate-overlay-show: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --animate-overlay-show: overlayShow 500ms cubic-bezier(0.16, 1, 0.3, 1);
   --animate-modal-content-show: modalContentShow 300ms
     cubic-bezier(0.16, 1, 0.3, 1);
   --animate-border: border 8s linear infinite;
 
+  --animate-accordion-slide-down: accordion-slide-down 300ms
+    cubic-bezier(0.87, 0, 0.13, 1);
+  --animate-accordion-slide-up: accordion-slide-up 300ms
+    cubic-bezier(0.87, 0, 0.13, 1);
+
+  /* Overlay animation */
   @keyframes overlayShow {
     from {
       opacity: 0;
@@ -52,15 +60,45 @@
     from {
       opacity: 0;
       margin-top: 2rem;
+      scale: 0.9;
     }
     to {
       opacity: 1;
       margin-top: 0;
+      scale: 1;
     }
   }
+
+  /* Border glow animation */
   @keyframes border {
     to {
       --border-angle: 360deg;
+    }
+  }
+
+  /* Accordion animation */
+  @keyframes accordion-slide-down {
+    from {
+      height: 0px;
+      opacity: 0;
+      margin-top: 0rem;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+      opacity: 1;
+      margin-top: 2rem;
+    }
+  }
+  @keyframes accordion-slide-up {
+    from {
+      height: var(--radix-accordion-content-height);
+      opacity: 1;
+      margin-top: 2rem;
+    }
+    to {
+      height: 0px;
+      opacity: 0;
+      margin-top: 0rem;
     }
   }
 }
@@ -79,7 +117,7 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
+    border-color: var(--color-zinc-200, currentColor);
   }
 }
 
@@ -101,5 +139,14 @@
   body {
     font-family: var(--font-sans);
     /* color-scheme: light dark; */
+  }
+
+  .font-mono.italic {
+    font-variation-settings: 'ital' 1;
+  }
+
+  p a {
+    color: var(--color-accent);
+    text-decoration: underline;
   }
 }

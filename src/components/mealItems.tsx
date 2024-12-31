@@ -12,7 +12,7 @@ const MealItems = ({ category, items, date }: MealItemsProps) => {
         <h3 className="uppercase text-xs font-semibold tracking-widest">
           {category}
         </h3>
-        <div className="grow h-px bg-slate-500" />
+        <div className="grow h-px bg-zinc-500" />
         <span className="text-sm font-medium font-mono inline-flex gap-0.5">
           <span>{total}</span>
           <span className="opacity-70">g</span>

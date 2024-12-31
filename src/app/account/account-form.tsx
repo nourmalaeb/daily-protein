@@ -13,7 +13,7 @@ export default function AccountForm({ data }: { data: UserPreferences }) {
   const [currentGoal, setCurrentGoal] = useState(data.goal);
   const [actionState, updatePreferencesAction, isPending] = useActionState(
     updatePreferences,
-    { payload: { appearance: data.appearance?.appearance, goal: data.goal } }
+    { payload: { goal: data.goal } }
   );
 
   return (
@@ -24,7 +24,7 @@ export default function AccountForm({ data }: { data: UserPreferences }) {
             Daily protein goal (in grams)
           </label>
           <p>
-            Your daily protein goal should be around 1.7-2 grams per lb of body
+            Your daily protein goal should be around 0.5–1 grams per lb of body
             weight.
           </p>
           <div className="flex gap-2">

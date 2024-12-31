@@ -52,3 +52,8 @@ export const distanceBetween = (
       (pointA.y - pointB.y) * (pointA.y - pointB.y)
   );
 };
+
+export const today = () => {
+  const date = new Date();
+  return date.toISOString().split('T')[0];
+};

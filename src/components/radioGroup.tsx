@@ -20,33 +20,35 @@ export const RadioInput = ({
   name,
   options,
   onChange,
+  className,
   ...props
 }: {
   defaultValue?: string;
   name: string;
-  options: string[];
+  options: { value: string; label: React.ReactNode }[];
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  className?: string;
   props?: React.InputHTMLAttributes<HTMLInputElement>;
 }) => {
   return (
-    <div className="flex flex-row gap-1" {...props}>
+    <div className={className || 'flex flex-row gap-1'} {...props}>
       {options.map((option, idx) => (
-        <div key={option} className={radioItemClasses}>
+        <div key={option.value} className={radioItemClasses}>
           <input
             type="radio"
-            value={option.toLowerCase()}
+            value={option.value.toLowerCase()}
             name={name}
             id={`radio-${name}-${idx}`}
             className="hidden peer"
             onChange={onChange}
             defaultChecked={
               defaultValue
-                ? defaultValue.toLowerCase() === option.toLowerCase()
-                : options[0].toLowerCase() === option.toLowerCase()
+                ? defaultValue.toLowerCase() === option.value.toLowerCase()
+                : options[0].value.toLowerCase() === option.value.toLowerCase()
             }
           />
           <label htmlFor={`radio-${name}-${idx}`} className={labelClasses}>
-            {option}
+            {option.label}
           </label>
           <div className={indicatorClasses} />
         </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { RadioInput } from '@/components/radioGroup';
+import { Laptop, Moon, Sun } from 'lucide-react';
 
 export const ColorModeSelector = () => {
   const [activeTheme, setActiveTheme] = useState<string>();
@@ -64,7 +65,35 @@ export const ColorModeSelector = () => {
     <>
       <RadioInput
         name={'colorModeSelector'}
-        options={['System', 'Light', 'Dark']}
+        options={[
+          {
+            value: 'system',
+            label: (
+              <span className="flex gap-2 items-center">
+                <Laptop size={16} />
+                System
+              </span>
+            ),
+          },
+          {
+            value: 'light',
+            label: (
+              <span className="flex gap-2 items-center">
+                <Sun size={16} />
+                Light
+              </span>
+            ),
+          },
+          {
+            value: 'dark',
+            label: (
+              <span className="flex gap-2 items-center">
+                <Moon size={16} />
+                Dark
+              </span>
+            ),
+          },
+        ]}
         defaultValue={activeTheme}
         onChange={e => handleThemeChange(e.target.value)}
       />

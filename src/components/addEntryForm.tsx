@@ -44,14 +44,14 @@ export default function AddEntryModal({
         <AddButton meal={meal} />
       </DialogPrimitive.Trigger>
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className="bg-shadow/30 fixed inset-0 transition backdrop-blur-[8px] animate-overlayShow" />
+        <DialogPrimitive.Overlay className="bg-shadow/30 dark:bg-shadow-dark/30 fixed inset-0 transition backdrop-blur-[8px] data-[state=open]:animate-overlay-show" />
         <DialogPrimitive.Content
           className="bg-background dark:bg-background-dark fixed transform overflow-hidden
              left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-             p-4 border border-highlight rounded-xl shadow-xl
+             p-4 border border-highlight dark:border-highlight-dark rounded-xl shadow-xl
              w-11/12 max-w-sm
              flex flex-col gap-4 items-stretch
-             transition animate-modalContentShow"
+             transition data-[state=open]:animate-modal-content-show"
         >
           <DialogPrimitive.Title asChild>
             <h3 className="font-bold text-xl tracking-tight">Add items</h3>
