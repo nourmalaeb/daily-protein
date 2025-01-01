@@ -89,7 +89,7 @@ async function StatsPage({
     );
   }
 
-  console.log(user);
+  // console.log(user);
 
   return (
     <div className="relative p-4 flex flex-col gap-1 items-stretch justify-center h-full grow">
