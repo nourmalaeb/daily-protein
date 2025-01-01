@@ -48,17 +48,24 @@ export default function EditEntryModal({
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="bg-shadow/30 dark:bg-shadow-dark/30 fixed inset-0 transition backdrop-blur-[8px] data-[state=open]:animate-overlay-show" />
         <DialogPrimitive.Content
-          className="bg-background dark:bg-background-dark fixed transform overflow-hidden
-                 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-                 p-4 border border-highlight dark:border-zinc-700 rounded-xl shadow-xl
-                 w-11/12 max-w-sm
-                 flex flex-col gap-4 items-stretch
-                 transition data-[state=open]:animate-modal-content-show"
+          className="bg-background dark:bg-background-dark fixed overflow-y-scroll
+                    transform left-1/2 -translate-x-1/2 top-16
+                    w-11/12 max-w-sm max-h-[80svh]
+                    border border-highlight dark:border-highlight-dark rounded-xl shadow-xl
+                    transition data-[state=open]:animate-modal-content-show"
         >
-          <DialogPrimitive.Title asChild>
-            <h3 className="font-bold text-xl tracking-tight">Edit item</h3>
+          <DialogPrimitive.Title className="flex justify-between p-4 bg-background dar:bg-background-dark sticky top-0 z-10">
+            <h3 className="font-bold text-xl tracking-tight">Add items</h3>
+            <DialogPrimitive.Close asChild>
+              <Button area-label="Close" size={'small'} className="px-1 py-1">
+                <X size={16} />
+              </Button>
+            </DialogPrimitive.Close>
           </DialogPrimitive.Title>
-          <form action={editEntriesAction} className="flex flex-col gap-4">
+          <form
+            action={editEntriesAction}
+            className="flex flex-col gap-4 px-4 pb-4"
+          >
             <MealPicker mealValue={meal || 'breakfast'} />
             <div className="grid grid-cols-10 gap-1">
               <span className="col-span-7 uppercase text-xs font-semibold tracking-widest opacity-80">
@@ -162,15 +169,6 @@ export default function EditEntryModal({
               )}
             </AnimatePresence>
           </form>
-          <DialogPrimitive.Close asChild>
-            <Button
-              area-label="Close"
-              size={'small'}
-              className="absolute top-2 right-2 px-1 py-1"
-            >
-              <X size={16} />
-            </Button>
-          </DialogPrimitive.Close>
         </DialogPrimitive.Content>
       </DialogPrimitive.Portal>
     </DialogPrimitive.Root>
