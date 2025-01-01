@@ -20,7 +20,9 @@ export const LoginForm = () => {
   return (
     <form className="flex flex-col gap-4" action={loginAction}>
       <div className="flex flex-col gap-1">
-        <label htmlFor="email">Email</label>
+        <label htmlFor="email" className="font-semibold">
+          Email
+        </label>
         <ControlledInput
           type="email"
           name="email"
@@ -31,7 +33,9 @@ export const LoginForm = () => {
         />
       </div>
       <div className="flex flex-col gap-1">
-        <label htmlFor="password">Password</label>
+        <label htmlFor="password" className="font-semibold">
+          Password
+        </label>
         <ControlledInput
           name="password"
           type="password"

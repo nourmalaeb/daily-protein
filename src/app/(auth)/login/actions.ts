@@ -35,7 +35,10 @@ const createSignupFormSchema = zfd.formData({
   password: zfd.text(z.string().trim()),
 });
 
-export async function signup(formData: FormData) {
+export async function signup(
+  _prevState: { error: string; data: { email: string; password: string } },
+  formData: FormData
+) {
   const supabase = await createClient();
 
   const data = createSignupFormSchema.parse(formData);
@@ -43,7 +46,7 @@ export async function signup(formData: FormData) {
   const { error } = await supabase.auth.signUp(data);
 
   if (error) {
-    redirect('/error');
+    return { error: error.message, data };
   }
 
   revalidatePath('/');
