@@ -46,9 +46,11 @@ const input = cva(
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement>,
     VariantProps<typeof input> {}
+
 export interface UncontrolledInputProps extends InputProps {
   initialValue?: string | FormDataEntryValue | null;
   className?: string;
+  autoComplete?: string;
 }
 
 export const Input: React.FC<UncontrolledInputProps> = ({

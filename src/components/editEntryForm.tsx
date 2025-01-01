@@ -46,21 +46,23 @@ export default function EditEntryModal({
         <ProteinChip item={item} meal={meal} />
       </DialogPrimitive.Trigger>
       <DialogPrimitive.Portal>
-        <DialogPrimitive.Overlay className="bg-shadow/30 dark:bg-shadow-dark/30 fixed inset-0 transition backdrop-blur-[8px] data-[state=open]:animate-overlay-show" />
+        <DialogPrimitive.Overlay className="bg-shadow/30 dark:bg-shadow-dark/30 fixed inset-0 transition backdrop-blur-[8px] data-[state=open]:animate-overlay-show data-[state=closed]:animate-overlay-hide" />
         <DialogPrimitive.Content
           className="bg-background dark:bg-background-dark fixed overflow-y-scroll
                     transform left-1/2 -translate-x-1/2 top-16
                     w-11/12 max-w-sm max-h-[80svh]
                     border border-highlight dark:border-highlight-dark rounded-xl shadow-xl
-                    transition data-[state=open]:animate-modal-content-show"
+            transition data-[state=open]:animate-modal-content-show data-[state=closed]:animate-modal-content-hide"
         >
-          <DialogPrimitive.Title className="flex justify-between p-4 bg-background dar:bg-background-dark sticky top-0 z-10">
-            <h3 className="font-bold text-xl tracking-tight">Add items</h3>
-            <DialogPrimitive.Close asChild>
-              <Button area-label="Close" size={'small'} className="px-1 py-1">
-                <X size={16} />
-              </Button>
-            </DialogPrimitive.Close>
+          <DialogPrimitive.Title asChild>
+            <div className="flex justify-between p-4 bg-background dar:bg-background-dark sticky top-0 z-10">
+              <h2 className="font-bold text-xl tracking-tight">Add items</h2>
+              <DialogPrimitive.Close asChild>
+                <Button area-label="Close" size={'small'} className="px-1 py-1">
+                  <X size={16} />
+                </Button>
+              </DialogPrimitive.Close>
+            </div>
           </DialogPrimitive.Title>
           <form
             action={editEntriesAction}

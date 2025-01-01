@@ -2,7 +2,7 @@
 
 import { login } from '@/app/(auth)/login/actions';
 import { Button } from './button';
-import { ControlledInput } from './controlledInput';
+import { Input } from './controlledInput';
 import { useActionState, useEffect, useState } from 'react';
 
 export const LoginForm = () => {
@@ -23,26 +23,28 @@ export const LoginForm = () => {
         <label htmlFor="email" className="font-semibold">
           Email
         </label>
-        <ControlledInput
+        <Input
           type="email"
           name="email"
           id="email"
           required
           onChange={() => setClearError(true)}
           defaultValue={state.data.email}
+          autoComplete="username"
         />
       </div>
       <div className="flex flex-col gap-1">
         <label htmlFor="password" className="font-semibold">
           Password
         </label>
-        <ControlledInput
+        <Input
           name="password"
           type="password"
           id="password"
           required
           onChange={() => setClearError(true)}
           defaultValue={state.data.password}
+          autoComplete="current-password"
         />
       </div>
       <Button type="submit" disabled={isPending}>

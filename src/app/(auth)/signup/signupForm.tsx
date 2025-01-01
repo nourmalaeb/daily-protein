@@ -42,6 +42,7 @@ export const SignupForm = () => {
           id="email"
           required
           defaultValue={actionState.data.email}
+          autoComplete="username"
         />
       </div>
       <div className="flex flex-col gap-1">
@@ -56,6 +57,7 @@ export const SignupForm = () => {
           onChange={e => setPasswordValue(e.target.value)}
           required
           pattern="[A-Za-z0-9#?!@$ %^&*\-]{12,}"
+          autoComplete="new-password"
         />
         <p className="opacity-90">
           Password requirements: at least 12 characters long, using letters,
@@ -74,6 +76,7 @@ export const SignupForm = () => {
           onChange={e => setConfirmPasswordValue(e.target.value)}
           ref={confirmPasswordRef}
           required
+          autoComplete="new-password"
         />
       </div>
       {actionState.error && !clearError && (

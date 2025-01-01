@@ -5,7 +5,11 @@ import { createClient } from './lib/utils/supabase/server';
 export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/on')) {
     const supabase = await createClient();
-    const date = request.nextUrl.pathname.split('/').pop();
+    const date = request.nextUrl.pathname.split('/').pop()?.slice(0, 10);
+
+    if (!date) {
+      return;
+    }
 
     const {
       data: { user },
