@@ -49,7 +49,7 @@ export default function AddEntryModal({
           key="addItem"
           className="bg-background dark:bg-background-dark fixed overflow-y-scroll
             transform left-1/2 -translate-x-1/2 top-16
-            w-11/12 max-w-sm max-h-[80svh]
+            w-11/12 max-w-sm max-h-1/2-screen
             border border-highlight dark:border-highlight-dark rounded-xl shadow-xl
             transition data-[state=open]:animate-modal-content-show data-[state=closed]:animate-modal-content-hide"
         >

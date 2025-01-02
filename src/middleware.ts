@@ -3,41 +3,42 @@ import { updateSession } from '@/lib/utils/supabase/middleware';
 import { createClient } from './lib/utils/supabase/server';
 
 export async function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname.startsWith('/on')) {
-    const supabase = await createClient();
-    const date = request.nextUrl.pathname.split('/').pop()?.slice(0, 10);
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (
+    (user && request.nextUrl.pathname === '/') ||
+    request.nextUrl.pathname.startsWith('/on')
+  ) {
+    const date = request.nextUrl.pathname.split('/on/').pop()?.slice(0, 10);
 
     if (!date) {
       return;
     }
 
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    // update the user's daily goal for today
+    const { data: goalData } = await supabase
+      .from('daily_goals')
+      .select()
+      .eq('user_id', user?.id)
+      .eq('date', date)
+      .single();
 
-    if (user) {
-      // update the user's daily goal for today
-      const { data: goalData } = await supabase
-        .from('daily_goals')
+    if (!goalData) {
+      const { data: goalPreference } = await supabase
+        .from('user_preferences')
         .select()
         .eq('user_id', user?.id)
-        .eq('date', date)
+        .eq('preference_key', 'goal')
         .single();
 
-      if (!goalData) {
-        const { data: goalPreference } = await supabase
-          .from('user_preferences')
-          .select()
-          .eq('user_id', user?.id)
-          .eq('preference_key', 'goal')
-          .single();
-
-        await supabase.from('daily_goals').insert({
-          protein_goal_grams: goalPreference.preference_value,
-          date: date,
-          user_id: user?.id,
-        });
-      }
+      await supabase.from('daily_goals').insert({
+        protein_goal_grams: goalPreference.preference_value,
+        date: date,
+        user_id: user?.id,
+      });
     }
   }
   // update user's auth session
