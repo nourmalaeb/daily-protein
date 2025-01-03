@@ -50,6 +50,8 @@
   --animate-accordion-slide-up: accordion-slide-up 300ms
     cubic-bezier(0.87, 0, 0.13, 1);
 
+  --animate-meter-bar-show: meter-bar-show 1200ms cubic-bezier(0.16, 1, 0.3, 1);
+
   /* Overlay animation */
   @keyframes overlayShow {
     from {
@@ -122,6 +124,30 @@
       height: 0px;
       opacity: 0;
       margin-top: 0rem;
+    }
+  }
+
+  /* Meter bar glow animation */
+  @keyframes meter-bar-show {
+    from {
+      opacity: 0;
+      transform: scale3d(0.5, 0, 1);
+      filter: brightness(2) saturate(2);
+    }
+    25% {
+      opacity: 0;
+      transform: scale3d(0.5, 0, 1);
+      filter: brightness(2) saturate(2);
+    }
+    50% {
+      opacity: 1;
+      transform: scale3d(1.1, 1.5, 1);
+      filter: brightness(2) saturate(2);
+    }
+    to {
+      opacity: 1;
+      transform: scale3d(1, 1, 1);
+      filter: brightness(1) saturate(1);
     }
   }
 }

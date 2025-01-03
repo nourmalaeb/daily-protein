@@ -1,3 +1,4 @@
+import { AnimatePresence } from 'motion/react';
 import * as motion from 'motion/react-client';
 
 type Stats = {
@@ -122,15 +123,21 @@ export const Meter = ({ stats, goal, date }: MeterProps) => {
           goal={goal}
           date={date}
         />
-        {distanceFromGoal < 0 && (
-          <div className="w-6 h-2 relative -left-3">
-            <div className="absolute blur-xs grow-0 shrink-0 bg-linear-to-r from-transparent via-white to-transparent w-6 h-2" />
-            <div className="absolute blur-xs grow-0 shrink-0 bg-linear-to-r from-transparent via-white to-transparent w-6 h-2" />
-            <div className="absolute blur-xs grow-0 shrink-0 bg-linear-to-r from-transparent via-white to-transparent w-5 h-2 left-2" />
-            <div className="absolute grow-0 shrink-0 bg-linear-to-r from-transparent to-accent w-6 h-2 -left-3" />
-            <div className="absolute grow-0 shrink-0 bg-linear-to-r from-transparent via-70% via-white to-transparent w-5 h-2" />
-          </div>
-        )}
+        <AnimatePresence>
+          {distanceFromGoal < 0 && (
+            <motion.div
+              layoutId="meterBarGlow"
+              className={`w-6 h-2 relative -left-3 origin-left transition-all animate-meter-bar-show`}
+              exit={{ opacity: 0 }}
+            >
+              <div className="absolute blur-xs grow-0 shrink-0 bg-linear-to-r from-transparent via-white to-transparent w-6 h-2" />
+              <div className="absolute blur-xs grow-0 shrink-0 bg-linear-to-r from-transparent via-white to-transparent w-6 h-2" />
+              <div className="absolute blur-xs grow-0 shrink-0 bg-linear-to-r from-transparent via-white to-transparent w-5 h-2 left-2" />
+              <div className="absolute grow-0 shrink-0 bg-linear-to-r from-transparent to-accent w-6 h-2 -left-3" />
+              <div className="absolute grow-0 shrink-0 bg-linear-to-r from-transparent via-70% via-white to-transparent w-5 h-2" />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </div>
   );
