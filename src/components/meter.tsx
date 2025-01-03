@@ -127,7 +127,7 @@ export const Meter = ({ stats, goal, date }: MeterProps) => {
           {distanceFromGoal < 0 && (
             <motion.div
               layoutId="meterBarGlow"
-              className={`w-6 h-2 relative -left-3 origin-left transition-all animate-meter-bar-show`}
+              className={`w-6 h-2 relative -left-3 origin-left transition-all animate-meter-bar-show brightness-105`}
               exit={{ opacity: 0 }}
             >
               <div className="absolute blur-xs grow-0 shrink-0 bg-linear-to-r from-transparent via-white to-transparent w-6 h-2" />
