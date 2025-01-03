@@ -1,11 +1,34 @@
 import { MealItemsProps } from '@/lib/types';
 import AddEntryModal from './addEntryForm';
 import EditEntryModal from './editEntryForm';
+import * as motion from 'motion/react-client';
 
 const MealItems = ({ category, items, date }: MealItemsProps) => {
   const total = items
     ? items.reduce((acc, item) => acc + (item.protein_grams || 0), 0)
     : 0;
+
+  const listVariants = {
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+    hidden: { opacity: 0 },
+  };
+
+  const listItemVariants = {
+    visible: {
+      opacity: 1,
+      x: 0,
+      transition: {
+        duration: 0.2,
+      },
+    },
+    hidden: { opacity: 0, x: -4 },
+  };
+
   return (
     <div className="flex flex-col items-stretch gap-1 p-4 ">
       <div className="flex flex-row gap-2 items-center">
@@ -18,18 +41,24 @@ const MealItems = ({ category, items, date }: MealItemsProps) => {
           <span className="opacity-70">g</span>
         </span>
       </div>
-      <div className="flex flex-row gap-1 flex-wrap">
+      <motion.div
+        className="flex flex-row gap-1 flex-wrap"
+        transition={{ staggerChildren: 1 }}
+        initial="hidden"
+        animate="visible"
+        variants={listVariants}
+      >
         {items &&
           items.map(item => (
-            <EditEntryModal
-              item={item}
-              meal={category}
-              date={date}
-              key={item.entry_id}
-            />
+            <motion.div key={item.entry_id} variants={listItemVariants}>
+              <EditEntryModal item={item} meal={category} date={date} />
+            </motion.div>
           ))}
-        <AddEntryModal meal={category} date={date} />
-      </div>
+
+        <motion.div variants={listItemVariants}>
+          <AddEntryModal meal={category} date={date} />
+        </motion.div>
+      </motion.div>
     </div>
   );
 };

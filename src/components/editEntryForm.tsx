@@ -55,7 +55,7 @@ export default function EditEntryModal({
             transition data-[state=open]:animate-modal-content-show data-[state=closed]:animate-modal-content-hide"
         >
           <DialogPrimitive.Title asChild>
-            <div className="flex justify-between p-4 bg-background dar:bg-background-dark sticky top-0 z-10">
+            <div className="flex justify-between p-4 bg-background dark:bg-background-dark sticky top-0 z-10">
               <h2 className="font-bold text-xl tracking-tight">Add items</h2>
               <DialogPrimitive.Close asChild>
                 <Button area-label="Close" size={'small'} className="px-1 py-1">

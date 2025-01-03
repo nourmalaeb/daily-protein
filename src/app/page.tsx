@@ -19,7 +19,7 @@ export default async function Index() {
 
   return user ? (
     <MainWrapper>
-      <AppHeader user={user} />
+      <AppHeader />
       <StatsPage supabase={supabase} user={user} />
     </MainWrapper>
   ) : (

@@ -1,3 +1,5 @@
+import * as motion from 'motion/react-client';
+
 type Stats = {
   breakfast?: number;
   lunch?: number;
@@ -8,9 +10,10 @@ type Stats = {
 type MeterProps = {
   stats?: Stats;
   goal: number;
+  date?: string;
 };
 
-export const Meter = ({ stats, goal }: MeterProps) => {
+export const Meter = ({ stats, goal, date }: MeterProps) => {
   const total =
     (stats?.breakfast || 0) +
     (stats?.lunch || 0) +
@@ -55,7 +58,7 @@ export const Meter = ({ stats, goal }: MeterProps) => {
             Goal
           </p>
           <div className="lining-nums text-md font-mono inline-flex gap-0.5">
-            <span>{goal || 200}</span>
+            <span>{goal}</span>
             <span className="opacity-70">g</span>
           </div>
         </div>
@@ -70,13 +73,19 @@ export const Meter = ({ stats, goal }: MeterProps) => {
         </div>
         <DistanceRemaining />
       </div>
-      <div className="flex flex-row gap-px items-center px-2">
+      <motion.div
+        className="relative flex flex-row gap-px items-center pl-2 pr-4"
+        layout={!!date}
+        layoutId={date ? `meterContainer-${date}` : undefined}
+      >
         <MeterBar
           category="breakfast"
           amount={stats?.breakfast ? stats.breakfast * ratio : 0}
           numberOfRemainingMeals={numberOfRemainingMeals * ratio}
           total={total * ratio}
           goalMet={distanceFromGoal <= 0}
+          goal={goal}
+          date={date}
         />
         <MeterBar
           category="lunch"
@@ -84,6 +93,8 @@ export const Meter = ({ stats, goal }: MeterProps) => {
           numberOfRemainingMeals={numberOfRemainingMeals * ratio}
           total={total * ratio}
           goalMet={distanceFromGoal <= 0}
+          goal={goal}
+          date={date}
         />
         <MeterBar
           category="dinner"
@@ -91,6 +102,8 @@ export const Meter = ({ stats, goal }: MeterProps) => {
           numberOfRemainingMeals={numberOfRemainingMeals * ratio}
           total={total * ratio}
           goalMet={distanceFromGoal <= 0}
+          goal={goal}
+          date={date}
         />
         <MeterBar
           category="snacks"
@@ -98,14 +111,17 @@ export const Meter = ({ stats, goal }: MeterProps) => {
           numberOfRemainingMeals={numberOfRemainingMeals * ratio}
           total={total * ratio}
           goalMet={distanceFromGoal <= 0}
+          goal={goal}
+          date={date}
         />
-        {numberOfRemainingMeals === 0 && total < goal && (
-          <MeterBar
-            category="snacks"
-            numberOfRemainingMeals={1}
-            total={total}
-          />
-        )}
+        <MeterBar
+          category="remaining"
+          numberOfRemainingMeals={1}
+          total={total}
+          hidden={numberOfRemainingMeals > 0 || total >= goal}
+          goal={goal}
+          date={date}
+        />
         {distanceFromGoal < 0 && (
           <div className="w-6 h-2 relative -left-3">
             <div className="absolute blur-xs grow-0 shrink-0 bg-linear-to-r from-transparent via-white to-transparent w-6 h-2" />
@@ -115,65 +131,77 @@ export const Meter = ({ stats, goal }: MeterProps) => {
             <div className="absolute grow-0 shrink-0 bg-linear-to-r from-transparent via-70% via-white to-transparent w-5 h-2" />
           </div>
         )}
-      </div>
+      </motion.div>
     </div>
   );
 };
 
 type MeterBarProps = {
-  category: 'breakfast' | 'lunch' | 'dinner' | 'snacks';
+  category: 'breakfast' | 'lunch' | 'dinner' | 'snacks' | 'remaining';
   total?: number;
   numberOfRemainingMeals: number;
   amount?: number;
+  goal: number;
   goalMet?: boolean;
+  date?: string;
+  hidden?: boolean;
 };
 
 const MeterBar = ({
   amount,
   category,
   total,
+  goal,
   goalMet,
   numberOfRemainingMeals,
+  date,
+  hidden,
   ...props
 }: MeterBarProps) => {
   const categoryColors = () => ({
     breakfast: `border-breakfast dark:border-breakfast-dark ${
       amount &&
       amount > 0 &&
-      'bg-breakfast dark:bg-breakfast-dark w-[' + amount / 2 + '%]'
+      'bg-breakfast dark:bg-breakfast-dark w-[' + (amount / goal) * 100 + '%]'
     }`,
     lunch: `border-lunch dark:border-lunch-dark ${
       amount &&
       amount > 0 &&
-      'bg-lunch dark:bg-lunch-dark w-[' + amount / 2 + '%]'
+      'bg-lunch dark:bg-lunch-dark w-[' + (amount / goal) * 100 + '%]'
     }`,
     dinner: `border-dinner dark:border-dinner-dark ${
       amount &&
       amount > 0 &&
-      'bg-dinner dark:bg-dinner-dark w-[' + amount / 2 + '%]'
+      'bg-dinner dark:bg-dinner-dark w-[' + (amount / goal) * 100 + '%]'
     }`,
     snacks: `border-snacks dark:border-snacks-dark ${
       amount &&
       amount > 0 &&
-      'bg-snacks dark:bg-snacks-dark w-[' + amount / 2 + '%]'
+      'bg-snacks dark:bg-snacks-dark w-[' + (amount / goal) * 100 + '%]'
     }`,
+    remaining: `border-zinc-500${hidden ? ' w-0 opacity-0' : ' relative'}`,
   });
 
   const glowClasses = goalMet
-    ? 'shadow-accent/40 dark:shadow-white/40 shadow-glow border-white/30'
+    ? ' shadow-accent/40 dark:shadow-white/40 shadow-glow border-white/30'
     : '';
+
+  const flexBasis = hidden
+    ? 0
+    : amount
+    ? `${(amount / goal) * 100 + '%'}`
+    : `${(goal - (total || 0)) / (numberOfRemainingMeals * 2) + '%'}`;
+
   return (
-    <div
-      className={`h-2 border grow-0 shrink-0 rounded-full ${glowClasses} ${
+    <motion.div
+      layoutId={date ? `meterBar-${category}` : undefined}
+      className={`h-2 border grow-0 shrink-0 rounded-full${glowClasses} ${
         categoryColors()[category]
       }`}
       {...props}
       style={{
-        flexBasis: amount
-          ? `calc(${amount / 2 + '%'} - 1px)`
-          : `calc(${
-              (200 - (total || 0)) / (numberOfRemainingMeals * 2) + '%'
-            } - 1px)`,
+        flexBasis,
+        opacity: hidden ? 0 : 1,
       }}
     />
   );

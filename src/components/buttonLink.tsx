@@ -45,9 +45,13 @@ const buttonLink = cva(
         primary: [
           'text-white',
           'from-orange-600',
+          'dark:from-orange-600',
           'to-orange-500',
+          'dark:to-orange-500',
           'shadow-orange-400',
+          'dark:shadow-orange-400',
           'active:to-orange-600',
+          'dark:active:to-orange-600',
         ],
       },
       size: {

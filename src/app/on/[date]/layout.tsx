@@ -8,13 +8,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  entries,
 }: {
   children: React.ReactNode;
+  entries: React.ReactNode;
 }) {
   return (
     <>
-      <MainWrapper>{children}</MainWrapper>
-      <div id="modal-root" />
+      <MainWrapper>
+        {children}
+        {entries}
+      </MainWrapper>
     </>
   );
 }

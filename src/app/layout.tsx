@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { monoFont, sansFont } from '@/lib/utils/fonts';
+import { ThemeProvider } from 'next-themes';
 
 export const metadata: Metadata = {
   title: 'daily proteins',
@@ -13,12 +14,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${sansFont.variable} ${monoFont.variable} antialiased 
-        bg-background dark:bg-background-dark text-foreground dark:text-foreground-dark`}
+          bg-background dark:bg-background-dark text-foreground dark:text-foreground-dark`}
       >
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
