@@ -24,7 +24,7 @@ export default async function Page({
 
   return (
     <>
-      <AppHeader />
+      <AppHeader user={user} />
       <DayNav currentDate={date} />
     </>
   );

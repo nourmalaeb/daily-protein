@@ -7,7 +7,6 @@ import { useActionState, useState } from 'react';
 import { updatePreferences } from './actions';
 import { ControlledInput } from '@/components/controlledInput';
 import dayjs from 'dayjs';
-import { ColorModeSelector } from './colorModeSelector';
 
 export default function AccountForm({ data }: { data: UserPreferences }) {
   const [currentGoal, setCurrentGoal] = useState(data.goal);
@@ -56,13 +55,6 @@ export default function AccountForm({ data }: { data: UserPreferences }) {
             Updating this value will set your daily protein goal from today (
             {dayjs().format('dddd, MMMM D YYYY')}) onwards.
           </p>
-        </div>
-        <div className="flex flex-col gap-3 items-start">
-          <label className="font-bold" htmlFor="appearance">
-            Appearance
-          </label>
-          <ColorModeSelector />
-          <p>This setting is saved locally on each device.</p>
         </div>
         {isPending && <div>Saving...</div>}
       </form>
