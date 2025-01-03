@@ -2,7 +2,7 @@
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { deleteEntryById, editEntryById } from '@/app/on/[date]/actions';
-import { Button } from '@/components/button';
+import { Button } from '@/components/buttonLink';
 import { Input } from '@/components/controlledInput';
 import { MealPicker } from '@/components/mealPicker';
 import { Item, MealType } from '@/lib/types';
@@ -127,27 +127,27 @@ export default function EditEntryModal({
             <AnimatePresence>
               {showConfirm && (
                 <motion.div
-                  className="isolate fixed inset-0 bg-shadow/50 backdrop-blur-xs z-50"
+                  className="isolate fixed inset-0 bg-shadow/50 dark:bg-shadow-dark/50 backdrop-blur-xs z-50"
                   initial={{ opacity: 0, scale: 0.96 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.96 }}
                 >
-                  <div className="absolute top-1/2 -translate-y-1/2 inset-x-2 bg-highlight/50 dark:bg-highlight-dark/50 rounded-lg flex flex-col gap-4 items-center justify-between transition backdrop-blur-lg animate-overlayShow p-6 text-center border border-highlight shadow-xl">
+                  <div className="absolute top-1/2 -translate-y-1/2 inset-x-2 bg-background/50 dark:bg-background-dark/70 rounded-lg flex flex-col gap-4 items-center justify-between transition backdrop-blur-lg animate-overlayShow p-6 text-center border border-highlight dark:border-highlight-dark shadow-xl">
                     <div className="flex items-center gap-2 w-full text-left">
                       <TriangleAlert className="w-4" strokeWidth={2.5} />
                       <h3 className="font-semibold">
                         Permanently delete this item?
                       </h3>
                     </div>
-                    <div className="flex gap-1 w-full text-left">
+                    <p className="flex gap-1 w-full text-left">
                       <span className="px-2 py-1 bg-highlight/75 dark:bg-highlight-dark/75 rounded-md grow">
                         {item.food_name}
                       </span>
-                      <span className="px-2 py-1 bg-highlight/75 dark:bg-highlight-dark/75 rounded-md flex gap-0.5">
-                        <span className="font-mono">{item.protein_grams}</span>
+                      <span className="font-mono px-2 py-1 bg-highlight/75 dark:bg-highlight-dark/75 rounded-md flex gap-0.5">
+                        {item.protein_grams}
                         <span className="opacity-70">g</span>
                       </span>
-                    </div>
+                    </p>
                     <div className="flex gap-2 w-full">
                       <Button
                         className="w-1/2"

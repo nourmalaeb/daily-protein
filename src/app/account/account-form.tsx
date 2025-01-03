@@ -1,7 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
-// import { RadioInput } from '@/components/radioGroup';
+import { Button } from '@/components/buttonLink';
 import { UserPreferences } from '@/lib/types';
 import { useActionState, useState } from 'react';
 import { updatePreferences } from './actions';

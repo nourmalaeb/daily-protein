@@ -1,7 +1,7 @@
 'use client';
 
 import { login } from '@/app/(auth)/login/actions';
-import { Button } from './button';
+import { Button } from '@/components/buttonLink';
 import { Input } from './controlledInput';
 import { useActionState, useEffect, useState } from 'react';
 

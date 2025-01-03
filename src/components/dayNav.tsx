@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
-// import { Button } from './button';
-import { ButtonLink } from './buttonLink';
+import { ButtonLink } from '@/components/buttonLink';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 dayjs.extend(LocalizedFormat);

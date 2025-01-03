@@ -3,9 +3,8 @@
 import { Settings2, X } from 'lucide-react';
 import Link from 'next/link';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { Button } from './button';
+import { Button, ButtonLink } from '@/components/buttonLink';
 import dynamic from 'next/dynamic';
-import { ButtonLink } from './buttonLink';
 import { User } from '@supabase/supabase-js';
 
 const ColorModeSelector = dynamic(() =>

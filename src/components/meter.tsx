@@ -40,7 +40,7 @@ export const Meter = ({ stats, goal, date }: MeterProps) => {
         </div>
       </div>
     ) : (
-      <div className="px-3 py-2 rounded-lg bg-highlight/50 dark:bg-shadow-dark/20 grow w-1/3">
+      <div className="px-3 py-2 rounded-lg bg-highlight/50 dark:bg-shadow-dark/20 grow w-1/3 dark:brightness-110 saturate-150">
         <p className="uppercase text-xs font-bold tracking-widest opacity-65">
           Exceeded
         </p>
@@ -75,7 +75,11 @@ export const Meter = ({ stats, goal, date }: MeterProps) => {
         <DistanceRemaining />
       </div>
       <motion.div
-        className="relative flex flex-row gap-px items-center pl-2 pr-4"
+        className={`relative flex flex-row gap-px items-center px-3 saturate-120 ${
+          distanceFromGoal <= 0
+            ? 'brightness-120 dark:brightness-105'
+            : 'brightness-105'
+        }`}
         layout={!!date}
         layoutId={date ? `meterContainer-${date}` : undefined}
       >
@@ -126,7 +130,6 @@ export const Meter = ({ stats, goal, date }: MeterProps) => {
         <AnimatePresence>
           {distanceFromGoal < 0 && (
             <motion.div
-              layoutId="meterBarGlow"
               className={`w-6 h-2 relative -left-3 origin-left transition-all animate-meter-bar-show brightness-105`}
               exit={{ opacity: 0 }}
             >

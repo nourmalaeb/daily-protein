@@ -2,7 +2,7 @@
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { createEntries } from '@/app/on/[date]/actions';
-import { Button } from '@/components/button';
+import { Button } from '@/components/buttonLink';
 import { Input } from '@/components/controlledInput';
 import { MealPicker } from '@/components/mealPicker';
 import { Trash2, X } from 'lucide-react';

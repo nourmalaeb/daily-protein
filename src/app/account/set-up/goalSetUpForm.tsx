@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@/components/button';
+import { Button } from '@/components/buttonLink';
 import { useActionState, useState } from 'react';
 import { createGoalPreference } from '../actions';
 import { ControlledInput } from '@/components/controlledInput';

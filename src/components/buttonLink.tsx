@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority';
 import Link from 'next/link';
 
-const buttonLink = cva(
+const button = cva(
   [
     'select-none',
     'font-medium',
@@ -113,7 +113,7 @@ const buttonLink = cva(
 
 export interface ButtonLinkProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement>,
-    VariantProps<typeof buttonLink> {
+    VariantProps<typeof button> {
   href: string;
 }
 
@@ -126,8 +126,26 @@ export const ButtonLink: React.FC<ButtonLinkProps> = ({
   ...props
 }: ButtonLinkProps) => (
   <Link
-    className={buttonLink({ intent, size, className, status })}
+    className={button({ intent, size, className, status })}
     href={href}
+    {...props}
+  />
+);
+
+export interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof button> {}
+
+export const Button: React.FC<ButtonProps> = ({
+  className,
+  intent,
+  filled,
+  size,
+  ...props
+}: ButtonProps) => (
+  <button
+    type={props.type || 'button'}
+    className={button({ intent, size, filled, className })}
     {...props}
   />
 );

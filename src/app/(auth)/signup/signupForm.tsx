@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useRef, useState } from 'react';
 import { signup } from '../login/actions';
 import { ControlledInput, Input } from '@/components/controlledInput';
-import { Button } from '@/components/button';
+import { Button } from '@/components/buttonLink';
 
 export const SignupForm = () => {
   const confirmPasswordRef = useRef<HTMLInputElement>(null);
