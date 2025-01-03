@@ -39,17 +39,17 @@ const Homepage = () => {
           <div className="flex flex-row gap-2">
             <Link
               href="/signup"
-              className="px-4 py-1.5 border border-transparent text-proteins rounded
-            bg-proteins/10 transition
-            hover:border-proteins hover:text-foreground hover:bg-transparent"
+              className="px-4 py-1.5 border border-transparent text-teal-600 dark:text-teal-400 
+              rounded bg-teal-500/10 transition
+            hover:border-teal-500 hover:text-foreground dark:hover:text-foreground-dark hover:bg-transparent"
             >
               Sign up
             </Link>
             <Link
               href="/login"
-              className="px-4 py-1.5 border border-transparent text-fats rounded
-            bg-fats/10 transition
-            hover:border-fats hover:text-foreground hover:bg-transparent"
+              className="px-4 py-1.5 border border-transparent text-orange-600 dark:text-orange-400
+              rounded bg-orange-500/10 transition
+            hover:border-orange-500 hover:text-foreground dark:hover:text-foreground-dark hover:bg-transparent"
             >
               Log in
             </Link>

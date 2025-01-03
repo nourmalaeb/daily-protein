@@ -9,8 +9,9 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   if (
-    (user && request.nextUrl.pathname === '/') ||
-    request.nextUrl.pathname.startsWith('/on')
+    user &&
+    (request.nextUrl.pathname === '/' ||
+      request.nextUrl.pathname.startsWith('/on'))
   ) {
     const date = request.nextUrl.pathname.split('/on/').pop()?.slice(0, 10);
 
