@@ -17,7 +17,7 @@ export default function RootLayout({
     <>
       <MainWrapper>
         {children}
-        {entries}
+        <div className="relative">{entries}</div>
       </MainWrapper>
     </>
   );

@@ -14,6 +14,8 @@ export default function AccountForm({ data }: { data: UserPreferences }) {
     { payload: { goal: data.goal } }
   );
 
+  console.log({ currentGoal, data, check: currentGoal === data.goal });
+
   return (
     <div className="flex flex-col gap-12 px-4 pt-8">
       <form className="flex flex-col gap-12" action={updatePreferencesAction}>

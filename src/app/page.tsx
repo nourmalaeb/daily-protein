@@ -75,6 +75,7 @@ async function StatsPage({
   for (let i = 0; i < 14; i++) {
     dateRange.push(dayjs().subtract(i, 'day').format('YYYY-MM-DD'));
   }
+
   const { dailyTotals, errors } = await getDailyTotals(
     supabase,
     user,
@@ -90,13 +91,11 @@ async function StatsPage({
     );
   }
 
-  // console.log(user);
-
   const listVariants = {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.05,
+        staggerChildren: 0.1,
       },
     },
     hidden: { opacity: 0 },

@@ -34,9 +34,12 @@ export const Meter = ({ stats, goal, date }: MeterProps) => {
         <p className="uppercase text-xs font-bold tracking-widest opacity-65">
           Remaining
         </p>
-        <div className="lining-num text-md font-mono flex gap-0.5">
+        <div className="lining-num text-md font-mono flex gap-0.5 items-baseline">
           <span>{distanceFromGoal}</span>
           <span className="opacity-70">g</span>
+          <span className="ml-auto text-sm opacity-70">
+            {Math.round((100 * distanceFromGoal) / goal)}%
+          </span>
         </div>
       </div>
     ) : (
@@ -44,9 +47,12 @@ export const Meter = ({ stats, goal, date }: MeterProps) => {
         <p className="uppercase text-xs font-bold tracking-widest opacity-65">
           Exceeded
         </p>
-        <div className="lining-num font-mono text-md font-semibold flex gap-0.5 text-green-600 dark:text-green-300 drop-shadow-[0_0_3px_theme(--color-green-500/.50)]">
+        <div className="lining-num font-mono text-md font-semibold flex gap-0.5 items-baseline text-green-600 dark:text-green-300 drop-shadow-[0_0_3px_theme(--color-green-500/.50)]">
           <span>{distanceFromGoal * -1}</span>
           <span className="opacity-70">g</span>
+          <span className="ml-auto text-sm opacity-70">
+            {Math.round((-100 * distanceFromGoal) / goal)}%
+          </span>
         </div>
       </div>
     );
@@ -58,7 +64,7 @@ export const Meter = ({ stats, goal, date }: MeterProps) => {
           <p className="uppercase text-xs font-bold tracking-widest opacity-65">
             Goal
           </p>
-          <div className="lining-nums text-md font-mono inline-flex gap-0.5">
+          <div className="lining-nums text-md font-mono flex gap-0.5">
             <span>{goal}</span>
             <span className="opacity-70">g</span>
           </div>
@@ -67,9 +73,18 @@ export const Meter = ({ stats, goal, date }: MeterProps) => {
           <p className="uppercase text-xs font-bold tracking-widest opacity-65">
             Total
           </p>
-          <div className="lining-num text-md font-mono inline-flex gap-0.5">
+          <div
+            className={`lining-num text-md font-mono flex gap-0.5 items-baseline${
+              total >= goal
+                ? ' font-semibold text-green-600 dark:text-green-300 drop-shadow-[0_0_3px_theme(--color-green-500/.50)]'
+                : ' font-normal'
+            }`}
+          >
             <span>{total || 0}</span>
             <span className="opacity-70">g</span>
+            <span className="ml-auto text-sm opacity-70">
+              {Math.round((total * 100) / goal)}%
+            </span>
           </div>
         </div>
         <DistanceRemaining />

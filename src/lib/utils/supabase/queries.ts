@@ -82,6 +82,7 @@ export const getDailyTotals = async (
             date: currentDate,
             isToday: dayjs(currentDate).isSame(dayjs(), 'day'),
             meals: [],
+            goal: protein_goal_grams,
           };
         }
 

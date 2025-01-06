@@ -22,7 +22,6 @@ const button = cva(
     'shadow-highlight',
     'dark:shadow-highlight-dark',
     'drop-shadow-sm',
-    'normal-case',
     'transition-all',
     'duration-400',
     'flex',
@@ -34,6 +33,13 @@ const button = cva(
     'dark:active:to-background-dark',
     'active:translate-y-px',
     'active:drop-shadow-xs',
+    'disabled:opacity-50',
+    'disabled:cursor-not-allowed',
+    'disabled:hover:drop-shadow-sm',
+    'disabled:active:translate-y-0',
+    'disabled:active:drop-shadow-sm',
+    'disabled:active:to-highlight',
+    'dark:disabled:active:to-highlight-dark',
   ],
   {
     variants: {
@@ -52,6 +58,7 @@ const button = cva(
           'dark:shadow-orange-400',
           'active:to-orange-600',
           'dark:active:to-orange-600',
+          `dark:disabled:active:to-orange-500`,
         ],
       },
       size: {
@@ -60,7 +67,14 @@ const button = cva(
         large: ['text-lg', 'py-2', 'px-6'],
       },
       status: {
-        disabled: ['opacity-50', 'pointer-events-none', 'cursor-not-allowed'],
+        disabled: [
+          'opacity-50',
+          'pointer-events-none',
+          'cursor-not-allowed',
+          'dark:opacity-50',
+          'dark:pointer-events-none',
+          'dark:cursor-not-allowed',
+        ],
       },
       filled: {
         true: ['text-white!'],
@@ -77,6 +91,7 @@ const button = cva(
           'to-zinc-600',
           'shadow-zinc-500',
           'active:to-zinc-700',
+          'disabled:to-zinc-600',
         ],
       },
       {
@@ -89,6 +104,7 @@ const button = cva(
           'to-emerald-500',
           'shadow-emerald-500',
           'active:to-emerald-700',
+          'disabled:to-emerald-500',
         ],
       },
       {
@@ -101,6 +117,7 @@ const button = cva(
           'to-red-500',
           'shadow-red-500',
           'active:to-red-700',
+          'disabled:to-red-500',
         ],
       },
     ],
