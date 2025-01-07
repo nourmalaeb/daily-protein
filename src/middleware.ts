@@ -13,9 +13,13 @@ export async function middleware(request: NextRequest) {
     (request.nextUrl.pathname === '/' ||
       request.nextUrl.pathname.startsWith('/on'))
   ) {
-    const timezone = request.headers.get('cf-timezone') || 'UTC';
+    const timezone = request.headers.get('x-vercel-ip-timezone') || 'UTC';
 
-    console.log('TIMEZONE IS ', timezone, request.headers.get('cf-timezone'));
+    console.log(
+      'TIMEZONE IS ',
+      timezone,
+      request.headers.get('x-vercel-ip-timezone')
+    );
 
     const date = request.nextUrl.pathname.split('/on/').pop()?.slice(0, 10);
 
