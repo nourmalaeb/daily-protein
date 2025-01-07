@@ -15,11 +15,7 @@ export async function middleware(request: NextRequest) {
   ) {
     const timezone = request.headers.get('cf-timezone') || 'UTC';
 
-    console.log(
-      'TIMEZONE IS ',
-      timezone,
-      Array.from(request.headers.entries())
-    );
+    console.log('TIMEZONE IS ', timezone, request.headers.get('cf-timezone'));
 
     const date = request.nextUrl.pathname.split('/on/').pop()?.slice(0, 10);
 
