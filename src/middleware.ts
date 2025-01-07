@@ -1,6 +1,7 @@
 import { type NextRequest } from 'next/server';
 import { updateSession } from '@/lib/utils/supabase/middleware';
 import { createClient } from './lib/utils/supabase/server';
+import { today } from './lib/utils';
 
 export async function middleware(request: NextRequest) {
   const supabase = await createClient();
@@ -15,12 +16,6 @@ export async function middleware(request: NextRequest) {
   ) {
     const timezone = request.headers.get('x-vercel-ip-timezone') || 'UTC';
 
-    console.log(
-      'TIMEZONE IS ',
-      timezone,
-      request.headers.get('x-vercel-ip-timezone')
-    );
-
     const date = request.nextUrl.pathname.split('/on/').pop()?.slice(0, 10);
 
     if (!date) {
@@ -32,7 +27,7 @@ export async function middleware(request: NextRequest) {
       .from('daily_goals')
       .select()
       .eq('user_id', user?.id)
-      .eq('date', date)
+      .eq('date', today(timezone))
       .single();
 
     if (!goalData) {

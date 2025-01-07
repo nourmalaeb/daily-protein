@@ -1,4 +1,5 @@
 import { Item } from '../types';
+import { Temporal } from 'temporal-polyfill';
 
 export const itemsParser = (items: Item[]) => {
   const breakfastItems = items.filter(i => i.meal === 'breakfast');
@@ -53,7 +54,19 @@ export const distanceBetween = (
   );
 };
 
-export const today = () => {
-  const date = new Date();
-  return date.toISOString().split('T')[0];
+export const today = (timezone?: string) => {
+  let date;
+  if (timezone) {
+    date = Temporal.Now.plainDateISO(timezone).toString();
+  } else if (process.browser) {
+    const now = new window.Date();
+    const year = now.getFullYear();
+    const month = now.getMonth() + 1;
+    const day = now.getDate();
+    date = new Temporal.PlainDate(year, month, day).toString();
+  } else {
+    date = Temporal.Now.plainDateISO().toString();
+  }
+
+  return date;
 };
