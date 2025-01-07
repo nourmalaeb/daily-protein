@@ -58,7 +58,7 @@ export const today = (timezone?: string) => {
   let date;
   if (timezone) {
     date = Temporal.Now.plainDateISO(timezone).toString();
-  } else if (process.browser) {
+  } else if (typeof window !== 'undefined') {
     const now = new window.Date();
     const year = now.getFullYear();
     const month = now.getMonth() + 1;

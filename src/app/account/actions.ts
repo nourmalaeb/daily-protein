@@ -6,7 +6,6 @@ import { SupabaseClient, User } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { revalidatePath } from 'next/cache';
-import dayjs from 'dayjs';
 import { today } from '@/lib/utils';
 import { redirect } from 'next/navigation';
 
