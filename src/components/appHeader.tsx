@@ -17,12 +17,12 @@ export const AppHeader = ({ user }: { user?: User }) => {
       <Link href={'/'}>
         <h1 className="w-min leading-none text-smfont-medium">daily protein</h1>
       </Link>
-      {user && <NavDrawer />}
+      {user && <NavDialog />}
     </header>
   );
 };
 
-export const NavDrawer = () => {
+export const NavDialog = () => {
   return (
     <DialogPrimitive.Root>
       <DialogPrimitive.Trigger>
@@ -31,6 +31,7 @@ export const NavDrawer = () => {
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="bg-shadow/30 dark:bg-shadow-dark/30 fixed inset-0 transition backdrop-blur-[8px] data-[state=open]:animate-overlay-show data-[state=closed]:animate-overlay-hide" />
         <DialogPrimitive.Content
+          aria-describedby={undefined}
           key="settings"
           className="bg-background dark:bg-background-dark fixed overflow-y-scroll
             transform left-1/2 -translate-x-1/2 top-16

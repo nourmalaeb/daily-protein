@@ -46,6 +46,7 @@ export default function AddEntryModal({
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="bg-shadow/30 dark:bg-shadow-dark/30 fixed inset-0 transition backdrop-blur-[8px] data-[state=open]:animate-overlay-show data-[state=closed]:animate-overlay-hide" />
         <DialogPrimitive.Content
+          aria-describedby={undefined}
           key="addItem"
           className="bg-background dark:bg-background-dark fixed overflow-y-scroll
             transform left-1/2 -translate-x-1/2 top-16

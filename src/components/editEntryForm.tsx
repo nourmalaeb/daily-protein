@@ -48,6 +48,8 @@ export default function EditEntryModal({
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="bg-shadow/30 dark:bg-shadow-dark/30 fixed inset-0 transition backdrop-blur-[8px] data-[state=open]:animate-overlay-show data-[state=closed]:animate-overlay-hide" />
         <DialogPrimitive.Content
+          key={`edit-${item.entry_id}`}
+          aria-describedby={undefined}
           className="bg-background dark:bg-background-dark fixed overflow-y-scroll
                     transform left-1/2 -translate-x-1/2 top-16
                     w-11/12 max-w-sm max-h-1/2-screen

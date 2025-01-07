@@ -1,10 +1,8 @@
 import { type NextRequest } from 'next/server';
 import { updateSession } from '@/lib/utils/supabase/middleware';
 import { createClient } from './lib/utils/supabase/server';
-import { Temporal } from 'temporal-polyfill';
 
 export async function middleware(request: NextRequest) {
-  console.log('IT IS NOW... ', Temporal.Now.plainDateISO().toString());
   const supabase = await createClient();
   const {
     data: { user },
@@ -15,6 +13,14 @@ export async function middleware(request: NextRequest) {
     (request.nextUrl.pathname === '/' ||
       request.nextUrl.pathname.startsWith('/on'))
   ) {
+    const timezone = request.headers.get('cf-timezone') || 'UTC';
+
+    console.log(
+      'TIMEZONE IS ',
+      timezone,
+      Array.from(request.headers.entries())
+    );
+
     const date = request.nextUrl.pathname.split('/on/').pop()?.slice(0, 10);
 
     if (!date) {
