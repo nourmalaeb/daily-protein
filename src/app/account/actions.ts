@@ -126,7 +126,7 @@ export const updatePreferences = async (
       protein_goal_grams: goal,
     })
     .eq('user_id', user?.id)
-    .gte('date', dayjs().format('YYYY-MM-DD'));
+    .gte('date', today());
 
   if (todaysGoalError) {
     return {

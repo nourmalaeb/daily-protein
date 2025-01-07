@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import MealItems from '@/components/mealItems';
 import { Meter } from '@/components/meter';
-import { itemsParser } from '@/lib/utils';
+import { itemsParser, today } from '@/lib/utils';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { redirect } from 'next/navigation';
@@ -30,7 +30,7 @@ export default async function Page({
   }
 
   if (!date || !dayjs(date, 'YYYY-MM-DD', true).isValid()) {
-    redirect(`/on/${dayjs().format('YYYY-MM-DD')}`);
+    redirect(`/on/${today()}`);
   }
 
   const { data } = await supabase

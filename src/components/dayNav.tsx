@@ -20,14 +20,16 @@ const DayNav = ({ currentDate }: { currentDate: string }) => {
         <ChevronLeft size={20} />
       </ButtonLink>
       <ButtonLink
-        href={`/on/${dayjs(today()).format('YYYY-MM-DD')}`}
+        href={`/on/${today()}`}
         className="grow font-mono"
         // status={navigation.state === 'loading' ? 'disabled' : undefined}
       >
         {dayjs(currentDate).format('ll')}
       </ButtonLink>
       <ButtonLink
-        status={dayjs(nextDate).isAfter(dayjs()) ? 'disabled' : undefined}
+        status={
+          dayjs(nextDate).isAfter(dayjs(today())) ? 'disabled' : undefined
+        }
         href={`/on/${nextDate}`}
         className="px-1.5!"
       >
