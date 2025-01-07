@@ -24,6 +24,7 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-use": "^17.6.0",
+    "temporal-polyfill": "^0.2.5",
     "zod": "^3.24.1",
     "zod-form-data": "^2.0.5"
   },

@@ -3,7 +3,7 @@ import { MainWrapper } from '@/components/mainWrapper';
 import { AppHeader } from '@/components/appHeader';
 
 export const metadata: Metadata = {
-  title: 'daily proteins',
+  title: 'daily protein',
   description: 'eat your gains',
 };
 

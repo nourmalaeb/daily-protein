@@ -1,8 +1,10 @@
 import { type NextRequest } from 'next/server';
 import { updateSession } from '@/lib/utils/supabase/middleware';
 import { createClient } from './lib/utils/supabase/server';
+import { Temporal } from 'temporal-polyfill';
 
 export async function middleware(request: NextRequest) {
+  console.log('IT IS NOW... ', Temporal.Now.plainDateISO().toString());
   const supabase = await createClient();
   const {
     data: { user },

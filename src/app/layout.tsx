@@ -4,7 +4,7 @@ import { monoFont, sansFont } from '@/lib/utils/fonts';
 import { ThemeProvider } from 'next-themes';
 
 export const metadata: Metadata = {
-  title: 'daily proteins',
+  title: 'daily protein',
   description: 'eat your gains',
 };
 

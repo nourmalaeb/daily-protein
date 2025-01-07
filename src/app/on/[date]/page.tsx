@@ -2,12 +2,21 @@ import DayNav from '@/components/dayNav';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/utils/supabase/server';
 import { AppHeader } from '@/components/appHeader';
+import { Metadata } from 'next';
 
-export default async function Page({
-  params,
-}: {
+type Params = {
   params: Promise<{ date: string }>;
-}) {
+};
+
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+  // read route params
+  const date = (await params).date;
+  return {
+    title: `proteins on ${date}`,
+  };
+}
+
+export default async function Page({ params }: Params) {
   // const data = useLoaderData<typeof loader>();
   // const navigation = useNavigation();
   const date = (await params).date;
