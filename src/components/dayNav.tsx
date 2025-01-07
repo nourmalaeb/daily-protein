@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { ButtonLink } from '@/components/buttonLink';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
+import { today } from '@/lib/utils';
 dayjs.extend(LocalizedFormat);
 
 const DayNav = ({ currentDate }: { currentDate: string }) => {
@@ -19,7 +20,7 @@ const DayNav = ({ currentDate }: { currentDate: string }) => {
         <ChevronLeft size={20} />
       </ButtonLink>
       <ButtonLink
-        href={`/on/${dayjs().format('YYYY-MM-DD')}`}
+        href={`/on/${dayjs(today()).format('YYYY-MM-DD')}`}
         className="grow font-mono"
         // status={navigation.state === 'loading' ? 'disabled' : undefined}
       >

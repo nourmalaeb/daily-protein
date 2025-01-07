@@ -10,6 +10,7 @@ import { Meter } from '@/components/meter';
 import { ArrowRight } from 'lucide-react';
 import { AnimatedBorderDiv } from '@/components/specialContainers';
 import * as motion from 'motion/react-client';
+import { today } from '@/lib/utils';
 
 export default async function Index() {
   const supabase = await createClient();
@@ -73,7 +74,7 @@ async function StatsPage({
 }) {
   const dateRange = [];
   for (let i = 0; i < 14; i++) {
-    dateRange.push(dayjs().subtract(i, 'day').format('YYYY-MM-DD'));
+    dateRange.push(dayjs(today()).subtract(i, 'day').format('YYYY-MM-DD'));
   }
 
   const { dailyTotals, errors } = await getDailyTotals(

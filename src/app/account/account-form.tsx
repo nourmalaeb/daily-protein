@@ -6,6 +6,7 @@ import { useActionState, useState } from 'react';
 import { updatePreferences } from './actions';
 import { ControlledInput } from '@/components/controlledInput';
 import dayjs from 'dayjs';
+import { today } from '@/lib/utils';
 
 export default function AccountForm({ data }: { data: UserPreferences }) {
   const [currentGoal, setCurrentGoal] = useState(data.goal);
@@ -54,7 +55,7 @@ export default function AccountForm({ data }: { data: UserPreferences }) {
           </div>
           <p>
             Updating this value will set your daily protein goal from today (
-            {dayjs().format('dddd, MMMM D YYYY')}) onwards.
+            {dayjs(today()).format('dddd, MMMM D YYYY')}) onwards.
           </p>
         </div>
         {isPending && <div>Saving...</div>}
