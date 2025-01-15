@@ -15,14 +15,14 @@ const DayNav = ({ currentDate }: { currentDate: string }) => {
       <ButtonLink
         href={`/on/${prevDate}`}
         className={`px-1.5!`}
-        // status={navigation.state === 'loading' ? 'disabled' : undefined}
+        // prefetch
       >
         <ChevronLeft size={20} />
       </ButtonLink>
       <ButtonLink
         href={`/on/${today()}`}
         className="grow font-mono"
-        // status={navigation.state === 'loading' ? 'disabled' : undefined}
+        // prefetch
       >
         {dayjs(currentDate).format('ll')}
       </ButtonLink>
@@ -32,6 +32,7 @@ const DayNav = ({ currentDate }: { currentDate: string }) => {
         }
         href={`/on/${nextDate}`}
         className="px-1.5!"
+        // prefetch
       >
         <ChevronRight size={20} />
       </ButtonLink>

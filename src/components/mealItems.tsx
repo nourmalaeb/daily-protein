@@ -30,7 +30,7 @@ const MealItems = ({ category, items, date }: MealItemsProps) => {
   };
 
   return (
-    <div className="flex flex-col items-stretch gap-1 p-4 ">
+    <div className="flex flex-col items-stretch gap-1 p-4">
       <div className="flex flex-row gap-2 items-center">
         <h3 className="uppercase text-xs font-semibold tracking-widest">
           {category}

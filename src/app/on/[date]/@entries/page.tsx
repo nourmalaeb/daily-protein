@@ -7,6 +7,9 @@ import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/utils/supabase/server';
 import { AnimatedBorderDiv } from '@/components/specialContainers';
+import { Suspense } from 'react';
+import { Temporal } from 'temporal-polyfill';
+import { getEntries } from '@/lib/utils/supabase/queries';
 dayjs.extend(customParseFormat);
 dayjs.extend(LocalizedFormat);
 
@@ -29,29 +32,18 @@ export default async function Page({
     redirect('/login');
   }
 
-  if (!date || !dayjs(date, 'YYYY-MM-DD', true).isValid()) {
+  if (
+    !date ||
+    !dayjs(date, 'YYYY-MM-DD', true).isValid() ||
+    Temporal.Duration.compare(
+      Temporal.PlainDate.from(date).until(Temporal.Now.plainDateISO()),
+      new Temporal.Duration()
+    ) < 0
+  ) {
     redirect(`/on/${today()}`);
   }
 
-  const { data } = await supabase
-    .from('protein_entries')
-    .select()
-    .eq('date', date)
-    .eq('user_id', user?.id);
-
-  const { data: goalData } = await supabase
-    .from('daily_goals')
-    .select()
-    .eq('user_id', user?.id)
-    .eq('date', date)
-    .single();
-
-  const { data: dayData } = await supabase
-    .from('daily_totals')
-    .select()
-    .eq('user_id', user?.id)
-    .eq('date', date)
-    .single();
+  const { data, dayData, goalData } = await getEntries(supabase, user, date);
 
   const parsedItems = data ? itemsParser(data) : undefined;
 
@@ -72,26 +64,28 @@ export default async function Page({
           date={date}
         />
       </AnimatedBorderDiv>
-      <MealItems
-        items={parsedItems?.breakfastItems}
-        category={'breakfast'}
-        date={date}
-      />
-      <MealItems
-        items={parsedItems?.lunchItems}
-        category={'lunch'}
-        date={date}
-      />
-      <MealItems
-        items={parsedItems?.dinnerItems}
-        category={'dinner'}
-        date={date}
-      />
-      <MealItems
-        items={parsedItems?.snacksItems}
-        category={'snacks'}
-        date={date}
-      />
+      <Suspense fallback={<p>Hello</p>}>
+        <MealItems
+          items={parsedItems?.breakfastItems}
+          category={'breakfast'}
+          date={date}
+        />
+        <MealItems
+          items={parsedItems?.lunchItems}
+          category={'lunch'}
+          date={date}
+        />
+        <MealItems
+          items={parsedItems?.dinnerItems}
+          category={'dinner'}
+          date={date}
+        />
+        <MealItems
+          items={parsedItems?.snacksItems}
+          category={'snacks'}
+          date={date}
+        />
+      </Suspense>
     </div>
   );
 }
