@@ -1,6 +1,5 @@
 import { GroupedDailyTotal } from '@/lib/types';
 import { SupabaseClient, User } from '@supabase/supabase-js';
-import dayjs from 'dayjs';
 import { cache } from 'react';
 import { Temporal } from 'temporal-polyfill';
 
