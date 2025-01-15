@@ -148,11 +148,11 @@ export const Meter = ({ stats, goal, date }: MeterProps) => {
               className={`w-6 h-2 relative -left-3 origin-left transition-all animate-meter-bar-show brightness-105`}
               exit={{ opacity: 0 }}
             >
-              <div className="absolute blur-xs grow-0 shrink-0 bg-linear-to-r from-transparent via-white to-transparent w-6 h-2" />
-              <div className="absolute blur-xs grow-0 shrink-0 bg-linear-to-r from-transparent via-white to-transparent w-6 h-2" />
-              <div className="absolute blur-xs grow-0 shrink-0 bg-linear-to-r from-transparent via-white to-transparent w-5 h-2 left-2" />
-              <div className="absolute grow-0 shrink-0 bg-linear-to-r from-transparent to-accent w-6 h-2 -left-3" />
-              <div className="absolute grow-0 shrink-0 bg-linear-to-r from-transparent via-70% via-white to-transparent w-5 h-2" />
+              <div className="absolute blur-xs grow-0 shrink-0 bg-linear-to-r from-transparent via-white to-transparent w-6 h-2 rounded-r-full" />
+              <div className="absolute blur-xs grow-0 shrink-0 bg-linear-to-r from-transparent via-white to-transparent w-6 h-2 rounded-r-full" />
+              <div className="absolute blur-xs grow-0 shrink-0 bg-linear-to-r from-transparent via-white to-transparent w-5 h-2 left-2 rounded-r-full" />
+              <div className="absolute grow-0 shrink-0 bg-linear-to-r from-transparent to-accent w-6 h-2 -left-3 rounded-r-full" />
+              <div className="absolute grow-0 shrink-0 bg-linear-to-r from-transparent via-70% via-white to-transparent w-5 h-2 rounded-r-full" />
             </motion.div>
           )}
         </AnimatePresence>

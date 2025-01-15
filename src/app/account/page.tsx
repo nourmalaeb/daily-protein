@@ -1,5 +1,5 @@
 import { MainWrapper } from '@/components/mainWrapper';
-import AccountForm from './account-form';
+import AccountForm from '@/components/account-form';
 import { createClient } from '@/lib/utils/supabase/server';
 import { AppHeader } from '@/components/appHeader';
 import { getPreferences } from './actions';
@@ -26,7 +26,7 @@ export default async function Account() {
     <MainWrapper>
       <AppHeader />
       <h1 className="font-bold text-2xl tracking-tight p-4">Preferences</h1>
-      <AccountForm data={data} />
+      <AccountForm preferences={data} />
     </MainWrapper>
   );
 }

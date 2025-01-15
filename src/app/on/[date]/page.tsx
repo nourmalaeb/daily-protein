@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/utils/supabase/server';
 import { AppHeader } from '@/components/appHeader';
 import { Metadata } from 'next';
+import { getPreferences } from '@/app/account/actions';
 
 type Params = {
   params: Promise<{ date: string }>;
@@ -31,9 +32,11 @@ export default async function Page({ params }: Params) {
     redirect('/login');
   }
 
+  const { data: preferences } = await getPreferences(supabase, user);
+
   return (
     <>
-      <AppHeader user={user} />
+      <AppHeader user={user} preferences={preferences} />
       <DayNav currentDate={date} />
     </>
   );

@@ -11,6 +11,7 @@ import { ArrowRight } from 'lucide-react';
 import { AnimatedBorderDiv } from '@/components/specialContainers';
 import * as motion from 'motion/react-client';
 import { today } from '@/lib/utils';
+import { getPreferences } from './account/actions';
 
 export default async function Index() {
   const supabase = await createClient();
@@ -19,9 +20,11 @@ export default async function Index() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  const { data: preferences } = await getPreferences(supabase, user);
+
   return user ? (
     <MainWrapper>
-      <AppHeader user={user} />
+      <AppHeader user={user} preferences={preferences} />
       <StatsPage supabase={supabase} user={user} />
     </MainWrapper>
   ) : (
