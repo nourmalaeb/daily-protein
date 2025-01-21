@@ -21,10 +21,10 @@ const DayNav = ({ currentDate }: { currentDate: string }) => {
       </ButtonLink>
       <ButtonLink
         href={`/on/${today()}`}
-        className="grow font-mono"
+        className="grow font-mono text-xs tracking-widest font-semibold uppercase"
         // prefetch
       >
-        {dayjs(currentDate).format('ll')}
+        {dayjs(currentDate).format('ddd, MMM D, YYYY')}
       </ButtonLink>
       <ButtonLink
         status={

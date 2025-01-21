@@ -8,7 +8,6 @@ const proteinChip = cva(
     'font-medium',
     'rounded-md',
     'border',
-    'bg-transparent',
     'normal-case',
     'transition-all',
     'text-sm',

@@ -33,6 +33,7 @@ const button = cva(
     'dark:active:to-background-dark',
     'active:translate-y-px',
     'active:drop-shadow-xs',
+    'active:duration-50',
     'disabled:opacity-50',
     'disabled:cursor-not-allowed',
     'disabled:hover:drop-shadow-sm',
