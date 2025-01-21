@@ -32,14 +32,23 @@ export default function AddEntryModal({
     }
   );
 
+  const resetAndClose = () => {
+    setItems([{ index: 0, name: '', protes: undefined }]);
+    setOpen(false);
+  };
+
   useEffect(() => {
     if (state.success) {
-      setOpen(false);
+      resetAndClose();
     }
   }, [state]);
 
   return (
-    <DialogPrimitive.Root modal open={open} onOpenChange={setOpen}>
+    <DialogPrimitive.Root
+      modal
+      open={open}
+      onOpenChange={e => (e ? setOpen(e) : resetAndClose())}
+    >
       <DialogPrimitive.Trigger>
         <AddButton meal={meal} />
       </DialogPrimitive.Trigger>
@@ -84,7 +93,7 @@ export default function AddEntryModal({
                     name={`item`}
                     className="col-span-7"
                     required
-                    autoFocus={index === 0}
+                    autoFocus={index === items[items.length - 1].index}
                   />
                   <Input
                     type="number"
@@ -123,7 +132,7 @@ export default function AddEntryModal({
             <div className="flex gap-2">
               <Button
                 intent={'destructive'}
-                onClick={() => setOpen(false)}
+                onClick={resetAndClose}
                 className="grow w-1/2"
               >
                 Cancel
