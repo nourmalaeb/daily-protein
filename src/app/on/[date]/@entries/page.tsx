@@ -9,7 +9,6 @@ import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { redirect, useParams } from 'next/navigation';
 import { AnimatedBorderDiv } from '@/components/specialContainers';
 import { Suspense, useEffect } from 'react';
-import { observer } from '@legendapp/state/react';
 import { useProteinStore } from '@/providers/protein-provider';
 dayjs.extend(customParseFormat);
 dayjs.extend(LocalizedFormat);
@@ -65,4 +64,4 @@ function Page() {
   );
 }
 
-export default observer(Page);
+export default Page;

@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      '@legendapp/state':
-        specifier: 3.0.0-beta.24
-        version: 3.0.0-beta.24(react@19.0.0)
       '@radix-ui/react-accordion':
         specifier: ^1.2.2
         version: 1.2.2(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -292,14 +289,6 @@ packages:
 
   '@jridgewell/sourcemap-codec@1.5.0':
     resolution: {integrity: sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ==}
-
-  '@legendapp/state@3.0.0-beta.24':
-    resolution: {integrity: sha512-WO08YCuC3DAQ85Kz5nYy+FrtK4f+mTMmNWMpzLq6uHpHFTHOLzvmrst50iapdX2aQScQRa2vQeTReWZVc4p2LQ==}
-    peerDependencies:
-      expo-sqlite: ^15.0.0
-    peerDependenciesMeta:
-      expo-sqlite:
-        optional: true
 
   '@next/env@15.1.6':
     resolution: {integrity: sha512-d9AFQVPEYNr+aqokIiPLNK/MTyt3DWa/dpKveiAaVccUadFbhFEvY6FXYX2LJO2Hv7PHnLBu2oWwB4uBuHjr/w==}
@@ -2411,12 +2400,6 @@ snapshots:
 
   '@jridgewell/sourcemap-codec@1.5.0': {}
 
-  '@legendapp/state@3.0.0-beta.24(react@19.0.0)':
-    dependencies:
-      use-sync-external-store: 1.4.0(react@19.0.0)
-    transitivePeerDependencies:
-      - react
-
   '@next/env@15.1.6': {}
 
   '@next/eslint-plugin-next@15.1.6':
@@ -4526,6 +4509,7 @@ snapshots:
   use-sync-external-store@1.4.0(react@19.0.0):
     dependencies:
       react: 19.0.0
+    optional: true
 
   webidl-conversions@3.0.1: {}
 
