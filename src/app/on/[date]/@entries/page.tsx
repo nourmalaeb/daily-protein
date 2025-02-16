@@ -1,91 +1,68 @@
+'use client';
+
 import dayjs from 'dayjs';
 import MealItems from '@/components/mealItems';
 import { Meter } from '@/components/meter';
-import { itemsParser, today } from '@/lib/utils';
+import { daysFromEntries, today } from '@/lib/utils';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
-import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/utils/supabase/server';
+import { redirect, useParams } from 'next/navigation';
 import { AnimatedBorderDiv } from '@/components/specialContainers';
-import { Suspense } from 'react';
-import { Temporal } from 'temporal-polyfill';
-import { getEntries } from '@/lib/utils/supabase/queries';
+import { Suspense, useEffect } from 'react';
+import { observer } from '@legendapp/state/react';
+import { useProteinStore } from '@/providers/protein-provider';
 dayjs.extend(customParseFormat);
 dayjs.extend(LocalizedFormat);
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ date: string }>;
-}) {
+function Page() {
   // const data = useLoaderData<typeof loader>();
   // const navigation = useNavigation();
-  const date = (await params).date;
+  const params = useParams<{ date: string }>();
 
-  const supabase = await createClient();
+  const { date } = params;
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect('/login');
+  if (!date || !dayjs(date, 'YYYY-MM-DD', true).isValid()) {
+    redirect(`/${today()}`);
   }
 
-  if (
-    !date ||
-    !dayjs(date, 'YYYY-MM-DD', true).isValid() ||
-    Temporal.Duration.compare(
-      Temporal.PlainDate.from(date).until(Temporal.Now.plainDateISO()),
-      new Temporal.Duration()
-    ) < 0
-  ) {
-    redirect(`/on/${today()}`);
-  }
+  const { entries, goals, fetchEntries } = useProteinStore(state => state);
 
-  const { data, dayData, goalData } = await getEntries(supabase, user, date);
+  useEffect(() => {
+    fetchEntries();
+  }, [fetchEntries]);
 
-  const parsedItems = data ? itemsParser(data) : undefined;
+  const dayData = daysFromEntries(entries, goals).find(d => d.date === date);
 
   return (
     <div>
       <AnimatedBorderDiv
-        animate={
-          dayData
-            ? dayData.total_protein_grams >= goalData.protein_goal_grams
-            : false
-        }
+        animate={dayData ? dayData.dailyTotal >= dayData?.goal : false}
         borderClasses="border-zinc-500/30 hover:border-zinc-500/80"
         className="rounded-xl border mx-2"
       >
         <Meter
-          goal={goalData?.protein_goal_grams}
-          stats={parsedItems?.stats}
+          goal={dayData?.goal || 0}
+          stats={{
+            breakfast: dayData?.meals[0].total_protein_grams,
+            lunch: dayData?.meals[1].total_protein_grams,
+            dinner: dayData?.meals[2].total_protein_grams,
+            snacks: dayData?.meals[3].total_protein_grams,
+          }}
           date={date}
         />
       </AnimatedBorderDiv>
-      <Suspense fallback={<p>Hello</p>}>
-        <MealItems
-          items={parsedItems?.breakfastItems}
-          category={'breakfast'}
-          date={date}
-        />
-        <MealItems
-          items={parsedItems?.lunchItems}
-          category={'lunch'}
-          date={date}
-        />
-        <MealItems
-          items={parsedItems?.dinnerItems}
-          category={'dinner'}
-          date={date}
-        />
-        <MealItems
-          items={parsedItems?.snacksItems}
-          category={'snacks'}
-          date={date}
-        />
+      <Suspense>
+        {dayData?.meals.map(meal => (
+          <MealItems
+            key={`${date}-${meal.meal}`}
+            items={meal.items}
+            category={meal.meal}
+            date={date}
+          />
+        ))}
       </Suspense>
     </div>
   );
 }
+
+export default observer(Page);

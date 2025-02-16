@@ -1,3 +1,6 @@
+import { SupabaseClient } from '@supabase/supabase-js';
+import { Database } from '../../../database.types';
+
 export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snacks';
 
 export interface ItemType {
@@ -16,7 +19,7 @@ export type Item = {
 
 export type MealItemsProps = {
   items?: Item[];
-  category: 'breakfast' | 'lunch' | 'dinner' | 'snacks';
+  category: string;
   date: string;
 };
 
@@ -60,3 +63,6 @@ export interface UserPreferences {
   appearance?: { appearance: string };
   goal?: number;
 }
+
+// Typed Supabase Client for legend state
+export type TypedSupabaseClient = SupabaseClient<Database>;

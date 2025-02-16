@@ -3,6 +3,8 @@ import './globals.css';
 import { monoFont, sansFont } from '@/lib/utils/fonts';
 import { ThemeProvider } from 'next-themes';
 
+import { ProteinStoreProvider } from '@/providers/protein-provider';
+
 export const metadata: Metadata = {
   title: 'daily protein',
   description: 'eat your gains',
@@ -26,7 +28,7 @@ export default function RootLayout({
           disableTransitionOnChange
           scriptProps={{ 'data-cfasync': 'false' }}
         >
-          {children}
+          <ProteinStoreProvider>{children}</ProteinStoreProvider>
         </ThemeProvider>
       </body>
     </html>

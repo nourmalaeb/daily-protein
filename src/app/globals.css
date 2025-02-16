@@ -19,12 +19,13 @@
   --color-background: rgb(237, 237, 237);
   --color-highlight: rgb(255, 255, 255);
   --color-shadow: rgb(200, 200, 200);
-  --color-breakfast: color(display-p3 0 0.545098 0.545098);
-  --color-lunch: color(display-p3 0.752941 0.498039 0);
-  --color-dinner: color(display-p3 0.886275 0.372549 0);
+  --color-breakfast: color(display-p3 0 0.5 0.5);
+  --color-lunch: color(display-p3 0.7 0.4 0);
+  --color-dinner: color(display-p3 0.78 0.222 0);
   --color-snacks: color(display-p3 0.462745 0.05098 0.87451);
   --color-proteins: color(display-p3 0 0.6 0.6);
   --color-accent: color(display-p3 1 0.6 0.5);
+  /* DARK MODE COLORS */
   --color-foreground-dark: rgb(237, 237, 237);
   --color-background-dark: rgb(33, 33, 33);
   --color-highlight-dark: rgb(56, 56, 56);

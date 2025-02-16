@@ -1,4 +1,4 @@
-import { MealItemsProps } from '@/lib/types';
+import { MealItemsProps, MealType } from '@/lib/types';
 import AddEntryModal from './addEntryForm';
 import EditEntryModal from './editEntryForm';
 import * as motion from 'motion/react-client';
@@ -51,12 +51,16 @@ const MealItems = ({ category, items, date }: MealItemsProps) => {
         {items &&
           items.map(item => (
             <motion.div key={item.entry_id} variants={listItemVariants}>
-              <EditEntryModal item={item} meal={category} date={date} />
+              <EditEntryModal
+                item={item}
+                meal={category as MealType}
+                date={date}
+              />
             </motion.div>
           ))}
 
         <motion.div variants={listItemVariants}>
-          <AddEntryModal meal={category} date={date} />
+          <AddEntryModal meal={category as MealType} date={date} />
         </motion.div>
       </motion.div>
     </div>

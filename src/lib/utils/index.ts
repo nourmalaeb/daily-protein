@@ -1,4 +1,5 @@
-import { Item } from '../types';
+import { DailyGoalType, DayDataType, EntryType } from '@/stores/protein-store';
+import { Item, MealType } from '../types';
 import { Temporal } from 'temporal-polyfill';
 
 export const itemsParser = (items: Item[]) => {
@@ -69,4 +70,47 @@ export const today = (timezone?: string) => {
   }
 
   return date;
+};
+
+const mealFromItems = (items: EntryType[]) => ({
+  meal: items[0]?.meal,
+  total_protein_grams: items.reduce((a, cv) => a + cv.protein_grams, 0),
+  items,
+});
+
+export const daysFromEntries = (
+  entries: EntryType[],
+  goals: DailyGoalType[]
+): DayDataType[] => {
+  const dates = entries.map(e => e.date);
+  const uniqueDates = [...new Set(dates)];
+  const days = uniqueDates.map(date => {
+    const dateObj = Temporal.PlainDate.from(date);
+    const dayEntries = entries.filter(e => e.date === date);
+    const total_protein_grams = dayEntries.reduce(
+      (a, cv) => a + cv.protein_grams,
+      0
+    );
+    const breakfastItems = dayEntries.filter(i => i.meal === 'breakfast');
+    const lunchItems = dayEntries.filter(i => i.meal === 'lunch');
+    const dinnerItems = dayEntries.filter(i => i.meal === 'dinner');
+    const snacksItems = dayEntries.filter(i => i.meal === 'snacks');
+
+    const meals = [
+      { ...mealFromItems(breakfastItems), meal: 'breakfast' as MealType },
+      { ...mealFromItems(lunchItems), meal: 'lunch' as MealType },
+      { ...mealFromItems(dinnerItems), meal: 'dinner' as MealType },
+      { ...mealFromItems(snacksItems), meal: 'snacks' as MealType },
+    ];
+    return {
+      date: dateObj.toString(),
+      isToday: Temporal.Now.plainDateISO().equals(dateObj),
+      dailyTotal: total_protein_grams,
+      goal: goals.find(g => g.date === date)?.protein_goal_grams || 200,
+      goalMet: total_protein_grams >= 200,
+      meals,
+    };
+  });
+
+  return days.sort((a, b) => b.date.localeCompare(a.date));
 };

@@ -154,3 +154,27 @@ export const getEntries = cache(
     return { data, goalData, dayData };
   }
 );
+
+export const preloadAllEntries = (supabase: SupabaseClient, user: User) => {
+  void getAllEntries(supabase, user);
+};
+
+export const getAllEntries = cache(
+  async (supabase: SupabaseClient, user: User) => {
+    const { data } = await supabase
+      .from('protein_entries')
+      .select()
+      .eq('user_id', user?.id);
+    return { data };
+  }
+);
+
+export const getDailyGoals = cache(
+  async (supabase: SupabaseClient, user: User) => {
+    const { data } = await supabase
+      .from('daily_goals')
+      .select()
+      .eq('user_id', user?.id);
+    return { data };
+  }
+);
