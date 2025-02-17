@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { useActionState, useEffect, useState } from 'react';
 import { ProteinChip } from './proteinChip';
 import { useProteinStore } from '@/providers/protein-provider';
+import useSound from 'use-sound';
 
 export default function EditEntryModal({
   meal,
@@ -75,9 +76,15 @@ export default function EditEntryModal({
     }
   };
 
+  const [boopSound] = useSound('/sounds/boop.wav', {
+    volume: 0.5,
+    playbackRate: 1.25,
+  });
+  const [cancelSound] = useSound('/sounds/cancel.wav', { volume: 0.5 });
+
   return (
     <DialogPrimitive.Root modal open={open} onOpenChange={setOpen}>
-      <DialogPrimitive.Trigger>
+      <DialogPrimitive.Trigger onMouseDown={() => boopSound()}>
         <ProteinChip item={item} meal={meal} />
       </DialogPrimitive.Trigger>
       <DialogPrimitive.Portal>
@@ -95,7 +102,12 @@ export default function EditEntryModal({
             <div className="flex justify-between p-4 bg-background dark:bg-background-dark sticky top-0 z-10">
               <h2 className="font-bold text-xl tracking-tight">Add items</h2>
               <DialogPrimitive.Close asChild>
-                <Button area-label="Close" size={'small'} className="px-1 py-1">
+                <Button
+                  area-label="Close"
+                  size={'small'}
+                  className="px-1 py-1"
+                  onMouseDown={() => cancelSound()}
+                >
                   <X size={16} />
                 </Button>
               </DialogPrimitive.Close>
@@ -149,6 +161,7 @@ export default function EditEntryModal({
                 intent={'destructive'}
                 onClick={() => setOpen(false)}
                 className="grow w-1/2"
+                onMouseDown={() => cancelSound()}
               >
                 Cancel
               </Button>

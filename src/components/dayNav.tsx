@@ -1,28 +1,37 @@
+'use client';
+
 import dayjs from 'dayjs';
 import { ButtonLink } from '@/components/buttonLink';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { today } from '@/lib/utils';
+import useSound from 'use-sound';
 dayjs.extend(LocalizedFormat);
 
 const DayNav = ({ currentDate }: { currentDate: string }) => {
   const nextDate = dayjs(currentDate).add(1, 'd').format('YYYY-MM-DD');
   const prevDate = dayjs(currentDate).subtract(1, 'd').format('YYYY-MM-DD');
   // console.log({ currentDate, nextDate, prevDate });
+  const [buttonClickSound] = useSound('/sounds/lightClick.wav', {
+    volume: 0.5,
+  });
+  const [todayClickSound] = useSound('/sounds/brightClick.wav', {
+    volume: 0.5,
+  });
 
   return (
     <div className="flex flex-row gap-1 w-full p-4">
       <ButtonLink
         href={`/on/${prevDate}`}
         className={`px-1.5!`}
-        // prefetch
+        onMouseDown={() => buttonClickSound()}
       >
         <ChevronLeft size={20} />
       </ButtonLink>
       <ButtonLink
         href={`/on/${today()}`}
         className="grow font-mono text-xs tracking-widest font-semibold uppercase"
-        // prefetch
+        onMouseDown={() => todayClickSound()}
       >
         {dayjs(currentDate).format('ddd, MMM D, YYYY')}
       </ButtonLink>
@@ -32,7 +41,7 @@ const DayNav = ({ currentDate }: { currentDate: string }) => {
         }
         href={`/on/${nextDate}`}
         className="px-1.5!"
-        // prefetch
+        onMouseDown={() => buttonClickSound()}
       >
         <ChevronRight size={20} />
       </ButtonLink>

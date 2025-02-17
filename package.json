@@ -27,6 +27,7 @@
     "react-dom": "^19.0.0",
     "react-use": "^17.6.0",
     "temporal-polyfill": "^0.2.5",
+    "use-sound": "^4.0.3",
     "zod": "^3.24.1",
     "zod-form-data": "^2.0.5",
     "zustand": "^5.0.3"
@@ -42,6 +43,5 @@
     "postcss": "^8.5.1",
     "tailwindcss": "4.0.2",
     "typescript": "^5.7.3"
-  },
-  "packageManager": "pnpm@9.15.4"
+  }
 }

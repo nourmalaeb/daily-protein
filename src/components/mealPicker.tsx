@@ -1,4 +1,7 @@
+'use client';
+
 import * as RadioGroup from '@radix-ui/react-radio-group';
+import useSound from 'use-sound';
 
 const radioItemClasses = `relative bg-background dark:bg-background-dark border border-shadow dark:border-shadow-dark 
     rounded-md block text-center
@@ -15,6 +18,9 @@ const indicatorClasses = `absolute inset-0 w-full h-full shadow-[0_0_4px_2px_rgb
 const labelClasses = `px-2 py-1 flex items-center justify-center select-none cursor-pointer`;
 
 export const MealPicker = ({ mealValue }: { mealValue?: string }) => {
+  const [thunkSound] = useSound('/sounds/thuthunk.wav', {
+    volume: 0.5,
+  });
   return (
     <RadioGroup.Root
       className="flex flex-row gap-1"
@@ -25,7 +31,12 @@ export const MealPicker = ({ mealValue }: { mealValue?: string }) => {
         <label htmlFor="r1" className={labelClasses}>
           Breakfast
         </label>
-        <RadioGroup.Item value="breakfast" id="r1" className="absolute inset-0">
+        <RadioGroup.Item
+          value="breakfast"
+          id="r1"
+          className="absolute inset-0"
+          onMouseDown={() => thunkSound()}
+        >
           <RadioGroup.Indicator
             forceMount
             className={
@@ -41,7 +52,12 @@ export const MealPicker = ({ mealValue }: { mealValue?: string }) => {
         <label htmlFor="r2" className={labelClasses}>
           Lunch
         </label>
-        <RadioGroup.Item value="lunch" id="r2" className="absolute inset-0">
+        <RadioGroup.Item
+          value="lunch"
+          id="r2"
+          className="absolute inset-0"
+          onMouseDown={() => thunkSound()}
+        >
           <RadioGroup.Indicator
             forceMount
             className={
@@ -57,7 +73,12 @@ export const MealPicker = ({ mealValue }: { mealValue?: string }) => {
         <label htmlFor="r3" className={labelClasses}>
           Dinner
         </label>
-        <RadioGroup.Item value="dinner" id="r3" className="absolute inset-0">
+        <RadioGroup.Item
+          value="dinner"
+          id="r3"
+          className="absolute inset-0"
+          onMouseDown={() => thunkSound()}
+        >
           <RadioGroup.Indicator
             forceMount
             className={
@@ -73,7 +94,12 @@ export const MealPicker = ({ mealValue }: { mealValue?: string }) => {
         <label htmlFor="r4" className={labelClasses}>
           Snacks
         </label>
-        <RadioGroup.Item value="snacks" id="r4" className="absolute inset-0">
+        <RadioGroup.Item
+          value="snacks"
+          id="r4"
+          className="absolute inset-0"
+          onMouseDown={() => thunkSound()}
+        >
           <RadioGroup.Indicator
             forceMount
             className={

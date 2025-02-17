@@ -14,6 +14,7 @@ import { AddButton } from './proteinChip';
 import { MealType } from '@/lib/types';
 import { useProteinStore } from '@/providers/protein-provider';
 import { SubmitButton } from './submitButton';
+import useSound from 'use-sound';
 
 export default function AddEntryModal({
   meal,
@@ -89,13 +90,16 @@ export default function AddEntryModal({
     initialState
   );
 
+  const [boopSound] = useSound('/sounds/boop.wav', { volume: 0.5 });
+  const [cancelSound] = useSound('/sounds/cancel.wav', { volume: 0.5 });
+
   return (
     <DialogPrimitive.Root
       modal
       open={open}
       onOpenChange={e => (e ? setOpen(e) : resetAndClose())}
     >
-      <DialogPrimitive.Trigger>
+      <DialogPrimitive.Trigger onMouseDown={() => boopSound()}>
         <AddButton meal={meal} />
       </DialogPrimitive.Trigger>
       <DialogPrimitive.Portal>
@@ -113,7 +117,12 @@ export default function AddEntryModal({
             <div className="flex justify-between p-4 bg-background dark:bg-background-dark sticky top-0 z-10">
               <h2 className="font-bold text-xl tracking-tight">Add items</h2>
               <DialogPrimitive.Close asChild>
-                <Button area-label="Close" size={'small'} className="px-1 py-1">
+                <Button
+                  area-label="Close"
+                  size={'small'}
+                  className="px-1 py-1"
+                  onMouseDown={() => cancelSound()}
+                >
                   <X size={16} />
                 </Button>
               </DialogPrimitive.Close>
@@ -177,6 +186,7 @@ export default function AddEntryModal({
                 intent={'destructive'}
                 onClick={resetAndClose}
                 className="grow w-1/2"
+                onMouseDown={() => cancelSound()}
               >
                 Cancel
               </Button>
