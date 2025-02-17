@@ -2,53 +2,68 @@
 
 import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/utils/supabase/server';
-import { revalidatePath } from 'next/cache';
+import { MealType } from '@/lib/types';
+import { Tables } from '../../../../database.types';
+
+export type CreateEntriesActionState = {
+  errors?: string;
+  success: boolean;
+  data?: Tables<'protein_entries'>[];
+};
 
 export async function createEntries(
   date: string,
-  _prevSTate: { errors?: string; success: boolean },
+  _prevState: CreateEntriesActionState,
   formData: FormData
-) {
+): Promise<CreateEntriesActionState> {
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (!user) {
+    return { success: false, errors: 'No user' };
+  }
+
   const rawItems = formData.getAll('item') as string[];
   const rawAmounts = formData.getAll('amount') as string[];
-  const meal = formData.get('meal') as string;
+  const meal = formData.get('meal') as MealType;
 
-  const itemsToSave = rawItems.map((itemName, idx) => ({
-    meal: meal,
-    food_name: itemName,
-    protein_grams: Number(rawAmounts[idx]),
-    date,
-    user_id: user?.id,
-  }));
+  const itemsToSave = (rawItems: string[]) =>
+    rawItems.map((itemName, idx) => ({
+      meal: meal,
+      food_name: itemName,
+      protein_grams: Number(rawAmounts[idx]),
+      date,
+      user_id: user.id,
+    }));
 
-  const { error } = await supabase.from('protein_entries').insert(itemsToSave);
+  const { data, error } = await supabase
+    .from('protein_entries')
+    .insert(itemsToSave(rawItems))
+    .select();
 
   if (error) {
     return { success: false, errors: error.message };
   }
 
-  revalidatePath(`/on/${date}`);
-  return { success: true };
+  // revalidatePath(`/on/${date}`);
+  return { success: true, data };
   // redirect(`/on/${date}`);
 }
 
 export async function editEntryById(
   date: string,
-  _prevSTate: { errors?: string; success: boolean },
+  _prevState: { errors?: string; success: boolean },
   formData: FormData
 ) {
   const supabase = await createClient();
 
   const food_name = formData.get('item') as string;
   const protein_grams = Number(formData.get('amount') as string);
-  const meal = formData.get('meal') as string;
-  const entry_id = formData.get('id') as string;
+  const meal = formData.get('meal') as MealType;
+  const entry_id = Number(formData.get('id') as string);
 
   const { error } = await supabase
     .from('protein_entries')
@@ -63,14 +78,14 @@ export async function editEntryById(
     return { success: false, errors: error.message };
   }
 
-  revalidatePath(`/on/${date}`);
+  // revalidatePath(`/on/${date}`);
   return { success: true };
 }
 
 export async function deleteEntryById(date: string, formData: FormData) {
   const supabase = await createClient();
 
-  const entry_id = formData.get('id') as string;
+  const entry_id = Number(formData.get('id') as string);
 
   const { error } = await supabase
     .from('protein_entries')
@@ -81,6 +96,6 @@ export async function deleteEntryById(date: string, formData: FormData) {
     redirect('/error');
   }
 
-  revalidatePath(`/on/${date}`);
-  redirect(`/on/${date}`);
+  // revalidatePath(`/on/${date}`);
+  return;
 }

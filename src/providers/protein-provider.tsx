@@ -1,10 +1,18 @@
 // src/providers/counter-store-provider.tsx
 'use client';
 
-import { type ReactNode, createContext, useRef, useContext } from 'react';
+import {
+  type ReactNode,
+  createContext,
+  useRef,
+  useContext,
+  useEffect,
+} from 'react';
 import { useStore } from 'zustand';
 
 import { type ProteinStore, createProteinStore } from '@/stores/protein-store';
+import { fetchInitialState } from '@/lib/utils';
+import { createClient } from '@/lib/utils/supabase/client';
 
 export type ProteinStoreApi = ReturnType<typeof createProteinStore>;
 
@@ -19,10 +27,29 @@ export interface ProteinStoreProviderProps {
 export const ProteinStoreProvider = ({
   children,
 }: ProteinStoreProviderProps) => {
-  const storeRef = useRef<ProteinStoreApi>(null);
+  const storeRef = useRef<ProteinStoreApi | null>(null);
+
   if (!storeRef.current) {
     storeRef.current = createProteinStore();
   }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const supabase = createClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (!user) {
+        console.log('no user - fetchEntries');
+        return;
+      }
+      const state = await fetchInitialState(supabase, user);
+
+      storeRef.current = createProteinStore(state);
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <ProteinStoreContext.Provider value={storeRef.current}>

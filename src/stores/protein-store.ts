@@ -2,9 +2,9 @@ import { createStore } from 'zustand/vanilla';
 import { persist } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { produce } from 'immer';
-import { getAllEntries, getDailyGoals } from '@/lib/utils/supabase/queries';
 import { createClient } from '@/lib/utils/supabase/client';
 import { MealType } from '@/lib/types';
+import { daysFromEntries, fetchInitialState } from '@/lib/utils';
 
 export type DayDataType = {
   date: string;
@@ -37,6 +37,7 @@ export type DailyGoalType = {
 export type ProteinState = {
   entries: Array<EntryType>;
   goals: Array<DailyGoalType>;
+  days: Array<DayDataType>;
 };
 
 export type ProteinActions = {
@@ -54,14 +55,14 @@ export type ProteinStore = ProteinState & ProteinActions;
 export const defaultProteinState: ProteinState = {
   entries: [],
   goals: [],
+  days: [],
 };
 
-export const createProteinStore = () => {
+export const createProteinStore = (initialState = defaultProteinState) => {
   return createStore<ProteinStore>()(
     persist(
       immer(set => ({
-        entries: [],
-        goals: [],
+        ...initialState,
         fetchEntries: async () => {
           const supabase = await createClient();
           const {
@@ -71,23 +72,15 @@ export const createProteinStore = () => {
             console.log('no user - fetchEntries');
             return;
           }
-          const { data: entriesData } = await getAllEntries(supabase, user);
-          if (!entriesData) {
-            console.log('no entries data - fetchEntries');
-          }
-          const { data: goalsData } = await getDailyGoals(supabase, user);
-          if (!goalsData) {
-            console.log('no goals data - fetchEntries');
-          }
-          const goals = goalsData || [];
-          const entries = entriesData || [];
-          console.log('fetched state', { entries, goals });
-          set({ entries, goals });
+          const initialState = await fetchInitialState(supabase, user);
+          console.log('fetched state', { initialState });
+          set(initialState);
         },
         addEntry: (entry: EntryType) =>
           set(
             produce(state => {
               state.entries.push(entry);
+              state.days = daysFromEntries(state.entries, state.goals);
             })
           ),
         updateEntry: (entry: EntryType) =>
@@ -101,6 +94,7 @@ export const createProteinStore = () => {
                 entryToUpdate.protein_grams = entry.protein_grams;
                 entryToUpdate.meal = entry.meal;
                 entryToUpdate.date = entry.date;
+                state.days = daysFromEntries(state.entries, state.goals);
               }
             })
           ),
@@ -110,6 +104,7 @@ export const createProteinStore = () => {
               state.entries = state.entries.filter(
                 (e: EntryType) => e.entry_id !== id
               );
+              state.days = daysFromEntries(state.entries, state.goals);
             })
           ),
       })),

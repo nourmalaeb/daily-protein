@@ -1,14 +1,19 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { createEntries } from '@/app/on/[date]/actions';
+import {
+  createEntries,
+  CreateEntriesActionState,
+} from '@/app/on/[date]/actions';
 import { Button } from '@/components/buttonLink';
 import { Input } from '@/components/controlledInput';
 import { MealPicker } from '@/components/mealPicker';
 import { Trash2, X } from 'lucide-react';
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useState } from 'react';
 import { AddButton } from './proteinChip';
 import { MealType } from '@/lib/types';
+import { useProteinStore } from '@/providers/protein-provider';
+import { SubmitButton } from './submitButton';
 
 export default function AddEntryModal({
   meal,
@@ -24,24 +29,65 @@ export default function AddEntryModal({
 
   const createEntriesWithDate = createEntries.bind(null, date);
 
-  const [state, createEntriesAction, isPending] = useActionState(
-    createEntriesWithDate,
-    {
-      errors: undefined,
-      success: false,
-    }
-  );
+  // const [state, createEntriesAction, isPending] = useActionState(
+  //   createEntriesWithDate,
+  //   {
+  //     errors: undefined,
+  //     success: false,
+  //     data: undefined,
+  //   }
+  // );
 
   const resetAndClose = () => {
     setItems([{ index: 0, name: '', protes: undefined }]);
     setOpen(false);
   };
 
-  useEffect(() => {
-    if (state.success) {
-      resetAndClose();
-    }
-  }, [state]);
+  const { addEntry } = useProteinStore(state => state);
+
+  // useEffect(() => {
+  //   if (state.success) {
+  //     resetAndClose();
+  //   }
+  // }, [state]);
+
+  // const handleSubmit = async (formData: FormData) => {
+  //   // Run both the server action and store update
+  //   const result = await createEntriesAction(formData);
+
+  //   console.log(result);
+
+  //   if (state.success) {
+  //     // Handle success
+  //     console.log(result);
+  //     result.data?.forEach(item => {
+  //       addEntry(item);
+  //     });
+  //     console.log('Form submitted and state updated!');
+  //     resetAndClose();
+  //   }
+  // };
+  const initialState = { success: false, data: [], error: null };
+
+  const [state, formAction] = useActionState(
+    async (prevState: CreateEntriesActionState, formData: FormData) => {
+      const result = await createEntriesWithDate(prevState, formData);
+      console.log(state, result);
+
+      if (result.success) {
+        // Handle success
+        console.log(result);
+        result.data?.forEach(item => {
+          addEntry(item);
+        });
+        console.log('Form submitted and state updated!');
+        resetAndClose();
+      }
+
+      return result;
+    },
+    initialState
+  );
 
   return (
     <DialogPrimitive.Root
@@ -73,10 +119,7 @@ export default function AddEntryModal({
               </DialogPrimitive.Close>
             </div>
           </DialogPrimitive.Title>
-          <form
-            action={createEntriesAction}
-            className="flex flex-col gap-4 px-4 pb-4"
-          >
+          <form action={formAction} className="flex flex-col gap-4 px-4 pb-4">
             <MealPicker mealValue={meal || 'breakfast'} />
             <div className="flex flex-col gap-2">
               <div className="grid grid-cols-10 gap-1">
@@ -137,14 +180,7 @@ export default function AddEntryModal({
               >
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                intent={'primary'}
-                className="grow w-1/2"
-                disabled={isPending}
-              >
-                {isPending ? 'Saving...' : 'Save'}
-              </Button>
+              <SubmitButton label="Save" />
             </div>
           </form>
         </DialogPrimitive.Content>

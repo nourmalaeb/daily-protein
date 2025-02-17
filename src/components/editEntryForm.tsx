@@ -10,6 +10,7 @@ import { Trash2, TriangleAlert, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useActionState, useEffect, useState } from 'react';
 import { ProteinChip } from './proteinChip';
+import { useProteinStore } from '@/providers/protein-provider';
 
 export default function EditEntryModal({
   meal,
@@ -34,11 +35,45 @@ export default function EditEntryModal({
     }
   );
 
+  const { updateEntry, deleteEntry } = useProteinStore(state => state);
+
   useEffect(() => {
     if (state.success) {
       setOpen(false);
     }
   }, [state]);
+
+  const handleUpdateAction = async (formData: FormData) => {
+    // Run both the server action and store update
+    await editEntriesAction(formData);
+
+    if (state.success) {
+      // Handle success
+      await updateEntry({
+        food_name: formData.get('item') as string,
+        protein_grams: Number(formData.get('amount') as string),
+        meal: formData.get('meal') as MealType,
+        entry_id: Number(formData.get('id')),
+        date,
+      });
+      console.log('Form submitted and state updated!');
+      setOpen(false);
+    }
+  };
+
+  const handleDeleteAction = async (formData: FormData) => {
+    console.log('DELETING');
+    // Run both the server action and store update
+    await deleteEntryByIdWithDate(formData);
+
+    if (state.success) {
+      // Handle success
+      await deleteEntry(Number(formData.get('id')));
+      console.log('Form submitted and state updated!');
+      setOpen(false);
+      setShowConfirm(false);
+    }
+  };
 
   return (
     <DialogPrimitive.Root modal open={open} onOpenChange={setOpen}>
@@ -67,7 +102,7 @@ export default function EditEntryModal({
             </div>
           </DialogPrimitive.Title>
           <form
-            action={editEntriesAction}
+            action={handleUpdateAction}
             className="flex flex-col gap-4 px-4 pb-4"
           >
             <MealPicker mealValue={meal || 'breakfast'} />
@@ -163,7 +198,7 @@ export default function EditEntryModal({
                         intent="destructive"
                         filled
                         className="w-1/2"
-                        formAction={deleteEntryByIdWithDate}
+                        formAction={handleDeleteAction}
                       >
                         Delete item
                       </Button>

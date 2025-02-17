@@ -3,7 +3,7 @@
 import { Button } from '@/components/buttonLink';
 import { UserPreferences } from '@/lib/types';
 import { useActionState, useState } from 'react';
-import { updatePreferences } from '../app/account/actions';
+import { updatePreferences } from '@/app/account/actions';
 import { ControlledInput } from '@/components/controlledInput';
 import dayjs from 'dayjs';
 import { today } from '@/lib/utils';
@@ -16,7 +16,7 @@ export default function AccountForm({
   const [currentGoal, setCurrentGoal] = useState(preferences.goal);
   const [actionState, updatePreferencesAction, isPending] = useActionState(
     updatePreferences,
-    { payload: { goal: preferences.goal } }
+    { error: undefined, payload: { goal: preferences.goal } }
   );
 
   console.log({

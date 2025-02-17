@@ -51,6 +51,13 @@ export const createGoalPreference = async (
     data: { user },
   } = await supabase.auth.getUser();
 
+  if (!user) {
+    return {
+      error: 'User not found',
+      payload: { goal: Number(formData.get('goal')) },
+    };
+  }
+
   const { goal } = createUpdatePreferencesFormSchema.parse(formData);
 
   // Create the user's goal
@@ -70,7 +77,7 @@ export const createGoalPreference = async (
   // Create the goal for today
   const { error: todaysGoalError } = await supabase.from('daily_goals').upsert({
     protein_goal_grams: goal,
-    user_id: user?.id,
+    user_id: user.id,
     date: today(),
   });
 
@@ -85,18 +92,27 @@ export const createGoalPreference = async (
   redirect('/');
 };
 
+type UpdatePreferencesActionState = {
+  error?: string;
+  payload: { goal?: number };
+};
+
 export const updatePreferences = async (
-  _actionState: {
-    error?: string;
-    payload: { goal?: number };
-  },
+  _actionState: UpdatePreferencesActionState,
   formData: FormData
-) => {
+): Promise<UpdatePreferencesActionState> => {
   const supabase = await createClient();
 
   const {
     data: { user },
   } = await supabase.auth.getUser();
+
+  if (!user) {
+    return {
+      error: 'User not found',
+      payload: { goal: Number(formData.get('goal')) },
+    };
+  }
 
   const { goal } = createUpdatePreferencesFormSchema.parse(formData);
 
@@ -124,7 +140,7 @@ export const updatePreferences = async (
     .update({
       protein_goal_grams: goal,
     })
-    .eq('user_id', user?.id)
+    .eq('user_id', user.id)
     .gte('date', today());
 
   if (todaysGoalError) {
@@ -138,7 +154,7 @@ export const updatePreferences = async (
 
   return {
     payload: {
-      goal: goalData.preference_value,
+      goal: Number(goalData.preference_value),
     },
   };
 };

@@ -1,6 +1,8 @@
 import { DailyGoalType, DayDataType, EntryType } from '@/stores/protein-store';
 import { Item, MealType } from '../types';
 import { Temporal } from 'temporal-polyfill';
+import { SupabaseClient, User } from '@supabase/supabase-js';
+import { getAllEntries, getDailyGoals } from './supabase/queries';
 
 export const itemsParser = (items: Item[]) => {
   const breakfastItems = items.filter(i => i.meal === 'breakfast');
@@ -82,11 +84,9 @@ export const daysFromEntries = (
   entries: EntryType[],
   goals: DailyGoalType[]
 ): DayDataType[] => {
-  const dates = entries.map(e => e.date);
-  const uniqueDates = [...new Set(dates)];
-  const days = uniqueDates.map(date => {
-    const dateObj = Temporal.PlainDate.from(date);
-    const dayEntries = entries.filter(e => e.date === date);
+  const days = goals.map(goal => {
+    const dateObj = Temporal.PlainDate.from(goal.date);
+    const dayEntries = entries.filter(e => e.date === goal.date);
     const total_protein_grams = dayEntries.reduce(
       (a, cv) => a + cv.protein_grams,
       0
@@ -106,11 +106,34 @@ export const daysFromEntries = (
       date: dateObj.toString(),
       isToday: Temporal.Now.plainDateISO().equals(dateObj),
       dailyTotal: total_protein_grams,
-      goal: goals.find(g => g.date === date)?.protein_goal_grams || 200,
-      goalMet: total_protein_grams >= 200,
+      goal: goal.protein_goal_grams,
+      goalMet: total_protein_grams >= goal.protein_goal_grams,
       meals,
     };
   });
 
   return days.sort((a, b) => b.date.localeCompare(a.date));
+};
+
+export const fetchInitialState = async (
+  supabase: SupabaseClient,
+  user: User
+): Promise<{
+  entries: EntryType[];
+  goals: DailyGoalType[];
+  days: DayDataType[];
+}> => {
+  const { data: entriesData } = await getAllEntries(supabase, user);
+  if (!entriesData) {
+    console.log('no entries data - fetchEntries');
+  }
+  const { data: goalsData } = await getDailyGoals(supabase, user);
+  if (!goalsData) {
+    console.log('no goals data - fetchEntries');
+  }
+  const goals = goalsData || [];
+  const entries = entriesData || [];
+  const days = daysFromEntries(entries, goals);
+  console.log('fetched state', { entries, goals });
+  return { entries, goals, days };
 };
