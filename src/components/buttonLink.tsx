@@ -143,6 +143,7 @@ export interface ButtonLinkProps
   extends React.AnchorHTMLAttributes<HTMLAnchorElement>,
     VariantProps<typeof button> {
   href: string;
+  prefetch?: boolean;
 }
 
 export const ButtonLink: React.FC<ButtonLinkProps> = ({
