@@ -67,7 +67,6 @@ export function StatsPage({ user }: { user: User }) {
                     href={`/on/${date}`}
                     className="justify-between"
                     onMouseDown={() => clickSound()}
-                    prefetch
                   >
                     <span className="w-1/3 font-semibold">
                       {isToday ? 'Today' : dayjs(date).format('ddd')}
