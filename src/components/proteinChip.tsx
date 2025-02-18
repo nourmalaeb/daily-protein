@@ -17,6 +17,7 @@ const proteinChip = cva(
     'items-center',
     'gap-1',
     'active:translate-y-px',
+    'text-left',
   ],
   {
     variants: {
