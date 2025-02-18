@@ -3,19 +3,15 @@
 import dayjs from 'dayjs';
 import MealItems from '@/components/mealItems';
 import { Meter } from '@/components/meter';
-import { daysFromEntries, today } from '@/lib/utils';
+import { today } from '@/lib/utils';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
-import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { redirect, useParams } from 'next/navigation';
 import { AnimatedBorderDiv } from '@/components/specialContainers';
 import { Suspense } from 'react';
 import { useProteinStore } from '@/providers/protein-provider';
 dayjs.extend(customParseFormat);
-dayjs.extend(LocalizedFormat);
 
 function Page() {
-  // const data = useLoaderData<typeof loader>();
-  // const navigation = useNavigation();
   const params = useParams<{ date: string }>();
 
   const { date } = params;
@@ -24,9 +20,9 @@ function Page() {
     redirect(`/${today()}`);
   }
 
-  const { entries, goals, _hasHydrated } = useProteinStore(state => state);
+  const { days, _hasHydrated } = useProteinStore(state => state);
 
-  const dayData = daysFromEntries(entries, goals).find(d => d.date === date);
+  const dayData = days.find(d => d.date === date);
 
   return (
     <div>
