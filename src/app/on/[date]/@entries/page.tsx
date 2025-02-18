@@ -39,13 +39,14 @@ function Page() {
         {!dayData ? (
           <div className="p-4">
             <p></p>
-            No data for {date}.
+            No data for {dayjs(date).format('ddd, MMM D, YYYY')}.
             <p>
               <Link href={`/on/${today()}`}>Go to today</Link>
             </p>
             <p>
               <Link href={`/on/${days[days.length - 1].date}`}>
-                Go to the day you signed up.
+                Go to the day you signed up (
+                {dayjs(days[days.length - 1].date).format('ddd, MMM D, YYYY')})
               </Link>
             </p>
           </div>
