@@ -145,6 +145,6 @@ export const fetchInitialState = async (
   const entries = entriesData || [];
   const preferences = preferencesData || [];
   const days = daysFromEntries(entries, goals);
-  console.log('fetched state', { entries, goals, days, preferences });
+  // console.log('fetched state', { entries, goals, days, preferences });
   return { entries, goals, days, preferences };
 };

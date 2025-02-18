@@ -11,7 +11,7 @@ import { useProteinStore } from '@/providers/protein-provider';
 import useSound from 'use-sound';
 
 export function StatsPage({ user }: { user: User }) {
-  const { days } = useProteinStore(state => state);
+  const { days, _hasHydrated } = useProteinStore(state => state);
 
   const listVariants = {
     visible: {
@@ -45,7 +45,10 @@ export function StatsPage({ user }: { user: User }) {
       animate="visible"
       className="relative p-4 flex flex-col gap-1 items-stretch justify-center h-full grow"
     >
-      {days.length > 0 &&
+      {!_hasHydrated ? (
+        <p>Loading...</p>
+      ) : (
+        days.length > 0 &&
         days.map(dayData => {
           const { date, isToday } = dayData;
           const stats = Object.fromEntries(
@@ -87,7 +90,8 @@ export function StatsPage({ user }: { user: User }) {
               </AnimatedBorderDiv>
             </motion.div>
           );
-        })}
+        })
+      )}
       <motion.div variants={listItemVariants} key="accountCreated">
         <AnimatedBorderDiv
           animate

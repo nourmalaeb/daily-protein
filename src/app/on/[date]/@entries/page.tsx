@@ -24,7 +24,7 @@ function Page() {
     redirect(`/${today()}`);
   }
 
-  const { entries, goals } = useProteinStore(state => state);
+  const { entries, goals, _hasHydrated } = useProteinStore(state => state);
 
   const dayData = daysFromEntries(entries, goals).find(d => d.date === date);
 
@@ -35,16 +35,20 @@ function Page() {
         borderClasses="border-zinc-500/30 hover:border-zinc-500/80"
         className="rounded-xl border mx-2"
       >
-        <Meter
-          goal={dayData?.goal || 0}
-          stats={{
-            breakfast: dayData?.meals[0].total_protein_grams,
-            lunch: dayData?.meals[1].total_protein_grams,
-            dinner: dayData?.meals[2].total_protein_grams,
-            snacks: dayData?.meals[3].total_protein_grams,
-          }}
-          date={date}
-        />
+        {!_hasHydrated ? (
+          <p className="p-4">Loading...</p>
+        ) : (
+          <Meter
+            goal={dayData?.goal || 0}
+            stats={{
+              breakfast: dayData?.meals[0].total_protein_grams,
+              lunch: dayData?.meals[1].total_protein_grams,
+              dinner: dayData?.meals[2].total_protein_grams,
+              snacks: dayData?.meals[3].total_protein_grams,
+            }}
+            date={date}
+          />
+        )}
       </AnimatedBorderDiv>
       <Suspense>
         {dayData?.meals.map(meal => (

@@ -40,6 +40,7 @@ export type ProteinState = {
   goals: Array<DailyGoalType>;
   days: Array<DayDataType>;
   preferences: Tables<'user_preferences'>[];
+  _hasHydrated?: boolean;
 };
 
 export type ProteinActions = {
@@ -49,6 +50,7 @@ export type ProteinActions = {
   deleteEntry: (id: number) => void;
   updateGoal: (goal: DailyGoalType) => void;
   updatePreference: (preferences: Tables<'user_preferences'>) => void;
+  setHasHydrated: (b: boolean) => void;
 };
 
 export type ProteinStore = ProteinState & ProteinActions;
@@ -58,6 +60,7 @@ export const defaultProteinState: ProteinState = {
   goals: [],
   days: [],
   preferences: [],
+  _hasHydrated: false,
 };
 
 export const createProteinStore = (initialState = defaultProteinState) => {
@@ -75,7 +78,7 @@ export const createProteinStore = (initialState = defaultProteinState) => {
             return;
           }
           const initialState = await fetchInitialState(supabase, user);
-          console.log('fetched state', { initialState });
+          // console.log('fetched state', { initialState });
           set(initialState);
         },
         addEntry: (entry: EntryType) =>
@@ -135,8 +138,20 @@ export const createProteinStore = (initialState = defaultProteinState) => {
               }
             })
           ),
+        _hasHydrated: false,
+        setHasHydrated: (b: boolean) => {
+          set({
+            _hasHydrated: b,
+          });
+        },
       })),
-      { name: 'protein-storage' }
+      {
+        name: 'protein-storage',
+        onRehydrateStorage: state => {
+          state.fetchEntries();
+          return () => state.setHasHydrated(true);
+        },
+      }
     )
   );
 };
