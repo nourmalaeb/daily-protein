@@ -5,6 +5,7 @@ import { produce } from 'immer';
 import { createClient } from '@/lib/utils/supabase/client';
 import { MealType } from '@/lib/types';
 import { daysFromEntries, fetchInitialState } from '@/lib/utils';
+import { Tables } from '../../database.types';
 
 export type DayDataType = {
   date: string;
@@ -38,6 +39,7 @@ export type ProteinState = {
   entries: Array<EntryType>;
   goals: Array<DailyGoalType>;
   days: Array<DayDataType>;
+  preferences: Tables<'user_preferences'>[];
 };
 
 export type ProteinActions = {
@@ -45,9 +47,8 @@ export type ProteinActions = {
   addEntry: (entry: EntryType) => void;
   updateEntry: (entry: EntryType) => void;
   deleteEntry: (id: number) => void;
-  // getDay: (date: string) => void;
-  // addDay: (day: DayDataType) => void;
-  // updateDay: (day: DayDataType) => void;
+  updateGoal: (goal: DailyGoalType) => void;
+  updatePreference: (preferences: Tables<'user_preferences'>) => void;
 };
 
 export type ProteinStore = ProteinState & ProteinActions;
@@ -56,6 +57,7 @@ export const defaultProteinState: ProteinState = {
   entries: [],
   goals: [],
   days: [],
+  preferences: [],
 };
 
 export const createProteinStore = (initialState = defaultProteinState) => {
@@ -105,6 +107,32 @@ export const createProteinStore = (initialState = defaultProteinState) => {
                 (e: EntryType) => e.entry_id !== id
               );
               state.days = daysFromEntries(state.entries, state.goals);
+            })
+          ),
+        updateGoal: (goal: DailyGoalType) =>
+          set(
+            produce(state => {
+              const goalToUpdate = state.goals.find(
+                (g: DailyGoalType) => g.date === goal.date
+              );
+              if (goalToUpdate) {
+                goalToUpdate.protein_goal_grams = goal.protein_goal_grams;
+                state.days = daysFromEntries(state.entries, state.goals);
+              }
+            })
+          ),
+        updatePreference: (preferences: Tables<'user_preferences'>) =>
+          set(
+            produce(state => {
+              const preferenceToUpdate = state.preferences.find(
+                (p: Tables<'user_preferences'>) =>
+                  p.preference_key === preferences.preference_key
+              );
+              if (preferenceToUpdate) {
+                preferenceToUpdate.preference_value =
+                  preferences.preference_value;
+                preferenceToUpdate.updated_at = preferences.updated_at;
+              }
             })
           ),
       })),

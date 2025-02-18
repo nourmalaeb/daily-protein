@@ -8,7 +8,7 @@ import { MealPicker } from '@/components/mealPicker';
 import { Item, MealType } from '@/lib/types';
 import { Trash2, TriangleAlert, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useActionState, useEffect, useState } from 'react';
+import { useActionState, useEffect, useRef, useState } from 'react';
 import { ProteinChip } from './proteinChip';
 import { useProteinStore } from '@/providers/protein-provider';
 import useSound from 'use-sound';
@@ -25,8 +25,9 @@ export default function EditEntryModal({
   const [open, setOpen] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
+  const formRef = useRef<HTMLFormElement>(null);
+
   const editEntryByIdWithDate = editEntryById.bind(null, date);
-  const deleteEntryByIdWithDate = deleteEntryById.bind(null, date);
 
   const [state, editEntriesAction, isPending] = useActionState(
     editEntryByIdWithDate,
@@ -65,10 +66,11 @@ export default function EditEntryModal({
   const handleDeleteAction = async (formData: FormData) => {
     console.log('DELETING');
     // Run both the server action and store update
-    await deleteEntryByIdWithDate(formData);
+    const result = await deleteEntryById(formData);
 
-    if (state.success) {
+    if (result.success) {
       // Handle success
+      console.log('Form submitted and state updated!');
       await deleteEntry(Number(formData.get('id')));
       console.log('Form submitted and state updated!');
       setOpen(false);
@@ -77,10 +79,11 @@ export default function EditEntryModal({
   };
 
   const [boopSound] = useSound('/sounds/boop.wav', {
-    volume: 0.5,
     playbackRate: 1.25,
   });
-  const [cancelSound] = useSound('/sounds/cancel.wav', { volume: 0.5 });
+  const [cancelSound] = useSound('/sounds/snikt.wav', { volume: 0.5 });
+  const [updateSound] = useSound('/sounds/diamond.wav', { volume: 0.5 });
+  const [errorSound] = useSound('/sounds/cancel.wav', { volume: 0.5 });
 
   return (
     <DialogPrimitive.Root modal open={open} onOpenChange={setOpen}>
@@ -116,6 +119,7 @@ export default function EditEntryModal({
           <form
             action={handleUpdateAction}
             className="flex flex-col gap-4 px-4 pb-4"
+            ref={formRef}
           >
             <MealPicker mealValue={meal || 'breakfast'} />
             <div className="grid grid-cols-10 gap-1">
@@ -170,6 +174,11 @@ export default function EditEntryModal({
                 intent={'primary'}
                 className="grow w-1/2"
                 disabled={isPending}
+                onMouseDown={() =>
+                  formRef.current?.checkValidity()
+                    ? updateSound()
+                    : errorSound()
+                }
               >
                 {isPending ? 'Updating...' : 'Update'}
               </Button>

@@ -9,7 +9,7 @@ import { Button } from '@/components/buttonLink';
 import { Input } from '@/components/controlledInput';
 import { MealPicker } from '@/components/mealPicker';
 import { Trash2, X } from 'lucide-react';
-import { useActionState, useState } from 'react';
+import { useActionState, useRef, useState } from 'react';
 import { AddButton } from './proteinChip';
 import { MealType } from '@/lib/types';
 import { useProteinStore } from '@/providers/protein-provider';
@@ -28,16 +28,9 @@ export default function AddEntryModal({
     { index: 0, name: '', protes: undefined },
   ]);
 
-  const createEntriesWithDate = createEntries.bind(null, date);
+  const formRef = useRef<HTMLFormElement>(null);
 
-  // const [state, createEntriesAction, isPending] = useActionState(
-  //   createEntriesWithDate,
-  //   {
-  //     errors: undefined,
-  //     success: false,
-  //     data: undefined,
-  //   }
-  // );
+  const createEntriesWithDate = createEntries.bind(null, date);
 
   const resetAndClose = () => {
     setItems([{ index: 0, name: '', protes: undefined }]);
@@ -46,28 +39,6 @@ export default function AddEntryModal({
 
   const { addEntry } = useProteinStore(state => state);
 
-  // useEffect(() => {
-  //   if (state.success) {
-  //     resetAndClose();
-  //   }
-  // }, [state]);
-
-  // const handleSubmit = async (formData: FormData) => {
-  //   // Run both the server action and store update
-  //   const result = await createEntriesAction(formData);
-
-  //   console.log(result);
-
-  //   if (state.success) {
-  //     // Handle success
-  //     console.log(result);
-  //     result.data?.forEach(item => {
-  //       addEntry(item);
-  //     });
-  //     console.log('Form submitted and state updated!');
-  //     resetAndClose();
-  //   }
-  // };
   const initialState = { success: false, data: [], error: null };
 
   const [state, formAction] = useActionState(
@@ -90,8 +61,10 @@ export default function AddEntryModal({
     initialState
   );
 
-  const [boopSound] = useSound('/sounds/boop.wav', { volume: 0.5 });
-  const [cancelSound] = useSound('/sounds/cancel.wav', { volume: 0.5 });
+  const [boopSound] = useSound('/sounds/boop.wav');
+  const [cancelSound] = useSound('/sounds/snikt.wav');
+  const [sparkleSound] = useSound('/sounds/sparkle.wav');
+  const [errorSound] = useSound('/sounds/cancel.wav');
 
   return (
     <DialogPrimitive.Root
@@ -128,7 +101,11 @@ export default function AddEntryModal({
               </DialogPrimitive.Close>
             </div>
           </DialogPrimitive.Title>
-          <form action={formAction} className="flex flex-col gap-4 px-4 pb-4">
+          <form
+            action={formAction}
+            className="flex flex-col gap-4 px-4 pb-4"
+            ref={formRef}
+          >
             <MealPicker mealValue={meal || 'breakfast'} />
             <div className="flex flex-col gap-2">
               <div className="grid grid-cols-10 gap-1">
@@ -190,7 +167,14 @@ export default function AddEntryModal({
               >
                 Cancel
               </Button>
-              <SubmitButton label="Save" />
+              <SubmitButton
+                label="Save"
+                onMouseDown={() =>
+                  formRef.current?.checkValidity()
+                    ? sparkleSound()
+                    : errorSound()
+                }
+              />
             </div>
           </form>
         </DialogPrimitive.Content>

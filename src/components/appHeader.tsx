@@ -8,26 +8,33 @@ import dynamic from 'next/dynamic';
 import { User } from '@supabase/supabase-js';
 import AccountForm from '@/components/account-form';
 import { UserPreferences } from '@/lib/types';
+import useSound from 'use-sound';
+import { useProteinStore } from '@/providers/protein-provider';
 
 const ColorModeSelector = dynamic(() =>
   import('@/components/colorModeSelector').then(mod => mod.ColorModeSelector)
 );
 
-export const AppHeader = ({
-  user,
-  preferences,
-}: {
-  user?: User;
-  preferences?: UserPreferences | null;
-}) => {
+export const AppHeader = ({ user }: { user?: User }) => {
+  const [goHomesound] = useSound('/sounds/gohome.wav', {
+    playbackRate: 0.625,
+    volume: 0.75,
+  });
+  const { preferences } = useProteinStore(state => state);
+
+  const mappedPreferences = preferences.reduce<UserPreferences>((acc, cv) => {
+    acc[cv.preference_key] = cv.preference_value;
+    return acc;
+  }, {});
+
   return (
     <header className="flex flex-row items-center justify-between py-4 border-b border-zinc-500 mx-4 text-foreground dark:text-foreground-dark">
-      <Link href={'/'}>
+      <Link href={'/'} onMouseDown={() => goHomesound()}>
         <h1 className="w-min leading-none text-sm font-medium">
           daily protein
         </h1>
       </Link>
-      {user && preferences && <NavDialog preferences={preferences} />}
+      {user && <NavDialog preferences={mappedPreferences} />}
     </header>
   );
 };

@@ -8,7 +8,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { redirect, useParams } from 'next/navigation';
 import { AnimatedBorderDiv } from '@/components/specialContainers';
-import { Suspense, useEffect } from 'react';
+import { Suspense } from 'react';
 import { useProteinStore } from '@/providers/protein-provider';
 dayjs.extend(customParseFormat);
 dayjs.extend(LocalizedFormat);
@@ -24,11 +24,7 @@ function Page() {
     redirect(`/${today()}`);
   }
 
-  const { entries, goals, fetchEntries } = useProteinStore(state => state);
-
-  useEffect(() => {
-    fetchEntries();
-  }, [fetchEntries]);
+  const { entries, goals } = useProteinStore(state => state);
 
   const dayData = daysFromEntries(entries, goals).find(d => d.date === date);
 

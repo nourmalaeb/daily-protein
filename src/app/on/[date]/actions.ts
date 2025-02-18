@@ -82,7 +82,7 @@ export async function editEntryById(
   return { success: true };
 }
 
-export async function deleteEntryById(date: string, formData: FormData) {
+export async function deleteEntryById(formData: FormData) {
   const supabase = await createClient();
 
   const entry_id = Number(formData.get('id') as string);
@@ -97,5 +97,5 @@ export async function deleteEntryById(date: string, formData: FormData) {
   }
 
   // revalidatePath(`/on/${date}`);
-  return;
+  return { success: true };
 }

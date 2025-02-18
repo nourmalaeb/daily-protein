@@ -2,7 +2,12 @@ import { DailyGoalType, DayDataType, EntryType } from '@/stores/protein-store';
 import { Item, MealType } from '../types';
 import { Temporal } from 'temporal-polyfill';
 import { SupabaseClient, User } from '@supabase/supabase-js';
-import { getAllEntries, getDailyGoals } from './supabase/queries';
+import {
+  getAllEntries,
+  getDailyGoals,
+  getUserPreferences,
+} from './supabase/queries';
+import { Tables } from '../../../database.types';
 
 export const itemsParser = (items: Item[]) => {
   const breakfastItems = items.filter(i => i.meal === 'breakfast');
@@ -122,6 +127,7 @@ export const fetchInitialState = async (
   entries: EntryType[];
   goals: DailyGoalType[];
   days: DayDataType[];
+  preferences: Tables<'user_preferences'>[];
 }> => {
   const { data: entriesData } = await getAllEntries(supabase, user);
   if (!entriesData) {
@@ -131,9 +137,14 @@ export const fetchInitialState = async (
   if (!goalsData) {
     console.log('no goals data - fetchEntries');
   }
+  const { data: preferencesData } = await getUserPreferences(supabase, user);
+  if (!preferencesData) {
+    console.log('no preferences data - fetchEntries');
+  }
   const goals = goalsData || [];
   const entries = entriesData || [];
+  const preferences = preferencesData || [];
   const days = daysFromEntries(entries, goals);
-  console.log('fetched state', { entries, goals });
-  return { entries, goals, days };
+  console.log('fetched state', { entries, goals, days, preferences });
+  return { entries, goals, days, preferences };
 };

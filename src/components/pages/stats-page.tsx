@@ -8,14 +8,10 @@ import { ArrowRight } from 'lucide-react';
 import { AnimatedBorderDiv } from '@/components/specialContainers';
 import * as motion from 'motion/react-client';
 import { useProteinStore } from '@/providers/protein-provider';
-import { useEffect } from 'react';
+import useSound from 'use-sound';
 
 export function StatsPage({ user }: { user: User }) {
-  const { days, fetchEntries } = useProteinStore(state => state);
-
-  useEffect(() => {
-    fetchEntries();
-  }, [fetchEntries]);
+  const { days } = useProteinStore(state => state);
 
   const listVariants = {
     visible: {
@@ -38,9 +34,9 @@ export function StatsPage({ user }: { user: User }) {
     hidden: { opacity: 0, y: 4 },
   };
 
-  if (!user) return <div>no user</div>;
+  const [clickSound] = useSound('/sounds/light-click.wav', { volume: 0.625 });
 
-  console.log({ days });
+  if (!user) return <div>no user</div>;
 
   return (
     <motion.div
@@ -55,6 +51,7 @@ export function StatsPage({ user }: { user: User }) {
           const stats = Object.fromEntries(
             dayData.meals.map(meal => [meal.meal, meal.total_protein_grams])
           );
+          if (dayjs(date).isAfter(dayjs())) return null;
           return (
             <motion.div variants={listItemVariants} key={date}>
               <AnimatedBorderDiv
@@ -63,7 +60,11 @@ export function StatsPage({ user }: { user: User }) {
                 className="rounded-xl border p-1"
               >
                 <div className="px-3 pt-3">
-                  <ButtonLink href={`/on/${date}`} className="justify-between">
+                  <ButtonLink
+                    href={`/on/${date}`}
+                    className="justify-between"
+                    onMouseDown={() => clickSound()}
+                  >
                     <span className="w-1/3 font-semibold">
                       {isToday ? 'Today' : dayjs(date).format('ddd')}
                     </span>

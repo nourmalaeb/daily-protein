@@ -6,8 +6,9 @@ import { SupabaseClient, User } from '@supabase/supabase-js';
 import { z } from 'zod';
 import { zfd } from 'zod-form-data';
 import { revalidatePath } from 'next/cache';
-import { today } from '@/lib/utils';
 import { redirect } from 'next/navigation';
+import { Tables } from '../../../database.types';
+import { Temporal } from 'temporal-polyfill';
 
 export const getPreferences = async (
   supabase: SupabaseClient,
@@ -36,6 +37,7 @@ export const getPreferences = async (
 
 const createUpdatePreferencesFormSchema = zfd.formData({
   goal: zfd.numeric(z.number().positive()),
+  date: zfd.text(z.string().trim()),
 });
 
 export const createGoalPreference = async (
@@ -58,7 +60,7 @@ export const createGoalPreference = async (
     };
   }
 
-  const { goal } = createUpdatePreferencesFormSchema.parse(formData);
+  const { goal, date } = createUpdatePreferencesFormSchema.parse(formData);
 
   // Create the user's goal
   const { error: goalError } = await supabase.from('user_preferences').insert({
@@ -78,7 +80,7 @@ export const createGoalPreference = async (
   const { error: todaysGoalError } = await supabase.from('daily_goals').upsert({
     protein_goal_grams: goal,
     user_id: user.id,
-    date: today(),
+    date: date,
   });
 
   if (todaysGoalError) {
@@ -92,8 +94,12 @@ export const createGoalPreference = async (
   redirect('/');
 };
 
-type UpdatePreferencesActionState = {
+export type UpdatePreferencesActionState = {
   error?: string;
+  data?: {
+    goalData: Tables<'daily_goals'>;
+    preferenceData: Tables<'user_preferences'>;
+  };
   payload: { goal?: number };
 };
 
@@ -114,13 +120,16 @@ export const updatePreferences = async (
     };
   }
 
-  const { goal } = createUpdatePreferencesFormSchema.parse(formData);
+  const { goal, date } = createUpdatePreferencesFormSchema.parse(formData);
+
+  console.log({ goal, date });
 
   // Update the user's goal
-  const { data: goalData, error: goalError } = await supabase
+  const { data: goalPreferenceData, error: goalError } = await supabase
     .from('user_preferences')
     .update({
       preference_value: goal,
+      updated_at: `${Temporal.Now.plainDateTimeISO()}`,
     })
     .eq('user_id', user?.id)
     .eq('preference_key', 'goal')
@@ -135,13 +144,14 @@ export const updatePreferences = async (
   }
 
   // Update the goal for today
-  const { error: todaysGoalError } = await supabase
+  const { error: todaysGoalError, data: dayGoalData } = await supabase
     .from('daily_goals')
     .update({
       protein_goal_grams: goal,
     })
     .eq('user_id', user.id)
-    .gte('date', today());
+    .gte('date', date)
+    .select();
 
   if (todaysGoalError) {
     return {
@@ -150,11 +160,13 @@ export const updatePreferences = async (
     };
   }
 
-  revalidatePath('/account', 'page');
-
   return {
+    data: {
+      goalData: dayGoalData.filter(d => d.date === date)[0],
+      preferenceData: goalPreferenceData,
+    },
     payload: {
-      goal: Number(goalData.preference_value),
+      goal: Number(goalPreferenceData.preference_value),
     },
   };
 };

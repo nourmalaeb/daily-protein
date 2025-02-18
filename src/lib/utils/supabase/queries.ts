@@ -178,3 +178,13 @@ export const getDailyGoals = cache(
     return { data };
   }
 );
+
+export const getUserPreferences = cache(
+  async (supabase: SupabaseClient, user: User) => {
+    const { data } = await supabase
+      .from('user_preferences')
+      .select()
+      .eq('user_id', user?.id);
+    return { data };
+  }
+);

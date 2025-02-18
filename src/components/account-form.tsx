@@ -3,27 +3,40 @@
 import { Button } from '@/components/buttonLink';
 import { UserPreferences } from '@/lib/types';
 import { useActionState, useState } from 'react';
-import { updatePreferences } from '@/app/account/actions';
+import {
+  updatePreferences,
+  UpdatePreferencesActionState,
+} from '@/app/account/actions';
 import { ControlledInput } from '@/components/controlledInput';
 import dayjs from 'dayjs';
 import { today } from '@/lib/utils';
+import { useProteinStore } from '@/providers/protein-provider';
 
 export default function AccountForm({
   preferences,
 }: {
   preferences: UserPreferences;
 }) {
+  const { updateGoal, updatePreference } = useProteinStore(state => state);
   const [currentGoal, setCurrentGoal] = useState(preferences.goal);
+  const initialState = {
+    error: undefined,
+    payload: { goal: preferences.goal },
+    data: undefined,
+  };
   const [actionState, updatePreferencesAction, isPending] = useActionState(
-    updatePreferences,
-    { error: undefined, payload: { goal: preferences.goal } }
+    async (prevState: UpdatePreferencesActionState, formData: FormData) => {
+      const result = await updatePreferences(prevState, formData);
+      if (result.data) {
+        // Handle success
+        console.log(result);
+        updateGoal(result.data.goalData);
+        updatePreference(result.data.preferenceData);
+      }
+      return result;
+    },
+    initialState
   );
-
-  console.log({
-    currentGoal,
-    preferences,
-    check: currentGoal === preferences.goal,
-  });
 
   return (
     <>
@@ -49,6 +62,7 @@ export default function AccountForm({
               }}
             />
           </div>
+          <input name="date" className="hidden" defaultValue={today()} />
           <Button
             intent={'primary'}
             type="submit"
