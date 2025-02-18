@@ -2,7 +2,6 @@ import { AppHeader } from '@/components/appHeader';
 import { MainWrapper } from '@/components/mainWrapper';
 import Link from 'next/link';
 import { createClient } from '@/lib/utils/supabase/server';
-import { getPreferences } from './account/actions';
 import { StatsPage } from '@/components/pages/stats-page';
 
 export default async function Index() {
@@ -12,11 +11,9 @@ export default async function Index() {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { data: preferences } = await getPreferences(supabase, user);
-
   return user ? (
     <MainWrapper>
-      <AppHeader user={user} preferences={preferences} />
+      <AppHeader user={user} />
       <StatsPage user={user} />
     </MainWrapper>
   ) : (
