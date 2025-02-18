@@ -35,7 +35,7 @@ export const MealPicker = ({ mealValue }: { mealValue?: string }) => {
           value="breakfast"
           id="r1"
           className="absolute inset-0"
-          onMouseDown={() => thunkSound()}
+          onPointerDown={() => thunkSound()}
         >
           <RadioGroup.Indicator
             forceMount
@@ -56,7 +56,7 @@ export const MealPicker = ({ mealValue }: { mealValue?: string }) => {
           value="lunch"
           id="r2"
           className="absolute inset-0"
-          onMouseDown={() => thunkSound()}
+          onPointerDown={() => thunkSound()}
         >
           <RadioGroup.Indicator
             forceMount
@@ -77,7 +77,7 @@ export const MealPicker = ({ mealValue }: { mealValue?: string }) => {
           value="dinner"
           id="r3"
           className="absolute inset-0"
-          onMouseDown={() => thunkSound()}
+          onPointerDown={() => thunkSound()}
         >
           <RadioGroup.Indicator
             forceMount
@@ -98,7 +98,7 @@ export const MealPicker = ({ mealValue }: { mealValue?: string }) => {
           value="snacks"
           id="r4"
           className="absolute inset-0"
-          onMouseDown={() => thunkSound()}
+          onPointerDown={() => thunkSound()}
         >
           <RadioGroup.Indicator
             forceMount

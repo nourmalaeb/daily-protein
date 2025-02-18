@@ -72,7 +72,7 @@ export default function AddEntryModal({
       open={open}
       onOpenChange={e => (e ? setOpen(e) : resetAndClose())}
     >
-      <DialogPrimitive.Trigger onMouseDown={() => boopSound()}>
+      <DialogPrimitive.Trigger onPointerDown={() => boopSound()}>
         <AddButton meal={meal} />
       </DialogPrimitive.Trigger>
       <DialogPrimitive.Portal>
@@ -94,7 +94,7 @@ export default function AddEntryModal({
                   area-label="Close"
                   size={'small'}
                   className="px-1 py-1"
-                  onMouseDown={() => cancelSound()}
+                  onPointerDown={() => cancelSound()}
                 >
                   <X size={16} />
                 </Button>
@@ -163,13 +163,13 @@ export default function AddEntryModal({
                 intent={'destructive'}
                 onClick={resetAndClose}
                 className="grow w-1/2"
-                onMouseDown={() => cancelSound()}
+                onPointerDown={() => cancelSound()}
               >
                 Cancel
               </Button>
               <SubmitButton
                 label="Save"
-                onMouseDown={() =>
+                onPointerDown={() =>
                   formRef.current?.checkValidity()
                     ? sparkleSound()
                     : errorSound()

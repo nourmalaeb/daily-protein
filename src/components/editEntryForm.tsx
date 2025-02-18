@@ -87,7 +87,7 @@ export default function EditEntryModal({
 
   return (
     <DialogPrimitive.Root modal open={open} onOpenChange={setOpen}>
-      <DialogPrimitive.Trigger onMouseDown={() => boopSound()}>
+      <DialogPrimitive.Trigger onPointerDown={() => boopSound()}>
         <ProteinChip item={item} meal={meal} />
       </DialogPrimitive.Trigger>
       <DialogPrimitive.Portal>
@@ -109,7 +109,7 @@ export default function EditEntryModal({
                   area-label="Close"
                   size={'small'}
                   className="px-1 py-1"
-                  onMouseDown={() => cancelSound()}
+                  onPointerDown={() => cancelSound()}
                 >
                   <X size={16} />
                 </Button>
@@ -165,7 +165,7 @@ export default function EditEntryModal({
                 intent={'destructive'}
                 onClick={() => setOpen(false)}
                 className="grow w-1/2"
-                onMouseDown={() => cancelSound()}
+                onPointerDown={() => cancelSound()}
               >
                 Cancel
               </Button>
@@ -174,7 +174,7 @@ export default function EditEntryModal({
                 intent={'primary'}
                 className="grow w-1/2"
                 disabled={isPending}
-                onMouseDown={() =>
+                onPointerDown={() =>
                   formRef.current?.checkValidity()
                     ? updateSound()
                     : errorSound()

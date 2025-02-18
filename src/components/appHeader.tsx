@@ -29,7 +29,7 @@ export const AppHeader = ({ user }: { user?: User }) => {
 
   return (
     <header className="flex flex-row items-center justify-between py-4 border-b border-zinc-500 mx-4 text-foreground dark:text-foreground-dark">
-      <Link href={'/'} onMouseDown={() => goHomesound()}>
+      <Link href={'/'} onPointerDown={() => goHomesound()}>
         <h1 className="w-min leading-none text-sm font-medium">
           daily protein
         </h1>

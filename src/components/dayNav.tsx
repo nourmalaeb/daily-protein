@@ -22,14 +22,14 @@ const DayNav = ({ currentDate }: { currentDate: string }) => {
       <ButtonLink
         href={`/on/${prevDate}`}
         className={`px-1.5!`}
-        onMouseDown={() => buttonClickSound()}
+        onPointerDown={() => buttonClickSound()}
       >
         <ChevronLeft size={20} />
       </ButtonLink>
       <ButtonLink
         href={`/on/${today()}`}
         className="grow font-mono text-xs tracking-widest font-semibold uppercase"
-        onMouseDown={() => todayClickSound()}
+        onPointerDown={() => todayClickSound()}
       >
         {dayjs(currentDate).format('ddd, MMM D, YYYY')}
       </ButtonLink>
@@ -39,7 +39,7 @@ const DayNav = ({ currentDate }: { currentDate: string }) => {
         }
         href={`/on/${nextDate}`}
         className="px-1.5!"
-        onMouseDown={() => buttonClickSound()}
+        onPointerDown={() => buttonClickSound()}
       >
         <ChevronRight size={20} />
       </ButtonLink>
