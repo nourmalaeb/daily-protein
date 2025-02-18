@@ -9,6 +9,7 @@ import { redirect, useParams } from 'next/navigation';
 import { AnimatedBorderDiv } from '@/components/specialContainers';
 import { Suspense } from 'react';
 import { useProteinStore } from '@/providers/protein-provider';
+import Link from 'next/link';
 dayjs.extend(customParseFormat);
 
 function Page() {
@@ -16,8 +17,12 @@ function Page() {
 
   const { date } = params;
 
-  if (!date || !dayjs(date, 'YYYY-MM-DD', true).isValid()) {
-    redirect(`/${today()}`);
+  if (
+    !date ||
+    !dayjs(date, 'YYYY-MM-DD', true).isValid() ||
+    dayjs(date).isAfter(today())
+  ) {
+    redirect(`/on/${today()}`);
   }
 
   const { days, _hasHydrated } = useProteinStore(state => state);
@@ -31,7 +36,20 @@ function Page() {
         borderClasses="border-zinc-500/30 hover:border-zinc-500/80"
         className="rounded-xl border mx-2"
       >
-        {!_hasHydrated ? (
+        {!dayData ? (
+          <div className="p-4">
+            <p></p>
+            No data for {date}.
+            <p>
+              <Link href={`/on/${today()}`}>Go to today</Link>
+            </p>
+            <p>
+              <Link href={`/on/${days[days.length - 1].date}`}>
+                Go to the day you signed up.
+              </Link>
+            </p>
+          </div>
+        ) : !_hasHydrated ? (
           <p className="p-4">Loading...</p>
         ) : (
           <Meter
