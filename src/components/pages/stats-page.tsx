@@ -59,7 +59,7 @@ export function StatsPage({ user }: { user: User }) {
             <motion.div variants={listItemVariants} key={date}>
               <AnimatedBorderDiv
                 animate={!!dayData?.goalMet}
-                borderClasses="border-zinc-500/30 hover:border-zinc-500/80"
+                borderClasses="border-zinc-500/30 md:hover:border-zinc-500/80"
                 className="rounded-xl border p-1"
               >
                 <div className="px-3 pt-3">
@@ -67,7 +67,7 @@ export function StatsPage({ user }: { user: User }) {
                     href={`/on/${date}`}
                     className="justify-between"
                     onMouseDown={() => clickSound()}
-                    prefetch={false}
+                    prefetch
                   >
                     <span className="w-1/3 font-semibold">
                       {isToday ? 'Today' : dayjs(date).format('ddd')}
