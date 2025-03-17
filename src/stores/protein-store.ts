@@ -148,6 +148,7 @@ export const createProteinStore = (initialState = defaultProteinState) => {
       {
         name: 'protein-storage',
         onRehydrateStorage: state => {
+          console.log('onRehydrateStorage');
           state.fetchEntries();
           return () => state.setHasHydrated(true);
         },

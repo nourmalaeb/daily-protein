@@ -41,10 +41,9 @@ export default function AddEntryModal({
 
   const initialState = { success: false, data: [], error: null };
 
-  const [state, formAction] = useActionState(
+  const [, formAction] = useActionState(
     async (prevState: CreateEntriesActionState, formData: FormData) => {
       const result = await createEntriesWithDate(prevState, formData);
-      console.log(state, result);
 
       if (result.success) {
         // Handle success

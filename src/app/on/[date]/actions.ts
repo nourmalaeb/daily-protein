@@ -53,9 +53,14 @@ export async function createEntries(
   // redirect(`/on/${date}`);
 }
 
+export type UpdateEntriesActionState = {
+  errors?: string;
+  success: boolean;
+  data?: Tables<'protein_entries'>;
+};
+
 export async function editEntryById(
-  date: string,
-  _prevState: { errors?: string; success: boolean },
+  _prevState: UpdateEntriesActionState,
   formData: FormData
 ) {
   const supabase = await createClient();
@@ -65,21 +70,22 @@ export async function editEntryById(
   const meal = formData.get('meal') as MealType;
   const entry_id = Number(formData.get('id') as string);
 
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('protein_entries')
     .update({
       food_name,
       protein_grams,
       meal,
     })
-    .eq('entry_id', entry_id);
+    .eq('entry_id', entry_id)
+    .select();
 
   if (error) {
     return { success: false, errors: error.message };
   }
 
   // revalidatePath(`/on/${date}`);
-  return { success: true };
+  return { success: true, data: data[0] };
 }
 
 export async function deleteEntryById(formData: FormData) {

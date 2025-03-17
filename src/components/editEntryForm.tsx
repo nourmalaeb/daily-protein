@@ -1,25 +1,27 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { deleteEntryById, editEntryById } from '@/app/on/[date]/actions';
+import {
+  deleteEntryById,
+  editEntryById,
+  UpdateEntriesActionState,
+} from '@/app/on/[date]/actions';
 import { Button } from '@/components/buttonLink';
 import { Input } from '@/components/controlledInput';
 import { MealPicker } from '@/components/mealPicker';
 import { Item, MealType } from '@/lib/types';
 import { Trash2, TriangleAlert, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { useActionState, useEffect, useRef, useState } from 'react';
+import { useActionState, useRef, useState } from 'react';
 import { ProteinChip } from './proteinChip';
 import { useProteinStore } from '@/providers/protein-provider';
 import useSound from 'use-sound';
 
 export default function EditEntryModal({
   meal,
-  date,
   item,
 }: {
   meal: MealType;
-  date: string;
   item: Item;
 }) {
   const [open, setOpen] = useState(false);
@@ -27,41 +29,25 @@ export default function EditEntryModal({
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  const editEntryByIdWithDate = editEntryById.bind(null, date);
-
-  const [state, editEntriesAction, isPending] = useActionState(
-    editEntryByIdWithDate,
+  const [, editEntriesAction, isPending] = useActionState(
+    async (prevState: UpdateEntriesActionState, formData: FormData) => {
+      const result = await editEntryById(prevState, formData);
+      if (result.success && result.data) {
+        // Handle success
+        updateEntry(result.data);
+        console.log('Form submitted and state updated!');
+        setOpen(false);
+      }
+      return result;
+    },
     {
-      errors: undefined,
+      errors: '',
       success: false,
+      data: undefined,
     }
   );
 
   const { updateEntry, deleteEntry } = useProteinStore(state => state);
-
-  useEffect(() => {
-    if (state.success) {
-      setOpen(false);
-    }
-  }, [state]);
-
-  const handleUpdateAction = async (formData: FormData) => {
-    // Run both the server action and store update
-    await editEntriesAction(formData);
-
-    if (state.success) {
-      // Handle success
-      await updateEntry({
-        food_name: formData.get('item') as string,
-        protein_grams: Number(formData.get('amount') as string),
-        meal: formData.get('meal') as MealType,
-        entry_id: Number(formData.get('id')),
-        date,
-      });
-      console.log('Form submitted and state updated!');
-      setOpen(false);
-    }
-  };
 
   const handleDeleteAction = async (formData: FormData) => {
     console.log('DELETING');
@@ -117,7 +103,7 @@ export default function EditEntryModal({
             </div>
           </DialogPrimitive.Title>
           <form
-            action={handleUpdateAction}
+            action={editEntriesAction}
             className="flex flex-col gap-4 px-4 pb-4"
             ref={formRef}
           >

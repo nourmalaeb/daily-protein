@@ -43,12 +43,15 @@ function Page() {
             <p>
               <Link href={`/on/${today()}`}>Go to today</Link>
             </p>
-            <p>
-              <Link href={`/on/${days[days.length - 1].date}`}>
-                Go to the day you signed up (
-                {dayjs(days[days.length - 1].date).format('ddd, MMM D, YYYY')})
-              </Link>
-            </p>
+            {days[days.length - 1] && (
+              <p>
+                <Link href={`/on/${days[days.length - 1].date}`}>
+                  Go to the day you signed up (
+                  {dayjs(days[days.length - 1].date).format('ddd, MMM D, YYYY')}
+                  )
+                </Link>
+              </p>
+            )}
           </div>
         ) : !_hasHydrated ? (
           <p className="p-4">Loading...</p>
