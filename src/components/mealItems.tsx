@@ -51,11 +51,7 @@ const MealItems = ({ category, items, date }: MealItemsProps) => {
         {items &&
           items.map(item => (
             <motion.div key={item.entry_id} variants={listItemVariants}>
-              <EditEntryModal
-                item={item}
-                meal={category as MealType}
-                date={date}
-              />
+              <EditEntryModal item={item} meal={category as MealType} />
             </motion.div>
           ))}
 
