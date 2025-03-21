@@ -35,7 +35,7 @@ export default function EditEntryModal({
       if (result.success && result.data) {
         // Handle success
         updateEntry(result.data);
-        console.log('Form submitted and state updated!');
+        // console.log('Form submitted and state updated!');
         setOpen(false);
       }
       return result;

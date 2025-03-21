@@ -47,11 +47,11 @@ export default function AddEntryModal({
 
       if (result.success) {
         // Handle success
-        console.log(result);
+        // console.log(result);
         result.data?.forEach(item => {
           addEntry(item);
         });
-        console.log('Form submitted and state updated!');
+        // console.log('Form submitted and state updated!');
         resetAndClose();
       }
 
