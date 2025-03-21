@@ -15,6 +15,7 @@
     "@radix-ui/react-slider": "^1.2.2",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.48.1",
+    "@uidotdev/usehooks": "^2.4.1",
     "babel-plugin-react-compiler": "19.0.0-beta-e552027-20250112",
     "class-variance-authority": "^0.7.1",
     "dayjs": "^1.11.13",

@@ -9,9 +9,21 @@ import { AnimatedBorderDiv } from '@/components/specialContainers';
 import * as motion from 'motion/react-client';
 import { useProteinStore } from '@/providers/protein-provider';
 import useSound from 'use-sound';
+import { useCallback } from 'react';
+import { useEvent } from 'react-use';
 
 export function StatsPage({ user }: { user: User }) {
-  const { days, _hasHydrated } = useProteinStore(state => state);
+  const { days, _hasHydrated, fetchEntries } = useProteinStore(state => state);
+
+  const refreshData = useCallback(() => {
+    console.log('visibilitychange');
+    if (document.visibilityState === 'visible') {
+      console.log('refreshing data');
+      fetchEntries();
+    }
+  }, [fetchEntries]);
+
+  useEvent('visibilitychange', refreshData);
 
   const listVariants = {
     visible: {

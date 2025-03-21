@@ -7,9 +7,10 @@ import { today } from '@/lib/utils';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { redirect, useParams } from 'next/navigation';
 import { AnimatedBorderDiv } from '@/components/specialContainers';
-import { Suspense } from 'react';
+import { Suspense, useCallback } from 'react';
 import { useProteinStore } from '@/providers/protein-provider';
 import Link from 'next/link';
+import { useEvent } from 'react-use';
 dayjs.extend(customParseFormat);
 
 function Page() {
@@ -25,7 +26,15 @@ function Page() {
     redirect(`/on/${today()}`);
   }
 
-  const { days, _hasHydrated } = useProteinStore(state => state);
+  const { days, _hasHydrated, fetchEntries } = useProteinStore(state => state);
+
+  const refreshData = useCallback(() => {
+    if (document.visibilityState === 'visible') {
+      fetchEntries();
+    }
+  }, [fetchEntries]);
+
+  useEvent('visibilitychange', refreshData);
 
   const dayData = days.find(d => d.date === date);
 
