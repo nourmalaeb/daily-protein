@@ -183,51 +183,43 @@ const MeterBar = ({
   hidden,
   ...props
 }: MeterBarProps) => {
-  const categoryColors = () => ({
-    breakfast: `border-breakfast dark:border-breakfast-dark ${
-      amount &&
-      amount > 0 &&
-      'bg-breakfast dark:bg-breakfast-dark w-[' + (amount / goal) * 100 + '%]'
-    }`,
-    lunch: `border-lunch dark:border-lunch-dark ${
-      amount &&
-      amount > 0 &&
-      'bg-lunch dark:bg-lunch-dark w-[' + (amount / goal) * 100 + '%]'
-    }`,
-    dinner: `border-dinner dark:border-dinner-dark ${
-      amount &&
-      amount > 0 &&
-      'bg-dinner dark:bg-dinner-dark w-[' + (amount / goal) * 100 + '%]'
-    }`,
-    snacks: `border-snacks dark:border-snacks-dark ${
-      amount &&
-      amount > 0 &&
-      'bg-snacks dark:bg-snacks-dark w-[' + (amount / goal) * 100 + '%]'
-    }`,
-    remaining: `border-zinc-500${hidden ? ' w-0 opacity-0' : ' relative'}`,
-  });
-
   const glowClasses = goalMet
     ? ' shadow-accent/40 dark:shadow-white/40 shadow-glow border-white/30'
     : '';
 
-  const flexBasis = hidden
+  const widthAsPercent = hidden
     ? 0
     : amount
-    ? `${(amount / goal) * 100 + '%'}`
-    : `${(goal - (total || 0)) / (numberOfRemainingMeals * 2) + '%'}`;
+    ? (amount / goal) * 100
+    : (100 * (goal - (total || 0))) / goal / numberOfRemainingMeals;
+
+  const categoryColors = (barWidth: number) => ({
+    breakfast: `border-breakfast dark:border-breakfast-dark w-[${barWidth}%] ${
+      amount && amount > 0 && 'bg-breakfast dark:bg-breakfast-dark'
+    }`,
+    lunch: `border-lunch dark:border-lunch-dark w-[${barWidth}%] ${
+      amount && amount > 0 && 'bg-lunch dark:bg-lunch-dark'
+    }`,
+    dinner: `border-dinner dark:border-dinner-dark w-[${barWidth}%] ${
+      amount && amount > 0 && 'bg-dinner dark:bg-dinner-dark'
+    }`,
+    snacks: `border-snacks dark:border-snacks-dark w-[${barWidth}%] ${
+      amount && amount > 0 && 'bg-snacks dark:bg-snacks-dark'
+    }`,
+    remaining: `border-zinc-500${hidden ? ' w-0 opacity-0' : ' relative'}`,
+  });
 
   return (
     <motion.div
       layoutId={date ? `meterBar-${category}` : undefined}
       className={`h-2 border grow-0 shrink-0 rounded-full${glowClasses} ${
-        categoryColors()[category]
+        categoryColors(widthAsPercent)[category]
       }`}
       {...props}
       style={{
-        flexBasis,
+        flexBasis: widthAsPercent + '%',
         opacity: hidden ? 0 : 1,
       }}
-    />
+    ></motion.div>
   );
 };
