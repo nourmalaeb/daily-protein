@@ -1,15 +1,15 @@
 'use client';
 
-import { Settings2, X } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Button } from '@/components/buttonLink';
-import dynamic from 'next/dynamic';
 import { User } from '@supabase/supabase-js';
 import AccountForm from '@/components/account-form';
 import { UserPreferences } from '@/lib/types';
-import useSound from 'use-sound';
 import { useProteinStore } from '@/providers/protein-provider';
+import useSound from 'use-sound';
+import { Settings2, X } from 'lucide-react';
 
 const ColorModeSelector = dynamic(() =>
   import('@/components/colorModeSelector').then(mod => mod.ColorModeSelector)
@@ -19,6 +19,7 @@ export const AppHeader = ({ user }: { user?: User }) => {
   const [goHomesound] = useSound('/sounds/gohome.wav', {
     playbackRate: 0.625,
     volume: 0.75,
+    html5: true,
   });
   const { preferences } = useProteinStore(state => state);
 

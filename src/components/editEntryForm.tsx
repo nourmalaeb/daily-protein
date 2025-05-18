@@ -67,9 +67,18 @@ export default function EditEntryModal({
   const [boopSound] = useSound('/sounds/boop.wav', {
     playbackRate: 1.25,
   });
-  const [cancelSound] = useSound('/sounds/snikt.wav', { volume: 0.5 });
-  const [updateSound] = useSound('/sounds/diamond.wav', { volume: 0.5 });
-  const [errorSound] = useSound('/sounds/cancel.wav', { volume: 0.5 });
+  const [cancelSound] = useSound('/sounds/snikt.wav', {
+    volume: 0.5,
+    html5: true,
+  });
+  const [updateSound] = useSound('/sounds/diamond.wav', {
+    volume: 0.5,
+    html5: true,
+  });
+  const [errorSound] = useSound('/sounds/cancel.wav', {
+    volume: 0.5,
+    html5: true,
+  });
 
   return (
     <DialogPrimitive.Root modal open={open} onOpenChange={setOpen}>

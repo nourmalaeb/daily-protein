@@ -46,7 +46,10 @@ export function StatsPage({ user }: { user: User }) {
     hidden: { opacity: 0, y: 4 },
   };
 
-  const [clickSound] = useSound('/sounds/light-click.wav', { volume: 0.625 });
+  const [clickSound] = useSound('/sounds/light-click.wav', {
+    volume: 0.625,
+    html5: true,
+  });
 
   if (!user) return <div>no user</div>;
 

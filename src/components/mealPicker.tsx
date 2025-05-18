@@ -20,6 +20,7 @@ const labelClasses = `px-2 py-1 flex items-center justify-center select-none cur
 export const MealPicker = ({ mealValue }: { mealValue?: string }) => {
   const [thunkSound] = useSound('/sounds/thuthunk.wav', {
     volume: 0.5,
+    html5: true,
   });
   return (
     <RadioGroup.Root

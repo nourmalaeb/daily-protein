@@ -16,6 +16,7 @@ const DayNav = ({ currentDate }: { currentDate: string }) => {
   const [buttonClickSound] = useSound('/sounds/lightClick.wav');
   const [todayClickSound] = useSound('/sounds/brightClick.wav', {
     volume: 0.5,
+    html5: true,
   });
 
   const { days } = useProteinStore(state => state);
