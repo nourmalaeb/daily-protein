@@ -8,7 +8,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 
 const DAY_SIZE = 40;
-const GAP_SIZE = 4;
+const GAP_SIZE = 8;
 const EFFECTIVE_DAY_WIDTH = DAY_SIZE + GAP_SIZE;
 const WEEK_WIDTH = EFFECTIVE_DAY_WIDTH * 7;
 const weekWidthClass = `w-[${WEEK_WIDTH}px]`;
@@ -55,7 +55,7 @@ export default function Widgets({ currentDate }: { currentDate: string }) {
       const { scrollOffset, getTotalSize, scrollToIndex } = dayVirtualizer;
       const width = getTotalSize() - PADDING_START_OFFSET * 2;
       const progress = scrollOffset ? scrollOffset / width : 0;
-      const closestIndex = Math.round(progress * reversedDays.length);
+      const closestIndex = Math.floor(progress * reversedDays.length);
       console.log(closestIndex);
       scrollToIndex(closestIndex, { align: 'center', behavior: 'smooth' });
       setCurrentIndex(closestIndex);
@@ -68,6 +68,7 @@ export default function Widgets({ currentDate }: { currentDate: string }) {
 
   return (
     <>
+      {/* <div>{currentIndex}</div> */}
       <div
         ref={scrollContainerRef}
         className="overflow-x-auto w-full no-scrollbar"
@@ -87,8 +88,9 @@ export default function Widgets({ currentDate }: { currentDate: string }) {
                   position: 'absolute',
                   left: `${virtualDay.start}px`,
                 }}
+                active={virtualDay.index === currentIndex}
                 key={day.date}
-                size={40}
+                size={DAY_SIZE}
                 stats={{
                   breakfast: day?.meals[0].total_protein_grams,
                   lunch: day?.meals[1].total_protein_grams,

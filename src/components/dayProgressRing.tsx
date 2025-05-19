@@ -18,6 +18,7 @@ type ProgressRingProps = {
   goal: number;
   size: number;
   date: string;
+  active: boolean;
   className?: string;
   scrollContainerRef?: RefObject<HTMLDivElement | null>;
   style?: React.CSSProperties;
@@ -34,6 +35,7 @@ const mealFillClasses: Record<keyof Stats, string> = {
 
 export const DayProgressRing = ({
   stats,
+  active,
   goal,
   size,
   date,
@@ -51,15 +53,10 @@ export const DayProgressRing = ({
     container: scrollContainerRef,
   });
 
-  const scale = useTransform(
-    scrollXProgress,
-    [0, 0.15, 0.85, 1],
-    [0, 1, 1, 0],
-    {
-      clamp: true,
-      ease: cubicBezier(0.22, 0.61, 0.36, 1),
-    }
-  );
+  const scale = useTransform(scrollXProgress, [0, 0.1, 0.8, 1], [0, 1, 1, 0], {
+    clamp: true,
+    // ease: cubicBezier(0.22, 0.61, 0.36, 1),
+  });
 
   const total =
     (stats?.breakfast || 0) +
@@ -92,19 +89,24 @@ export const DayProgressRing = ({
     <>
       <motion.div
         ref={scrollRef}
-        style={{ ...style, width: size, height: size, scale, opacity: scale }}
-        className={cn(className, 'rounded-full relative flex-none')}
+        style={{ ...style, width: size, height: size, scale }}
+        className={cn(
+          className,
+          'rounded-full relative flex-none opacity-80 transition-opacity',
+          active && 'opacity-100'
+        )}
         viewport={{ root: scrollContainerRef }}
         layout
         onClick={onClick}
       >
-        <Ring size={size} data={data} date={date} />
+        <Ring size={size} data={data} date={date} active={active} />
 
         {dayOfTheMonth && (
           <span
             className={clsx(
               'absolute inset-0 grid place-items-center font-semibold text-sm font-mono opacity-70',
-              total >= goal && 'text-green-700 dark:text-green-300 opacity-100'
+              total >= goal && 'text-green-700 dark:text-green-300 opacity-100',
+              active && 'opacity-100'
             )}
           >
             {dayOfTheMonth}
@@ -118,6 +120,7 @@ export const DayProgressRing = ({
 type RingProps = {
   size: number;
   date: string;
+  active: boolean;
   data: {
     meal: string;
     amount: number;
@@ -127,7 +130,7 @@ type RingProps = {
   }[];
 };
 
-const Ring = ({ size, data, date }: RingProps) => {
+const Ring = ({ size, data, date, active }: RingProps) => {
   return (
     <svg
       width={size}
@@ -145,8 +148,8 @@ const Ring = ({ size, data, date }: RingProps) => {
       />
       {data.map(({ meal, percentage, startPercentage, mealClassName }, idx) => {
         const d = d3.arc().cornerRadius(size)({
-          innerRadius: size / 2 - 4,
-          outerRadius: size / 2,
+          innerRadius: active ? size / 2 - 4 : size / 2 - 3,
+          outerRadius: active ? size / 2 : size / 2 - 1,
           startAngle: startPercentage * Math.PI * 2,
           endAngle: (percentage + startPercentage) * Math.PI * 2,
           padAngle: 0.025,
