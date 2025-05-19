@@ -160,7 +160,7 @@ export const cn = (...inputs: ClassValue[]) => {
 // DAYS TO WEEKS
 
 export const daysToWeeks = (days: DayDataType[]) => {
-  let weeks = [];
+  const weeks = [];
   const latestDay = Temporal.PlainDate.from(days[0].date);
   const dayOfWeek = latestDay.dayOfWeek;
   const firstWeek = days.slice(0, dayOfWeek);

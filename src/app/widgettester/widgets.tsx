@@ -13,10 +13,10 @@ const EFFECTIVE_DAY_WIDTH = DAY_SIZE + GAP_SIZE;
 const WEEK_WIDTH = EFFECTIVE_DAY_WIDTH * 7;
 const weekWidthClass = `w-[${WEEK_WIDTH}px]`;
 
-const weekClasses = cn(
-  'flex flex-row-reverse gap-1 snap-center snap-always scroll-mx-8 last-of-type:ml-20',
-  weekWidthClass
-);
+// const weekClasses = cn(
+//   'flex flex-row-reverse gap-1 snap-center snap-always scroll-mx-8 last-of-type:ml-20',
+//   weekWidthClass
+// );
 
 const VIRTUALIZER_PADDING_ITEMS = 4;
 const PADDING_START_OFFSET = EFFECTIVE_DAY_WIDTH * VIRTUALIZER_PADDING_ITEMS;
@@ -24,7 +24,7 @@ const PADDING_START_OFFSET = EFFECTIVE_DAY_WIDTH * VIRTUALIZER_PADDING_ITEMS;
 export default function Widgets({ currentDate }: { currentDate: string }) {
   // const data = useLoaderData<typeof loader>();
   // const navigation = useNavigation();
-  const { days, _hasHydrated, fetchEntries } = useProteinStore(state => state);
+  const { days, _hasHydrated } = useProteinStore(state => state);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -64,7 +64,7 @@ export default function Widgets({ currentDate }: { currentDate: string }) {
 
   if (!_hasHydrated || !days || days.length === 0) return <p>Loading...</p>;
 
-  const weeks = daysToWeeks(days);
+  // const weeks = daysToWeeks(days);
 
   return (
     <>

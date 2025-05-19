@@ -3,8 +3,8 @@
 import { cn } from '@/lib/utils';
 import clsx from 'clsx';
 import * as d3 from 'd3';
-import { cubicBezier, motion, useScroll, useTransform } from 'motion/react';
-import { useEffect, useRef, forwardRef, ForwardedRef, RefObject } from 'react';
+import { motion, useScroll, useTransform } from 'motion/react';
+import { useRef, RefObject } from 'react';
 
 type Stats = {
   breakfast?: number;
