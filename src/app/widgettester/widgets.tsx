@@ -2,7 +2,7 @@
 
 import { DayProgressRing } from '@/components/dayProgressRing';
 import { Meter } from '@/components/meter';
-import { cn, daysToWeeks } from '@/lib/utils';
+// import { cn, daysToWeeks } from '@/lib/utils';
 import { useProteinStore } from '@/providers/protein-provider';
 import { useEffect, useRef, useState } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
@@ -11,7 +11,7 @@ const DAY_SIZE = 40;
 const GAP_SIZE = 8;
 const EFFECTIVE_DAY_WIDTH = DAY_SIZE + GAP_SIZE;
 const WEEK_WIDTH = EFFECTIVE_DAY_WIDTH * 7;
-const weekWidthClass = `w-[${WEEK_WIDTH}px]`;
+// const weekWidthClass = `w-[${WEEK_WIDTH}px]`;
 
 // const weekClasses = cn(
 //   'flex flex-row-reverse gap-1 snap-center snap-always scroll-mx-8 last-of-type:ml-20',
