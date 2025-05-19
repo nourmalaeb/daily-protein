@@ -1,6 +1,6 @@
 import { MainWrapper } from '@/components/mainWrapper';
 
-export default function RootLayout({
+export default function Layout({
   children,
   entries,
 }: {

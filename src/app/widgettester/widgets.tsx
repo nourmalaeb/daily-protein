@@ -4,8 +4,9 @@ import { DayProgressRing } from '@/components/dayProgressRing';
 import { Meter } from '@/components/meter';
 // import { cn, daysToWeeks } from '@/lib/utils';
 import { useProteinStore } from '@/providers/protein-provider';
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
+import MealItems from '@/components/mealItems';
 
 const DAY_SIZE = 40;
 const GAP_SIZE = 8;
@@ -123,6 +124,16 @@ export default function Widgets({ currentDate }: { currentDate: string }) {
           goal={reversedDays[currentIndex].goal}
         />
       )}
+      <Suspense>
+        {reversedDays[currentIndex]?.meals.map(meal => (
+          <MealItems
+            key={`${reversedDays[currentIndex].date}-${meal.meal}`}
+            items={meal.items}
+            category={meal.meal}
+            date={reversedDays[currentIndex].date}
+          />
+        ))}
+      </Suspense>
     </>
   );
 }
