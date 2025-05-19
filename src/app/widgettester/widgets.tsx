@@ -10,7 +10,7 @@ import { useVirtualizer } from '@tanstack/react-virtual';
 const DAY_SIZE = 40;
 const GAP_SIZE = 8;
 const EFFECTIVE_DAY_WIDTH = DAY_SIZE + GAP_SIZE;
-const WEEK_WIDTH = EFFECTIVE_DAY_WIDTH * 7;
+// const WEEK_WIDTH = EFFECTIVE_DAY_WIDTH * 7;
 // const weekWidthClass = `w-[${WEEK_WIDTH}px]`;
 
 // const weekClasses = cn(
