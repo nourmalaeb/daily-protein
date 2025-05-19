@@ -22,7 +22,7 @@ const DayNav = ({ currentDate }: { currentDate: string }) => {
   const { days } = useProteinStore(state => state);
 
   const outOfRange = dayjs(currentDate).isBefore(
-    dayjs(days[days.length - 1].date)
+    dayjs(days[days.length - 1]?.date)
   );
 
   return (

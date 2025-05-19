@@ -1,4 +1,10 @@
+'use client';
+
+import { cn } from '@/lib/utils';
+import clsx from 'clsx';
 import * as d3 from 'd3';
+import { cubicBezier, motion, useScroll, useTransform } from 'motion/react';
+import { useEffect, useRef, forwardRef, ForwardedRef, RefObject } from 'react';
 
 type Stats = {
   breakfast?: number;
@@ -11,7 +17,11 @@ type ProgressRingProps = {
   stats?: Stats;
   goal: number;
   size: number;
-  date?: string;
+  date: string;
+  className?: string;
+  scrollContainerRef?: RefObject<HTMLDivElement | null>;
+  style?: React.CSSProperties;
+  onClick?: () => void;
 };
 
 // Define a mapping for meal types to their Tailwind fill classes
@@ -27,20 +37,35 @@ export const DayProgressRing = ({
   goal,
   size,
   date,
+  className,
+  scrollContainerRef,
+  style,
+  onClick,
 }: ProgressRingProps) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const { scrollXProgress } = useScroll({
+    target: scrollRef,
+    offset: ['end end', 'end start'],
+    axis: 'x',
+    container: scrollContainerRef,
+  });
+
+  const scale = useTransform(
+    scrollXProgress,
+    [0, 0.15, 0.85, 1],
+    [0, 1, 1, 0],
+    {
+      clamp: true,
+      ease: cubicBezier(0.22, 0.61, 0.36, 1),
+    }
+  );
+
   const total =
     (stats?.breakfast || 0) +
     (stats?.lunch || 0) +
     (stats?.dinner || 0) +
     (stats?.snacks || 0);
-
-  const ratio = goal / total < 1 ? goal / total : 1;
-
-  const numberOfRemainingMeals = stats
-    ? 4 - Object.values(stats).reduce((acc, cv) => acc + (cv > 0 ? 1 : 0), 0)
-    : 4;
-
-  const distanceFromGoal = goal - total;
 
   const mealCategories: ('breakfast' | 'lunch' | 'dinner' | 'snacks')[] = [
     'breakfast',
@@ -65,53 +90,79 @@ export const DayProgressRing = ({
 
   return (
     <>
-      <div
-        style={{ width: size, height: size }}
-        className="rounded-full relative"
+      <motion.div
+        ref={scrollRef}
+        style={{ ...style, width: size, height: size, scale, opacity: scale }}
+        className={cn(className, 'rounded-full relative flex-none')}
+        viewport={{ root: scrollContainerRef }}
+        layout
+        onClick={onClick}
       >
-        <svg
-          width={size}
-          height={size}
-          viewBox={`0 0 ${size} ${size}`}
-          className="absolute inset-0"
-        >
-          <circle
-            cx={size / 2}
-            cy={size / 2}
-            r={size / 2 - 2}
-            className="stroke-white dark:stroke-black opacity-75"
-            strokeWidth={4}
-            fill="none"
-          />
-          {data.map(
-            ({ meal, percentage, startPercentage, mealClassName }, idx) => {
-              const d = d3.arc().cornerRadius(size)({
-                innerRadius: size / 2 - 4,
-                outerRadius: size / 2,
-                startAngle: startPercentage * Math.PI * 2,
-                endAngle: (percentage + startPercentage) * Math.PI * 2,
-                padAngle: 0.025,
-              });
+        <Ring size={size} data={data} date={date} />
 
-              if (!d) return null;
-
-              return (
-                <path
-                  key={idx * percentage * startPercentage + meal + date}
-                  d={d}
-                  transform="translate(20, 20)"
-                  className={mealClassName}
-                />
-              );
-            }
-          )}
-        </svg>
         {dayOfTheMonth && (
-          <span className="absolute inset-0 grid place-items-center font-semibold text-sm font-mono opacity-70">
+          <span
+            className={clsx(
+              'absolute inset-0 grid place-items-center font-semibold text-sm font-mono opacity-70',
+              total >= goal && 'text-green-700 dark:text-green-300 opacity-100'
+            )}
+          >
             {dayOfTheMonth}
           </span>
         )}
-      </div>
+      </motion.div>
     </>
+  );
+};
+
+type RingProps = {
+  size: number;
+  date: string;
+  data: {
+    meal: string;
+    amount: number;
+    percentage: number;
+    startPercentage: number;
+    mealClassName: string;
+  }[];
+};
+
+const Ring = ({ size, data, date }: RingProps) => {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      className="absolute inset-0"
+    >
+      <circle
+        cx={size / 2}
+        cy={size / 2}
+        r={size / 2 - 2}
+        className="stroke-white dark:stroke-black opacity-75"
+        strokeWidth={4}
+        fill="none"
+      />
+      {data.map(({ meal, percentage, startPercentage, mealClassName }, idx) => {
+        const d = d3.arc().cornerRadius(size)({
+          innerRadius: size / 2 - 4,
+          outerRadius: size / 2,
+          startAngle: startPercentage * Math.PI * 2,
+          endAngle: (percentage + startPercentage) * Math.PI * 2,
+          padAngle: 0.025,
+        });
+
+        if (!d) return null;
+
+        return (
+          <path
+            key={idx * percentage * startPercentage + meal + date}
+            d={d}
+            transform="translate(20, 20)"
+            className={mealClassName}
+          />
+        );
+      })}
+    </svg>
   );
 };

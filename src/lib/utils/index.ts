@@ -8,6 +8,8 @@ import {
   getUserPreferences,
 } from './supabase/queries';
 import { Tables } from '../../../database.types';
+import clsx, { ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export const itemsParser = (items: Item[]) => {
   const breakfastItems = items.filter(i => i.meal === 'breakfast');
@@ -147,4 +149,25 @@ export const fetchInitialState = async (
   const days = daysFromEntries(entries, goals);
   // console.log('fetched state', { entries, goals, days, preferences });
   return { entries, goals, days, preferences };
+};
+
+// MERGE CLASSES
+
+export const cn = (...inputs: ClassValue[]) => {
+  return twMerge(clsx(inputs));
+};
+
+// DAYS TO WEEKS
+
+export const daysToWeeks = (days: DayDataType[]) => {
+  let weeks = [];
+  const latestDay = Temporal.PlainDate.from(days[0].date);
+  const dayOfWeek = latestDay.dayOfWeek;
+  const firstWeek = days.slice(0, dayOfWeek);
+  weeks.push(firstWeek);
+
+  for (let i = dayOfWeek; i < days.length; i += 7) {
+    weeks.push(days.slice(i, i + 7));
+  }
+  return weeks;
 };
