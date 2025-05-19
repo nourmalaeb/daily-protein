@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import clsx from 'clsx';
 import * as d3 from 'd3';
 import { motion, useScroll, useTransform } from 'motion/react';
-import { useRef, RefObject } from 'react';
+import { useRef, RefObject, useEffect } from 'react';
 
 type Stats = {
   breakfast?: number;
@@ -84,6 +84,15 @@ export const DayProgressRing = ({
   }));
 
   const dayOfTheMonth = date ? new Date(date).getDate() : null;
+
+  useEffect(() => {
+    const unsubscribe = scrollXProgress.on('change', latest => {
+      if (date === '2025-04-01') {
+        console.log(`scrollXProgress for ${date}:`, latest);
+      }
+    });
+    return () => unsubscribe();
+  }, [scrollXProgress]);
 
   return (
     <>

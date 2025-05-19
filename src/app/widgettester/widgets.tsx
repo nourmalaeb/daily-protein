@@ -26,7 +26,7 @@ export default function Widgets({ currentDate }: { currentDate: string }) {
   // const data = useLoaderData<typeof loader>();
   // const navigation = useNavigation();
   const { days, _hasHydrated } = useProteinStore(state => state);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(days.length - 1);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -38,8 +38,11 @@ export default function Widgets({ currentDate }: { currentDate: string }) {
     estimateSize: () => EFFECTIVE_DAY_WIDTH,
     horizontal: true,
     overscan: 12,
+    scrollPaddingStart: PADDING_START_OFFSET,
+    scrollPaddingEnd: PADDING_START_OFFSET,
     paddingStart: PADDING_START_OFFSET,
     paddingEnd: PADDING_START_OFFSET,
+    isScrollingResetDelay: 300,
   });
 
   useEffect(() => {
@@ -52,30 +55,43 @@ export default function Widgets({ currentDate }: { currentDate: string }) {
   useEffect(() => {
     if (dayVirtualizer.isScrolling) {
       return;
-    } else {
-      const { scrollOffset, getTotalSize, scrollToIndex } = dayVirtualizer;
-      const width = getTotalSize() - PADDING_START_OFFSET * 2;
-      const progress = scrollOffset ? scrollOffset / width : 0;
-      const closestIndex = Math.floor(progress * reversedDays.length);
-      console.log(closestIndex);
-      scrollToIndex(closestIndex, { align: 'center', behavior: 'smooth' });
-      setCurrentIndex(closestIndex);
     }
-  }, [dayVirtualizer.isScrolling]);
+    const { scrollOffset, getTotalSize, scrollToOffset } = dayVirtualizer;
+    if (!scrollOffset || reversedDays.length === 0) {
+      setCurrentIndex(days.length - 1);
+    }
+    const width = getTotalSize() - PADDING_START_OFFSET * 2;
+    const progress = scrollOffset ? scrollOffset / width : 0;
+    const closestIndex = Math.round(progress * reversedDays.length);
+    // console.log({ closestIndex, width, progress, progWidth: progress * width });
+    scrollToOffset(
+      closestIndex * EFFECTIVE_DAY_WIDTH +
+        PADDING_START_OFFSET +
+        DAY_SIZE * 0.5,
+      { align: 'center', behavior: 'smooth' }
+    );
+    setCurrentIndex(closestIndex);
+  }, [dayVirtualizer.isScrolling, reversedDays.length]);
+
+  useEffect(() => {
+    setCurrentIndex(days.length - 1);
+    dayVirtualizer.scrollToIndex(days.length - 1, { align: 'center' });
+  }, [_hasHydrated, days.length]);
 
   if (!_hasHydrated || !days || days.length === 0) return <p>Loading...</p>;
 
-  // const weeks = daysToWeeks(days);
-
   return (
     <>
-      {/* <div>{currentIndex}</div> */}
+      {/* <div>
+        {currentIndex} {days.length} {dayVirtualizer.scrollOffset}{' '}
+        {dayVirtualizer.isScrolling ? 'SCROLLING' : 'POTATO'}
+      </div> */}
       <div
         ref={scrollContainerRef}
-        className="overflow-x-auto w-full no-scrollbar"
+        className="overflow-x-auto w-full no-scrollbar relative"
       >
         <div
-          className="relative no-scrollbar"
+          className="relative"
           style={{
             height: `${DAY_SIZE}px`,
             width: `${dayVirtualizer.getTotalSize()}px`,
@@ -101,12 +117,18 @@ export default function Widgets({ currentDate }: { currentDate: string }) {
                 goal={day.goal}
                 date={day.date}
                 scrollContainerRef={scrollContainerRef}
-                onClick={() =>
-                  dayVirtualizer.scrollToIndex(virtualDay.index, {
-                    align: 'center',
-                    behavior: 'smooth',
-                  })
-                }
+                onClick={() => {
+                  setCurrentIndex(virtualDay.index);
+                  dayVirtualizer.scrollToOffset(
+                    virtualDay.index * EFFECTIVE_DAY_WIDTH +
+                      PADDING_START_OFFSET +
+                      DAY_SIZE * 0.5,
+                    {
+                      align: 'center',
+                      behavior: 'smooth',
+                    }
+                  );
+                }}
               />
             );
           })}
