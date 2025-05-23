@@ -7,6 +7,7 @@ import { useProteinStore } from '@/providers/protein-provider';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import MealItems from '@/components/mealItems';
+import { useDebounce } from 'react-use';
 
 const DAY_SIZE = 40;
 const GAP_SIZE = 8;
@@ -27,6 +28,8 @@ export default function Widgets({ currentDate }: { currentDate: string }) {
   // const navigation = useNavigation();
   const { days, _hasHydrated } = useProteinStore(state => state);
   const [currentIndex, setCurrentIndex] = useState(days.length - 1);
+  const [currentDay, setCurrentDay] = useState(days[currentIndex]);
+  const [scrolledAmount, setScrolledAmount] = useState(0);
 
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
@@ -45,47 +48,83 @@ export default function Widgets({ currentDate }: { currentDate: string }) {
     isScrollingResetDelay: 300,
   });
 
-  useEffect(() => {
-    if (days && days.length > 0) {
-      const todaysIndex = days.findIndex(day => day.date === currentDate);
-      setCurrentIndex(todaysIndex);
-    }
-  }, [days, currentDate]);
+  const indexToOffset = (index: number) =>
+    index * EFFECTIVE_DAY_WIDTH + PADDING_START_OFFSET + DAY_SIZE * 0.5;
 
-  useEffect(() => {
-    if (dayVirtualizer.isScrolling) {
-      return;
-    }
-    const { scrollOffset, getTotalSize, scrollToOffset } = dayVirtualizer;
-    if (!scrollOffset || reversedDays.length === 0) {
-      setCurrentIndex(days.length - 1);
-    }
-    const width = getTotalSize() - PADDING_START_OFFSET * 2;
-    const progress = scrollOffset ? scrollOffset / width : 0;
-    const closestIndex = Math.round(progress * reversedDays.length);
-    // console.log({ closestIndex, width, progress, progWidth: progress * width });
-    scrollToOffset(
-      closestIndex * EFFECTIVE_DAY_WIDTH +
-        PADDING_START_OFFSET +
-        DAY_SIZE * 0.5,
-      { align: 'center', behavior: 'smooth' }
-    );
-    setCurrentIndex(closestIndex);
-  }, [dayVirtualizer.isScrolling, reversedDays.length]);
+  // useEffect(() => {
+  //   if (dayVirtualizer.isScrolling) {
+  //     return;
+  //   }
+  //   const { scrollOffset, getTotalSize, scrollToOffset } = dayVirtualizer;
+  //   if (!scrollOffset || reversedDays.length === 0) {
+  //     setCurrentIndex(days.length - 1);
+  //   }
+  //   const width = getTotalSize() - PADDING_START_OFFSET * 2;
+  //   const progress = scrollOffset ? scrollOffset / width : 0;
+  //   const closestIndex = Math.round(progress * reversedDays.length);
+  //   // console.log({ closestIndex, width, progress, progWidth: progress * width });
+  //   scrollToOffset(
+  //     closestIndex * EFFECTIVE_DAY_WIDTH +
+  //       PADDING_START_OFFSET +
+  //       DAY_SIZE * 0.5,
+  //     { align: 'center', behavior: 'smooth' }
+  //   );
+  //   setCurrentIndex(closestIndex);
+  // }, [dayVirtualizer.isScrolling, reversedDays.length]);
 
   useEffect(() => {
     setCurrentIndex(days.length - 1);
-    dayVirtualizer.scrollToIndex(days.length - 1, { align: 'center' });
+    dayVirtualizer.scrollToOffset(indexToOffset(days.length - 1), {
+      align: 'center',
+    });
   }, [_hasHydrated, days.length]);
+
+  const [isReady, cancel] = useDebounce(
+    () => {
+      const { scrollOffset, getTotalSize, scrollDirection } = dayVirtualizer;
+      if (!scrollOffset || reversedDays.length === 0) {
+        setCurrentIndex(days.length - 1);
+      }
+      const width = getTotalSize() - PADDING_START_OFFSET * 2;
+      const progress = scrollOffset ? scrollOffset / width : 0;
+      console.log(progress);
+      const closestIndex =
+        Math.abs(scrolledAmount - (scrollOffset || 0)) < DAY_SIZE * 1.5
+          ? currentIndex
+          : scrollDirection === 'forward'
+          ? Math.ceil(progress * reversedDays.length)
+          : Math.floor(progress * reversedDays.length + 0.25);
+
+      setCurrentIndex(closestIndex);
+    },
+    10,
+    [dayVirtualizer.scrollOffset]
+  );
+
+  const [_isReady, _cancel] = useDebounce(
+    () => {
+      dayVirtualizer.scrollToOffset(indexToOffset(currentIndex), {
+        align: 'center',
+        behavior: 'smooth',
+      });
+      setCurrentDay(reversedDays[currentIndex]);
+      setScrolledAmount(dayVirtualizer.scrollOffset || 0);
+    },
+    350,
+    [currentIndex]
+  );
 
   if (!_hasHydrated || !days || days.length === 0) return <p>Loading...</p>;
 
   return (
     <>
-      {/* <div>
+      <div>
         {currentIndex} {days.length} {dayVirtualizer.scrollOffset}{' '}
-        {dayVirtualizer.isScrolling ? 'SCROLLING' : 'POTATO'}
-      </div> */}
+        {scrolledAmount} {dayVirtualizer.scrollDirection}
+      </div>
+      <div className="relative w-full h-1">
+        <div className="absolute w-px h-20 bg-red-400 left-1/2 top-0" />
+      </div>
       <div
         ref={scrollContainerRef}
         className="overflow-x-auto w-full no-scrollbar relative"
@@ -120,9 +159,7 @@ export default function Widgets({ currentDate }: { currentDate: string }) {
                 onClick={() => {
                   setCurrentIndex(virtualDay.index);
                   dayVirtualizer.scrollToOffset(
-                    virtualDay.index * EFFECTIVE_DAY_WIDTH +
-                      PADDING_START_OFFSET +
-                      DAY_SIZE * 0.5,
+                    indexToOffset(virtualDay.index),
                     {
                       align: 'center',
                       behavior: 'smooth',
@@ -134,25 +171,26 @@ export default function Widgets({ currentDate }: { currentDate: string }) {
           })}
         </div>
       </div>
-      {reversedDays[currentIndex] && (
+      {currentDay && (
         <Meter
-          date={currentDate}
+          key={currentDay.date}
+          date={currentDay.date}
           stats={{
-            breakfast: reversedDays[currentIndex].meals[0].total_protein_grams,
-            lunch: reversedDays[currentIndex].meals[1].total_protein_grams,
-            dinner: reversedDays[currentIndex].meals[2].total_protein_grams,
-            snacks: reversedDays[currentIndex].meals[3].total_protein_grams,
+            breakfast: currentDay.meals[0].total_protein_grams,
+            lunch: currentDay.meals[1].total_protein_grams,
+            dinner: currentDay.meals[2].total_protein_grams,
+            snacks: currentDay.meals[3].total_protein_grams,
           }}
-          goal={reversedDays[currentIndex].goal}
+          goal={currentDay.goal}
         />
       )}
       <Suspense>
-        {reversedDays[currentIndex]?.meals.map(meal => (
+        {currentDay?.meals.map(meal => (
           <MealItems
-            key={`${reversedDays[currentIndex].date}-${meal.meal}`}
+            key={`${currentDay.date}-${meal.meal}`}
             items={meal.items}
             category={meal.meal}
-            date={reversedDays[currentIndex].date}
+            date={currentDay.date}
           />
         ))}
       </Suspense>

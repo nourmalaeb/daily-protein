@@ -219,6 +219,7 @@ const MeterBar = ({
       style={{
         flexBasis: widthAsPercent + '%',
         opacity: hidden ? 0 : 1,
+        borderRadius: 99,
       }}
     ></motion.div>
   );

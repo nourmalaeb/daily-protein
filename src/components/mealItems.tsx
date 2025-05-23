@@ -31,7 +31,11 @@ const MealItems = ({ category, items, date }: MealItemsProps) => {
 
   return (
     <div className="flex flex-col items-stretch gap-1 p-4">
-      <div className="flex flex-row gap-2 items-center">
+      <motion.div
+        layout
+        layoutId={`${category}-meal-header`}
+        className="flex flex-row gap-2 items-center"
+      >
         <h3 className="uppercase text-xs font-semibold tracking-widest">
           {category}
         </h3>
@@ -40,22 +44,24 @@ const MealItems = ({ category, items, date }: MealItemsProps) => {
           <span>{total}</span>
           <span className="opacity-70">g</span>
         </span>
-      </div>
+      </motion.div>
       <motion.div
         className="flex flex-row gap-1 flex-wrap"
         transition={{ staggerChildren: 1 }}
         initial="hidden"
         animate="visible"
         variants={listVariants}
+        layout
+        layoutId={`${category}-meal-items`}
       >
         {items &&
           items.map(item => (
-            <motion.div key={item.entry_id} variants={listItemVariants}>
+            <motion.div layout key={item.entry_id} variants={listItemVariants}>
               <EditEntryModal item={item} meal={category as MealType} />
             </motion.div>
           ))}
 
-        <motion.div variants={listItemVariants}>
+        <motion.div variants={listItemVariants} layout>
           <AddEntryModal meal={category as MealType} date={date} />
         </motion.div>
       </motion.div>

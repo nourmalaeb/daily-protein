@@ -101,7 +101,7 @@ export const DayProgressRing = ({
         style={{ ...style, width: size, height: size, scale }}
         className={cn(
           className,
-          'rounded-full relative flex-none opacity-80 transition-opacity',
+          'rounded-full relative flex-none opacity-80 transition-opacity hover:opacity-100',
           active && 'opacity-100'
         )}
         viewport={{ root: scrollContainerRef }}
@@ -113,7 +113,7 @@ export const DayProgressRing = ({
         {dayOfTheMonth && (
           <span
             className={clsx(
-              'absolute inset-0 grid place-items-center font-semibold text-sm font-mono opacity-70',
+              'absolute inset-0 grid place-items-center font-semibold text-sm font-mono opacity-70 select-none cursor-pointer',
               total >= goal && 'text-green-700 dark:text-green-300 opacity-100',
               active && 'opacity-100'
             )}
