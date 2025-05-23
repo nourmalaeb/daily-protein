@@ -7,7 +7,7 @@ import { useProteinStore } from '@/providers/protein-provider';
 import { Suspense, useEffect, useRef, useState } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import MealItems from '@/components/mealItems';
-import { useDebounce } from 'react-use';
+import { useDebounce } from 'react-haiku';
 
 const DAY_SIZE = 40;
 const GAP_SIZE = 8;
@@ -23,7 +23,7 @@ const EFFECTIVE_DAY_WIDTH = DAY_SIZE + GAP_SIZE;
 const VIRTUALIZER_PADDING_ITEMS = 4;
 const PADDING_START_OFFSET = EFFECTIVE_DAY_WIDTH * VIRTUALIZER_PADDING_ITEMS;
 
-export default function Widgets({ currentDate }: { currentDate: string }) {
+export default function Widgets() {
   // const data = useLoaderData<typeof loader>();
   // const navigation = useNavigation();
   const { days, _hasHydrated } = useProteinStore(state => state);
@@ -79,41 +79,36 @@ export default function Widgets({ currentDate }: { currentDate: string }) {
     });
   }, [_hasHydrated, days.length]);
 
-  const [isReady, cancel] = useDebounce(
-    () => {
-      const { scrollOffset, getTotalSize, scrollDirection } = dayVirtualizer;
-      if (!scrollOffset || reversedDays.length === 0) {
-        setCurrentIndex(days.length - 1);
-      }
-      const width = getTotalSize() - PADDING_START_OFFSET * 2;
-      const progress = scrollOffset ? scrollOffset / width : 0;
-      console.log(progress);
-      const closestIndex =
-        Math.abs(scrolledAmount - (scrollOffset || 0)) < DAY_SIZE * 1.5
-          ? currentIndex
-          : scrollDirection === 'forward'
-          ? Math.ceil(progress * reversedDays.length)
-          : Math.floor(progress * reversedDays.length + 0.25);
+  const debouncedScrollOffset = useDebounce(dayVirtualizer.scrollOffset, 0);
 
-      setCurrentIndex(closestIndex);
-    },
-    10,
-    [dayVirtualizer.scrollOffset]
-  );
+  useEffect(() => {
+    const { scrollOffset, getTotalSize, scrollDirection } = dayVirtualizer;
+    if (!scrollOffset || reversedDays.length === 0) {
+      setCurrentIndex(days.length - 1);
+    }
+    const width = getTotalSize() - PADDING_START_OFFSET * 2;
+    const progress = scrollOffset ? scrollOffset / width : 0;
+    console.log(progress);
+    const closestIndex =
+      Math.abs(scrolledAmount - (scrollOffset || 0)) < DAY_SIZE * 1.5
+        ? currentIndex
+        : scrollDirection === 'forward'
+        ? Math.ceil(progress * reversedDays.length - 0.25)
+        : Math.floor(progress * reversedDays.length + 0.25);
 
-  const [_isReady, _cancel] = useDebounce(
-    () => {
-      dayVirtualizer.scrollToOffset(indexToOffset(currentIndex), {
-        align: 'center',
-        behavior: 'smooth',
-      });
-      setCurrentDay(reversedDays[currentIndex]);
-      setScrolledAmount(dayVirtualizer.scrollOffset || 0);
-    },
-    350,
-    [currentIndex]
-  );
+    setCurrentIndex(closestIndex);
+  }, [debouncedScrollOffset]);
 
+  const debouncedCurrentIndex = useDebounce(currentIndex, 350);
+
+  useEffect(() => {
+    dayVirtualizer.scrollToOffset(indexToOffset(debouncedCurrentIndex), {
+      align: 'center',
+      behavior: 'smooth',
+    });
+    setCurrentDay(reversedDays[currentIndex]);
+    setScrolledAmount(dayVirtualizer.scrollOffset || 0);
+  }, [debouncedCurrentIndex]);
   if (!_hasHydrated || !days || days.length === 0) return <p>Loading...</p>;
 
   return (
