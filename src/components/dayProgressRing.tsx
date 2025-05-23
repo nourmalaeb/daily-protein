@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils';
 import clsx from 'clsx';
 import * as d3 from 'd3';
-import { motion, useScroll, useTransform } from 'motion/react';
+import { cubicBezier, motion, useScroll, useTransform } from 'motion/react';
 import { useRef, RefObject, useEffect } from 'react';
 
 type Stats = {
@@ -48,15 +48,20 @@ export const DayProgressRing = ({
 
   const { scrollXProgress } = useScroll({
     target: scrollRef,
-    offset: ['end end', 'end start'],
+    offset: ['end end', 'start start'],
     axis: 'x',
     container: scrollContainerRef,
   });
 
-  const scale = useTransform(scrollXProgress, [0, 0.1, 0.8, 1], [0, 1, 1, 0], {
-    clamp: true,
-    // ease: cubicBezier(0.22, 0.61, 0.36, 1),
-  });
+  const scale = useTransform(
+    scrollXProgress,
+    [0, 0.15, 0.85, 1],
+    [0.4, 1, 1, 0.4],
+    {
+      clamp: true,
+      ease: cubicBezier(0.05, 0.45, 0.95, 0.55),
+    }
+  );
 
   const total =
     (stats?.breakfast || 0) +

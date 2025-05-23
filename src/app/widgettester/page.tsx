@@ -37,7 +37,7 @@ export default async function Page({ params }: Params) {
     <>
       <AppHeader user={user} />
       <DayNav currentDate={date} />
-      <Widgets currentDate={date} />
+      <Widgets />
     </>
   );
 }
