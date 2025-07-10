@@ -2,7 +2,6 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/lib/utils/supabase/server';
 import { AppHeader } from '@/components/appHeader';
 import { Metadata } from 'next';
-import { today } from '@/lib/utils';
 import WeeksNav from './weeksNav';
 
 type Params = {
@@ -18,6 +17,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Params) {
+  console.log(params);
   const supabase = await createClient();
 
   const {
