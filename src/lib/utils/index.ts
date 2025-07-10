@@ -129,6 +129,7 @@ export const fetchInitialState = async (
   entries: EntryType[];
   goals: DailyGoalType[];
   days: DayDataType[];
+  currentDay?: DayDataType;
   preferences: Tables<'user_preferences'>[];
 }> => {
   const { data: entriesData } = await getAllEntries(supabase, user);
@@ -147,8 +148,9 @@ export const fetchInitialState = async (
   const entries = entriesData || [];
   const preferences = preferencesData || [];
   const days = daysFromEntries(entries, goals);
+  const currentDay = days.find(day => day.date === today());
   // console.log('fetched state', { entries, goals, days, preferences });
-  return { entries, goals, days, preferences };
+  return { entries, goals, days, currentDay, preferences };
 };
 
 // MERGE CLASSES

@@ -5,6 +5,7 @@ import { AppHeader } from '@/components/appHeader';
 import { Metadata } from 'next';
 import Widgets from './widgets';
 import { today } from '@/lib/utils';
+import WeeksNav from './weeksNav';
 
 type Params = {
   params: Promise<{ date: string }>;
@@ -36,8 +37,8 @@ export default async function Page({ params }: Params) {
   return (
     <>
       <AppHeader user={user} />
-      <DayNav currentDate={date} />
-      <Widgets />
+      <WeeksNav currentDate={date} />
+      {/* <Widgets /> */}
     </>
   );
 }

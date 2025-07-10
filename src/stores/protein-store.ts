@@ -39,11 +39,13 @@ export type ProteinState = {
   entries: Array<EntryType>;
   goals: Array<DailyGoalType>;
   days: Array<DayDataType>;
+  currentDay?: DayDataType;
   preferences: Tables<'user_preferences'>[];
   _hasHydrated?: boolean;
 };
 
 export type ProteinActions = {
+  setCurrentDay: (date: string) => void;
   fetchEntries: () => void;
   addEntry: (entry: EntryType) => void;
   updateEntry: (entry: EntryType) => void;
@@ -59,6 +61,7 @@ export const defaultProteinState: ProteinState = {
   entries: [],
   goals: [],
   days: [],
+  currentDay: undefined,
   preferences: [],
   _hasHydrated: false,
 };
@@ -68,6 +71,14 @@ export const createProteinStore = (initialState = defaultProteinState) => {
     persist(
       immer(set => ({
         ...initialState,
+        setCurrentDay: (date: string) =>
+          set(
+            produce(state => {
+              state.currentDay = state.days.find(
+                (day: DayDataType) => day.date === date
+              );
+            })
+          ),
         fetchEntries: async () => {
           const supabase = await createClient();
           const {

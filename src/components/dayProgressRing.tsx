@@ -40,29 +40,9 @@ export const DayProgressRing = ({
   size,
   date,
   className,
-  scrollContainerRef,
   style,
   onClick,
 }: ProgressRingProps) => {
-  const scrollRef = useRef<HTMLDivElement>(null);
-
-  const { scrollXProgress } = useScroll({
-    target: scrollRef,
-    offset: ['end end', 'start start'],
-    axis: 'x',
-    container: scrollContainerRef,
-  });
-
-  const scale = useTransform(
-    scrollXProgress,
-    [0, 0.15, 0.85, 1],
-    [0.4, 1, 1, 0.4],
-    {
-      clamp: true,
-      ease: cubicBezier(0.05, 0.45, 0.95, 0.55),
-    }
-  );
-
   const total =
     (stats?.breakfast || 0) +
     (stats?.lunch || 0) +
@@ -88,28 +68,17 @@ export const DayProgressRing = ({
     mealClassName: mealFillClasses[meal],
   }));
 
-  const dayOfTheMonth = date ? new Date(date).getDate() : null;
-
-  useEffect(() => {
-    const unsubscribe = scrollXProgress.on('change', latest => {
-      if (date === '2025-04-01') {
-        console.log(`scrollXProgress for ${date}:`, latest);
-      }
-    });
-    return () => unsubscribe();
-  }, [scrollXProgress]);
+  const dayOfTheMonth = date ? new Date(date).getUTCDate() : null;
 
   return (
     <>
       <motion.div
-        ref={scrollRef}
-        style={{ ...style, width: size, height: size, scale }}
+        style={{ ...style, width: size, height: size }}
         className={cn(
           className,
           'rounded-full relative flex-none opacity-80 transition-opacity hover:opacity-100',
           active && 'opacity-100'
         )}
-        viewport={{ root: scrollContainerRef }}
         layout
         onClick={onClick}
       >
@@ -117,10 +86,11 @@ export const DayProgressRing = ({
 
         {dayOfTheMonth && (
           <span
-            className={clsx(
-              'absolute inset-0 grid place-items-center font-semibold text-sm font-mono opacity-70 select-none cursor-pointer',
-              total >= goal && 'text-green-700 dark:text-green-300 opacity-100',
-              active && 'opacity-100'
+            className={cn(
+              'absolute rounded-full inset-4 grid place-items-center font-semibold text-sm font-mono opacity-70 select-none cursor-pointer transition-all',
+              total >= goal &&
+                'text-green-700 dark:text-green-300 opacity-100 font-bold',
+              active && 'opacity-100 bg-white/75 dark:bg-black inset-1.5'
             )}
           >
             {dayOfTheMonth}
@@ -150,7 +120,10 @@ const Ring = ({ size, data, date, active }: RingProps) => {
       width={size}
       height={size}
       viewBox={`0 0 ${size} ${size}`}
-      className="absolute inset-0"
+      className={cn(
+        'absolute inset-0 transition-all',
+        active ? 'scale-100' : 'scale-80'
+      )}
     >
       <circle
         cx={size / 2}
@@ -175,7 +148,7 @@ const Ring = ({ size, data, date, active }: RingProps) => {
           <path
             key={idx * percentage * startPercentage + meal + date}
             d={d}
-            transform="translate(20, 20)"
+            transform={`translate(${size / 2}, ${size / 2})`}
             className={mealClassName}
           />
         );

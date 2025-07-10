@@ -176,5 +176,6 @@ export const Button: React.FC<ButtonProps> = ({
     type={props.type || 'button'}
     className={button({ intent, size, filled, className })}
     {...props}
+    disabled={props.status === 'disabled'}
   />
 );
