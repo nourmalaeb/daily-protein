@@ -5,13 +5,13 @@ import { Meter } from '@/components/meter';
 import { useProteinStore } from '@/providers/protein-provider';
 import { Suspense, useRef } from 'react';
 import MealItems from '@/components/mealItems';
-import { useDebounce, useSize } from 'react-haiku';
+import { useSize } from 'react-haiku';
 import { DayDataType } from '@/stores/protein-store';
 import { Temporal } from 'temporal-polyfill';
 import DayNav from '@/components/dayNavUsingParams';
 import { cn, today } from '@/lib/utils';
 
-export default function WeeksNav({ currentDate }: { currentDate: string }) {
+export default function WeeksNav() {
   // const data = useLoaderData<typeof loader>();
   // const navigation = useNavigation();
   const { days, currentDay, setCurrentDay, _hasHydrated } = useProteinStore(
@@ -41,7 +41,7 @@ export default function WeeksNav({ currentDate }: { currentDate: string }) {
     return (
       <>
         {daysToAdd.map(day => (
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1" key={day.toString()}>
             <div className="relative text-center font-mono text-xs tracking-widest font-medium uppercase opacity-70">
               {day.toLocaleString('en-us', {
                 weekday: 'short',
@@ -70,7 +70,7 @@ export default function WeeksNav({ currentDate }: { currentDate: string }) {
     return (
       <>
         {daysToAdd.map(day => (
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1" key={day.toString()}>
             <div className="relative text-center font-mono text-xs tracking-widest font-medium uppercase opacity-70">
               {day.toLocaleString('en-us', {
                 weekday: 'short',
@@ -102,7 +102,7 @@ export default function WeeksNav({ currentDate }: { currentDate: string }) {
       >
         <BonusDaysEnd numDays={numberOfBonusDaysEnd} />
         {days.map((day: DayDataType) => (
-          <div className="flex flex-col gap-1">
+          <div className="flex flex-col gap-1" key={`dayring-${day.date}`}>
             <div
               className={cn(
                 'relative text-center font-mono text-xs tracking-widest font-medium uppercase opacity-70',
@@ -119,7 +119,6 @@ export default function WeeksNav({ currentDate }: { currentDate: string }) {
                   'snap-start snap-always'
               )}
               active={day.date === currentDay?.date}
-              key={day.date}
               size={DAY_SIZE}
               stats={{
                 breakfast: day?.meals[0].total_protein_grams,

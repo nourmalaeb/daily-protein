@@ -1,7 +1,7 @@
 'use client';
 
 import dayjs from 'dayjs';
-import { Button, ButtonLink } from '@/components/buttonLink';
+import { Button } from '@/components/buttonLink';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { today } from '@/lib/utils';
@@ -19,7 +19,7 @@ const DayNav = ({ currentDate }: { currentDate: string }) => {
     html5: true,
   });
 
-  const { days, currentDay, setCurrentDay } = useProteinStore(state => state);
+  const { days, setCurrentDay } = useProteinStore(state => state);
 
   const outOfRange = dayjs(currentDate).isBefore(
     dayjs(days[days.length - 1]?.date)

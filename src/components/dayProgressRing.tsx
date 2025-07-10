@@ -1,10 +1,9 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import clsx from 'clsx';
 import * as d3 from 'd3';
-import { cubicBezier, motion, useScroll, useTransform } from 'motion/react';
-import { useRef, RefObject, useEffect } from 'react';
+import { motion } from 'motion/react';
+import { RefObject } from 'react';
 
 type Stats = {
   breakfast?: number;

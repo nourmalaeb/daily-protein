@@ -3,7 +3,6 @@ import {
   motion,
   type Target,
   type TargetAndTransition,
-  type AnimationControls,
   type VariantLabels,
 } from 'motion/react';
 
@@ -16,7 +15,7 @@ export function SplitLetters({
 }: {
   text: string;
   initial?: boolean | Target | VariantLabels;
-  animate?: AnimationControls | TargetAndTransition | VariantLabels | boolean;
+  animate?: TargetAndTransition | VariantLabels | boolean;
   variants?: Variants;
 }) {
   const letters = text.split('');

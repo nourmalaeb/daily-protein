@@ -37,8 +37,7 @@ export default async function Page({ params }: Params) {
   return (
     <>
       <AppHeader user={user} />
-      <WeeksNav currentDate={date} />
-      {/* <Widgets /> */}
+      <WeeksNav />
     </>
   );
 }
