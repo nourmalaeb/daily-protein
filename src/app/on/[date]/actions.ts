@@ -12,7 +12,6 @@ export type CreateEntriesActionState = {
 };
 
 export async function createEntries(
-  date: string,
   _prevState: CreateEntriesActionState,
   formData: FormData
 ): Promise<CreateEntriesActionState> {
@@ -29,6 +28,7 @@ export async function createEntries(
   const rawItems = formData.getAll('item') as string[];
   const rawAmounts = formData.getAll('amount') as string[];
   const meal = formData.get('meal') as MealType;
+  const date = formData.get('date') as string;
 
   const itemsToSave = (rawItems: string[]) =>
     rawItems.map((itemName, idx) => ({
@@ -37,7 +37,10 @@ export async function createEntries(
       protein_grams: Number(rawAmounts[idx]),
       date,
       user_id: user.id,
+      _creationTime: Date.now(),
     }));
+
+  console.log(itemsToSave(rawItems));
 
   const { data, error } = await supabase
     .from('protein_entries')

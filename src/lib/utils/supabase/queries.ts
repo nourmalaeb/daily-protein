@@ -164,7 +164,9 @@ export const getAllEntries = cache(
     const { data } = await supabase
       .from('protein_entries')
       .select()
-      .eq('user_id', user?.id);
+      .eq('user_id', user?.id)
+      .order('_creationTime', { ascending: false })
+      .limit(500);
     return { data };
   }
 );

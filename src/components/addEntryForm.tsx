@@ -30,8 +30,6 @@ export default function AddEntryModal({
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  const createEntriesWithDate = createEntries.bind(null, date);
-
   const resetAndClose = () => {
     setItems([{ index: 0, name: '', protes: undefined }]);
     setOpen(false);
@@ -43,7 +41,7 @@ export default function AddEntryModal({
 
   const [, formAction] = useActionState(
     async (prevState: CreateEntriesActionState, formData: FormData) => {
-      const result = await createEntriesWithDate(prevState, formData);
+      const result = await createEntries(prevState, formData);
 
       if (result.success) {
         // Handle success
@@ -105,6 +103,7 @@ export default function AddEntryModal({
             className="flex flex-col gap-4 px-4 pb-4"
             ref={formRef}
           >
+            <input type="hidden" name="date" value={date} />
             <MealPicker mealValue={meal || 'breakfast'} />
             <div className="flex flex-col gap-2">
               <div className="grid grid-cols-10 gap-1">
