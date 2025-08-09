@@ -2,6 +2,8 @@
 
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import useSound from 'use-sound';
+import { MealType } from '@/lib/types';
+import { Dispatch, SetStateAction } from 'react';
 
 const radioItemClasses = `relative bg-background dark:bg-background-dark border border-shadow dark:border-shadow-dark 
     rounded-md block text-center
@@ -17,16 +19,28 @@ const indicatorClasses = `absolute inset-0 w-full h-full shadow-[0_0_4px_2px_rgb
 
 const labelClasses = `px-2 py-1 flex items-center justify-center select-none cursor-pointer`;
 
-export const MealPicker = ({ mealValue }: { mealValue?: string }) => {
+export const MealPicker = ({
+  mealValue,
+  setMealValue,
+}: {
+  mealValue?: string;
+  setMealValue: Dispatch<SetStateAction<MealType>>;
+}) => {
   const [thunkSound] = useSound('/sounds/thuthunk.wav', {
     volume: 0.5,
     html5: true,
   });
+
+  const handleMealChange = (value: string) => {
+    setMealValue(value as MealType);
+  };
+
   return (
     <RadioGroup.Root
       className="flex flex-row gap-1"
       defaultValue={mealValue}
       name="meal"
+      onValueChange={handleMealChange}
     >
       <div className={radioItemClasses}>
         <label htmlFor="r1" className={labelClasses}>

@@ -1,24 +1,49 @@
 'use client';
 
-import { login } from '@/app/(auth)/login/actions';
 import { Button } from '@/components/buttonLink';
 import { Input } from './controlledInput';
-import { useActionState, useEffect, useState } from 'react';
+import { useState } from 'react';
+import { useSignIn } from '@clerk/nextjs';
+import { ClerkAPIError } from '@clerk/types';
+import { useRouter } from 'next/navigation';
+import { isClerkAPIResponseError } from '@clerk/nextjs/errors';
 
 export const LoginForm = () => {
-  const [state, loginAction, isPending] = useActionState(login, {
-    error: '',
-    data: { email: '', password: '' },
-  });
-  const [clearError, setClearError] = useState(false);
-  useEffect(() => {
-    if (state.error) {
-      setClearError(false);
+  const { isLoaded, signIn, setActive } = useSignIn();
+  const [errors, setErrors] = useState<ClerkAPIError[]>();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter();
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    setErrors(undefined);
+
+    if (!isLoaded) return;
+
+    try {
+      const signInAttempt = await signIn.create({
+        identifier: email,
+        password: password,
+      });
+
+      if (signInAttempt.status === 'complete') {
+        await setActive({ session: signInAttempt.createdSessionId });
+        router.push('/');
+      } else {
+        console.error(JSON.stringify(signInAttempt, null, 2));
+      }
+    } catch (err) {
+      if (isClerkAPIResponseError(err)) {
+        setErrors(err.errors);
+      }
+      console.error(JSON.stringify(err, null, 2));
     }
-  }, [state]);
+  };
 
   return (
-    <form className="flex flex-col gap-4" action={loginAction}>
+    <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       <div className="flex flex-col gap-1">
         <label htmlFor="email" className="font-semibold">
           Email
@@ -27,9 +52,9 @@ export const LoginForm = () => {
           type="email"
           name="email"
           id="email"
+          value={email}
           required
-          onChange={() => setClearError(true)}
-          defaultValue={state.data.email}
+          onChange={e => setEmail(e.target.value)}
           autoComplete="username"
         />
       </div>
@@ -41,22 +66,25 @@ export const LoginForm = () => {
           name="password"
           type="password"
           id="password"
+          value={password}
           required
-          onChange={() => setClearError(true)}
-          defaultValue={state.data.password}
+          onChange={e => setPassword(e.target.value)}
           autoComplete="current-password"
         />
       </div>
-      <Button type="submit" disabled={isPending}>
-        Log in
-      </Button>
-      {state.error && !clearError && (
-        <p
-          aria-live="polite"
-          className="text-red-500 font-mono px-3 py-1 bg-red-500/10 rounded-sm text-wrap"
-        >
-          {`Error: ${state.error}`}
-        </p>
+      <Button type="submit">Sign in</Button>
+      {errors && (
+        <ul>
+          {errors.map((el, idx) => (
+            <li
+              key={idx}
+              aria-live="polite"
+              className="text-red-500 font-mono px-3 py-1 bg-red-500/10 rounded-sm text-wrap"
+            >
+              {`Error: ${el.longMessage}`}
+            </li>
+          ))}
+        </ul>
       )}
     </form>
   );

@@ -1,23 +1,24 @@
+'use client';
+
 import { AppHeader } from '@/components/appHeader';
 import { MainWrapper } from '@/components/mainWrapper';
 import Link from 'next/link';
-import { createClient } from '@/lib/utils/supabase/server';
 import { StatsPage } from '@/components/pages/stats-page';
+import { Authenticated, Unauthenticated } from 'convex/react';
 
-export default async function Index() {
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  return user ? (
-    <MainWrapper>
-      <AppHeader user={user} />
-      <StatsPage user={user} />
-    </MainWrapper>
-  ) : (
-    <Homepage />
+export default function Index() {
+  return (
+    <>
+      <Authenticated>
+        <MainWrapper>
+          <AppHeader />
+          <StatsPage />
+        </MainWrapper>
+      </Authenticated>
+      <Unauthenticated>
+        <Homepage />
+      </Unauthenticated>
+    </>
   );
 }
 

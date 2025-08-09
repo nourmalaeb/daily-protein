@@ -6,7 +6,8 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import LocalizedFormat from 'dayjs/plugin/localizedFormat';
 import { today } from '@/lib/utils';
 import useSound from 'use-sound';
-import { useProteinStore } from '@/providers/protein-provider';
+import { useQuery } from 'convex/react';
+import { api } from '../../convex/_generated/api';
 dayjs.extend(LocalizedFormat);
 
 const DayNav = ({ currentDate }: { currentDate: string }) => {
@@ -19,7 +20,9 @@ const DayNav = ({ currentDate }: { currentDate: string }) => {
     html5: true,
   });
 
-  const { days } = useProteinStore(state => state);
+  const days = useQuery(api.days.getAllUserEntries);
+
+  if (!days) return;
 
   const outOfRange = dayjs(currentDate).isBefore(
     dayjs(days[days.length - 1]?.date)

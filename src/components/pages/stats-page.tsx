@@ -2,29 +2,15 @@
 
 import { ButtonLink } from '@/components/buttonLink';
 import dayjs from 'dayjs';
-import { User } from '@supabase/supabase-js';
 import { Meter } from '@/components/meter';
 import { ArrowRight } from 'lucide-react';
 import { AnimatedBorderDiv } from '@/components/specialContainers';
 import * as motion from 'motion/react-client';
-import { useProteinStore } from '@/providers/protein-provider';
 import useSound from 'use-sound';
-import { useCallback } from 'react';
-import { useEvent } from 'react-use';
+import { useQuery } from 'convex/react';
+import { api } from '../../../convex/_generated/api';
 
-export function StatsPage({ user }: { user: User }) {
-  const { days, _hasHydrated, fetchEntries } = useProteinStore(state => state);
-
-  const refreshData = useCallback(() => {
-    console.log('visibilitychange');
-    if (document.visibilityState === 'visible') {
-      console.log('refreshing data');
-      fetchEntries();
-    }
-  }, [fetchEntries]);
-
-  useEvent('visibilitychange', refreshData);
-
+export function StatsPage() {
   const listVariants = {
     visible: {
       opacity: 1,
@@ -51,7 +37,7 @@ export function StatsPage({ user }: { user: User }) {
     html5: true,
   });
 
-  if (!user) return <div>no user</div>;
+  const days = useQuery(api.days.getAllUserEntries, {});
 
   return (
     <motion.div
@@ -60,9 +46,7 @@ export function StatsPage({ user }: { user: User }) {
       animate="visible"
       className="relative p-4 flex flex-col gap-1 items-stretch justify-center h-full grow"
     >
-      {!_hasHydrated ? (
-        <p>Loading...</p>
-      ) : (
+      {days &&
         days.length > 0 &&
         days.map(dayData => {
           const { date, isToday } = dayData;
@@ -105,8 +89,7 @@ export function StatsPage({ user }: { user: User }) {
               </AnimatedBorderDiv>
             </motion.div>
           );
-        })
-      )}
+        })}
       <motion.div variants={listItemVariants} key="accountCreated">
         <AnimatedBorderDiv
           animate
@@ -115,8 +98,7 @@ export function StatsPage({ user }: { user: User }) {
         >
           <p>🌱</p>
           <p className="text-center text-teal-700 dark:text-teal-200 font-mono uppercase text-xs opacity-80 font-medium tracking-widest">
-            Account created on{' '}
-            {dayjs(user.created_at).format('ddd MMMM DD, YYYY')}
+            Account created on {dayjs().format('ddd MMMM DD, YYYY')}
           </p>
         </AnimatedBorderDiv>
       </motion.div>

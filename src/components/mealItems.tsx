@@ -56,13 +56,13 @@ const MealItems = ({ category, items, date }: MealItemsProps) => {
       >
         {items &&
           items.map(item => (
-            <motion.div layout key={item.entry_id} variants={listItemVariants}>
-              <EditEntryModal item={item} meal={category as MealType} />
+            <motion.div layout key={item._id} variants={listItemVariants}>
+              <EditEntryModal item={item} initialMeal={category as MealType} />
             </motion.div>
           ))}
 
         <motion.div variants={listItemVariants} layout>
-          <AddEntryModal meal={category as MealType} date={date} />
+          <AddEntryModal initialMeal={category as MealType} date={date} />
         </motion.div>
       </motion.div>
     </div>

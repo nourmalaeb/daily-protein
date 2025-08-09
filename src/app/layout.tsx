@@ -2,8 +2,9 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { monoFont, sansFont } from '@/lib/utils/fonts';
 import { ThemeProvider } from 'next-themes';
-
-import { ProteinStoreProvider } from '@/providers/protein-provider';
+import { ConvexClientProvider } from './ConvexClientProvider';
+// import { ProteinStoreProvider } from '@/providers/protein-provider';
+import { ClerkProvider } from '@clerk/nextjs';
 
 export const metadata: Metadata = {
   title: 'daily protein',
@@ -16,21 +17,25 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${sansFont.variable} ${monoFont.variable} antialiased 
+    <ClerkProvider>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${sansFont.variable} ${monoFont.variable} antialiased 
           bg-background dark:bg-background-dark text-foreground dark:text-foreground-dark`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-          scriptProps={{ 'data-cfasync': 'false' }}
         >
-          <ProteinStoreProvider>{children}</ProteinStoreProvider>
-        </ThemeProvider>
-      </body>
-    </html>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+            scriptProps={{ 'data-cfasync': 'false' }}
+          >
+            {/* <ProteinStoreProvider> */}
+            <ConvexClientProvider>{children}</ConvexClientProvider>
+            {/* </ProteinStoreProvider> */}
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

@@ -1,8 +1,5 @@
-import DayNav from '@/components/dayNav';
-import { redirect } from 'next/navigation';
-import { createClient } from '@/lib/utils/supabase/server';
-import { AppHeader } from '@/components/appHeader';
 import { Metadata } from 'next';
+import AuthenticatedPageWrapper from './pageWrapper';
 
 type Params = {
   params: Promise<{ date: string }>;
@@ -21,20 +18,5 @@ export default async function Page({ params }: Params) {
   // const navigation = useNavigation();
   const date = (await params).date;
 
-  const supabase = await createClient();
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) {
-    redirect('/login');
-  }
-
-  return (
-    <>
-      <AppHeader user={user} />
-      <DayNav currentDate={date} />
-    </>
-  );
+  return <AuthenticatedPageWrapper date={date} />;
 }

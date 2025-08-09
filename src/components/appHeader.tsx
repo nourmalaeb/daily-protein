@@ -4,24 +4,27 @@ import dynamic from 'next/dynamic';
 import Link from 'next/link';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
 import { Button } from '@/components/buttonLink';
-import { User } from '@supabase/supabase-js';
 import AccountForm from '@/components/account-form';
 import { UserPreferences } from '@/lib/types';
-import { useProteinStore } from '@/providers/protein-provider';
 import useSound from 'use-sound';
 import { Settings2, X } from 'lucide-react';
+import { Authenticated, useQuery } from 'convex/react';
+import { api } from '../../convex/_generated/api';
 
 const ColorModeSelector = dynamic(() =>
   import('@/components/colorModeSelector').then(mod => mod.ColorModeSelector)
 );
 
-export const AppHeader = ({ user }: { user?: User }) => {
+export const AppHeader = () => {
   const [goHomesound] = useSound('/sounds/gohome.wav', {
     playbackRate: 0.625,
     volume: 0.75,
     html5: true,
   });
-  const { preferences } = useProteinStore(state => state);
+  const preferences = useQuery(api.userPreferences.get);
+
+  console.log(preferences);
+  if (!preferences) return;
 
   const mappedPreferences = preferences.reduce<UserPreferences>((acc, cv) => {
     acc[cv.preference_key] = cv.preference_value;
@@ -35,7 +38,9 @@ export const AppHeader = ({ user }: { user?: User }) => {
           daily protein
         </h1>
       </Link>
-      {user && <NavDialog preferences={mappedPreferences} />}
+      <Authenticated>
+        <NavDialog preferences={mappedPreferences} />
+      </Authenticated>
     </header>
   );
 };

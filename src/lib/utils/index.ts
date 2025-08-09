@@ -10,6 +10,7 @@ import {
 import { Tables } from '../../../database.types';
 import clsx, { ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { Doc } from '../../../convex/_generated/dataModel';
 
 export const itemsParser = (items: Item[]) => {
   const breakfastItems = items.filter(i => i.meal === 'breakfast');
@@ -88,6 +89,41 @@ const mealFromItems = (items: EntryType[]) => ({
 });
 
 export const daysFromEntries = (
+  entries: Doc<'protein_entries'>[],
+  goals: Doc<'daily_goals'>[]
+): DayDataType[] => {
+  const days = goals.map(goal => {
+    const dateObj = Temporal.PlainDate.from(goal.date);
+    const dayEntries = entries.filter(e => e.date === goal.date);
+    const total_protein_grams = dayEntries.reduce(
+      (a, cv) => a + cv.protein_grams,
+      0
+    );
+    const breakfastItems = dayEntries.filter(i => i.meal === 'breakfast');
+    const lunchItems = dayEntries.filter(i => i.meal === 'lunch');
+    const dinnerItems = dayEntries.filter(i => i.meal === 'dinner');
+    const snacksItems = dayEntries.filter(i => i.meal === 'snacks');
+
+    const meals = [
+      { ...mealFromItems(breakfastItems), meal: 'breakfast' as MealType },
+      { ...mealFromItems(lunchItems), meal: 'lunch' as MealType },
+      { ...mealFromItems(dinnerItems), meal: 'dinner' as MealType },
+      { ...mealFromItems(snacksItems), meal: 'snacks' as MealType },
+    ];
+    return {
+      date: dateObj.toString(),
+      isToday: Temporal.Now.plainDateISO().equals(dateObj),
+      dailyTotal: total_protein_grams,
+      goal: goal.protein_goal_grams,
+      goalMet: total_protein_grams >= goal.protein_goal_grams,
+      meals,
+    };
+  });
+
+  return days.sort((a, b) => b.date.localeCompare(a.date));
+};
+
+export const daysFromEntriesSupa = (
   entries: EntryType[],
   goals: DailyGoalType[]
 ): DayDataType[] => {

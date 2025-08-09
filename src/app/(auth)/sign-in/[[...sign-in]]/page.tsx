@@ -1,22 +1,19 @@
-'use client';
-
 import Link from 'next/link';
-import { SignupForm } from './signupForm';
+import { LoginForm } from '@/components/loginForm';
 
-const SignupPage = () => {
-  // console.log(actionData);
+const LoginPage = () => {
   return (
     <div className="flex flex-col gap-10 p-4">
-      <h1 className="font-bold text-2xl tracking-tight">Sign up</h1>
-      <SignupForm />
+      <h1 className="font-bold text-2xl tracking-tight">Sign in</h1>
+      <LoginForm />
       <div className="p-4 border border-zinc-500 text-center">
         <h2>
-          Already have an account?{' '}
+          Need an account?{' '}
           <Link
-            href="/login"
+            href="/sign-up"
             className="text-orange-600 underline hover:text-orange-700"
           >
-            Log in
+            Sign up
           </Link>
         </h2>
       </div>
@@ -24,4 +21,4 @@ const SignupPage = () => {
   );
 };
 
-export default SignupPage;
+export default LoginPage;

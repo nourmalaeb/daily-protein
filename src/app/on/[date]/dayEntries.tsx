@@ -7,13 +7,13 @@ import { today } from '@/lib/utils';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { redirect, useParams } from 'next/navigation';
 import { AnimatedBorderDiv } from '@/components/specialContainers';
-import { Suspense, useCallback } from 'react';
-import { useProteinStore } from '@/providers/protein-provider';
+import { Suspense } from 'react';
 import Link from 'next/link';
-import { useEvent } from 'react-use';
+import { useQuery } from 'convex/react';
+import { api } from '../../../../convex/_generated/api';
 dayjs.extend(customParseFormat);
 
-function Page() {
+function DayEntries() {
   const params = useParams<{ date: string }>();
 
   const { date } = params;
@@ -23,20 +23,11 @@ function Page() {
     !dayjs(date, 'YYYY-MM-DD', true).isValid() ||
     dayjs(date).isAfter(today())
   ) {
+    console.log('FUDGE');
     redirect(`/on/${today()}`);
   }
 
-  const { days, _hasHydrated, fetchEntries } = useProteinStore(state => state);
-
-  const refreshData = useCallback(() => {
-    if (document.visibilityState === 'visible') {
-      fetchEntries();
-    }
-  }, [fetchEntries]);
-
-  useEvent('visibilitychange', refreshData);
-
-  const dayData = days.find(d => d.date === date);
+  const dayData = useQuery(api.days.getDayByDate, { date });
 
   return (
     <div>
@@ -52,18 +43,7 @@ function Page() {
             <p>
               <Link href={`/on/${today()}`}>Go to today</Link>
             </p>
-            {days[days.length - 1] && (
-              <p>
-                <Link href={`/on/${days[days.length - 1].date}`}>
-                  Go to the day you signed up (
-                  {dayjs(days[days.length - 1].date).format('ddd, MMM D, YYYY')}
-                  )
-                </Link>
-              </p>
-            )}
           </div>
-        ) : !_hasHydrated ? (
-          <p className="p-4">Loading...</p>
         ) : (
           <Meter
             goal={dayData?.goal || 0}
@@ -91,4 +71,4 @@ function Page() {
   );
 }
 
-export default Page;
+export default DayEntries;

@@ -1,19 +1,21 @@
-import Link from 'next/link';
-import { LoginForm } from '@/components/loginForm';
+'use client';
 
-const LoginPage = () => {
+import Link from 'next/link';
+import { SignupForm } from './signupForm';
+
+const SignupPage = () => {
   return (
     <div className="flex flex-col gap-10 p-4">
-      <h1 className="font-bold text-2xl tracking-tight">Log in</h1>
-      <LoginForm />
+      <h1 className="font-bold text-2xl tracking-tight">Sign up</h1>
+      <SignupForm />
       <div className="p-4 border border-zinc-500 text-center">
         <h2>
-          Need an account?{' '}
+          Already have an account?{' '}
           <Link
-            href="/signup"
+            href="/sign-in"
             className="text-orange-600 underline hover:text-orange-700"
           >
-            Sign up
+            Sign in
           </Link>
         </h2>
       </div>
@@ -21,4 +23,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default SignupPage;

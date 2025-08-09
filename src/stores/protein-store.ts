@@ -6,6 +6,7 @@ import { createClient } from '@/lib/utils/supabase/client';
 import { MealType } from '@/lib/types';
 import { daysFromEntries, fetchInitialState } from '@/lib/utils';
 import { Tables } from '../../database.types';
+import { Id } from '../../convex/_generated/dataModel';
 
 export type DayDataType = {
   date: string;
@@ -23,6 +24,14 @@ export type MealDataType = {
 };
 
 export type EntryType = {
+  food_name: string;
+  _id: Id<'protein_entries'>;
+  protein_grams: number;
+  meal: MealType;
+  date: string;
+};
+
+export type EntryTypeSupa = {
   food_name: string;
   entry_id: number;
   protein_grams: number;

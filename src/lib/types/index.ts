@@ -1,5 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 import { Database } from '../../../database.types';
+import { Id } from '../../../convex/_generated/dataModel';
 
 export type MealType = 'breakfast' | 'lunch' | 'dinner' | 'snacks';
 
@@ -11,7 +12,7 @@ export interface ItemType {
 }
 
 export type Item = {
-  entry_id: number;
+  _id: Id<'protein_entries'>;
   food_name: string;
   protein_grams: number;
   meal?: string;

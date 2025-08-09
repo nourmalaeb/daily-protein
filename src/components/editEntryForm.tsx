@@ -1,11 +1,7 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import {
-  deleteEntryById,
-  editEntryById,
-  UpdateEntriesActionState,
-} from '@/app/on/[date]/actions';
+import { deleteEntryById } from '@/app/on/[date]/actions';
 import { Button } from '@/components/buttonLink';
 import { Input } from '@/components/controlledInput';
 import { MealPicker } from '@/components/mealPicker';
@@ -14,54 +10,40 @@ import { Trash2, TriangleAlert, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useActionState, useRef, useState } from 'react';
 import { ProteinChip } from './proteinChip';
-import { useProteinStore } from '@/providers/protein-provider';
 import useSound from 'use-sound';
+import { api } from '../../convex/_generated/api';
+import { useMutation } from 'convex/react';
 
 export default function EditEntryModal({
-  meal,
+  initialMeal,
   item,
 }: {
-  meal: MealType;
+  initialMeal: MealType;
   item: Item;
 }) {
   const [open, setOpen] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [meal, setMeal] = useState<MealType>(initialMeal);
+  const [protein_grams, setProteinGrams] = useState(item.protein_grams);
+  const [food_name, setFoodName] = useState(item.food_name);
 
   const formRef = useRef<HTMLFormElement>(null);
 
-  const [, editEntriesAction, isPending] = useActionState(
-    async (prevState: UpdateEntriesActionState, formData: FormData) => {
-      const result = await editEntryById(prevState, formData);
-      if (result.success && result.data) {
-        // Handle success
-        updateEntry(result.data);
-        // console.log('Form submitted and state updated!');
-        setOpen(false);
-      }
-      return result;
-    },
-    {
-      errors: '',
-      success: false,
-      data: undefined,
-    }
-  );
+  const updateEntry = useMutation(api.entries.update);
+  const deleteEntry = useMutation(api.entries.deleteEntry);
 
-  const { updateEntry, deleteEntry } = useProteinStore(state => state);
+  const handleUpdateEntry = (e: React.FormEvent) => {
+    e.preventDefault();
+    updateEntry({ meal, food_name, protein_grams, entry_id: item._id });
+    setOpen(false);
+  };
 
-  const handleDeleteAction = async (formData: FormData) => {
-    console.log('DELETING');
-    // Run both the server action and store update
-    const result = await deleteEntryById(formData);
+  const handleDeleteAction = (e: React.FormEvent) => {
+    e.preventDefault();
+    deleteEntry({ id: item._id });
 
-    if (result.success) {
-      // Handle success
-      console.log('Form submitted and state updated!');
-      await deleteEntry(Number(formData.get('id')));
-      console.log('Form submitted and state updated!');
-      setOpen(false);
-      setShowConfirm(false);
-    }
+    setOpen(false);
+    setShowConfirm(false);
   };
 
   const [boopSound] = useSound('/sounds/boop.wav', {
@@ -88,7 +70,7 @@ export default function EditEntryModal({
       <DialogPrimitive.Portal>
         <DialogPrimitive.Overlay className="bg-shadow/30 dark:bg-shadow-dark/30 fixed inset-0 transition backdrop-blur-[8px] data-[state=open]:animate-overlay-show data-[state=closed]:animate-overlay-hide" />
         <DialogPrimitive.Content
-          key={`edit-${item.entry_id}`}
+          key={`edit-${item._id}`}
           aria-describedby={undefined}
           className="bg-background dark:bg-background-dark fixed overflow-y-scroll
                     transform left-1/2 -translate-x-1/2 top-16
@@ -112,11 +94,14 @@ export default function EditEntryModal({
             </div>
           </DialogPrimitive.Title>
           <form
-            action={editEntriesAction}
+            onSubmit={handleUpdateEntry}
             className="flex flex-col gap-4 px-4 pb-4"
             ref={formRef}
           >
-            <MealPicker mealValue={meal || 'breakfast'} />
+            <MealPicker
+              mealValue={meal || 'breakfast'}
+              setMealValue={setMeal}
+            />
             <div className="grid grid-cols-10 gap-1">
               <span className="col-span-7 uppercase text-xs font-semibold tracking-widest opacity-80">
                 Item
@@ -127,13 +112,14 @@ export default function EditEntryModal({
 
               <Input
                 name="id"
-                initialValue={String(item.entry_id)}
+                initialValue={String(item._id)}
                 className="hidden"
               />
               <Input
                 name="item"
                 initialValue={item.food_name}
-                // placeholder="Item name"
+                value={food_name}
+                onChange={e => setFoodName(e.target.value)}
                 className="col-span-7"
                 required
               />
@@ -141,6 +127,8 @@ export default function EditEntryModal({
                 type="number"
                 name="amount"
                 initialValue={String(item.protein_grams)}
+                value={protein_grams}
+                onChange={e => setProteinGrams(Number(e.target.value))}
                 className="col-span-2 font-mono"
                 required
                 min={0}
@@ -168,14 +156,13 @@ export default function EditEntryModal({
                 type="submit"
                 intent={'primary'}
                 className="grow w-1/2"
-                disabled={isPending}
                 onPointerDown={() =>
                   formRef.current?.checkValidity()
                     ? updateSound()
                     : errorSound()
                 }
               >
-                {isPending ? 'Updating...' : 'Update'}
+                Update
               </Button>
             </div>
             <AnimatePresence>
@@ -210,12 +197,11 @@ export default function EditEntryModal({
                         Cancel
                       </Button>
                       <Button
-                        type="submit"
                         value="delete"
                         intent="destructive"
                         filled
                         className="w-1/2"
-                        formAction={handleDeleteAction}
+                        onClick={handleDeleteAction}
                       >
                         Delete item
                       </Button>

@@ -1,62 +1,55 @@
 'use client';
 
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import {
-  createEntries,
-  CreateEntriesActionState,
-} from '@/app/on/[date]/actions';
 import { Button } from '@/components/buttonLink';
 import { Input } from '@/components/controlledInput';
 import { MealPicker } from '@/components/mealPicker';
 import { Trash2, X } from 'lucide-react';
-import { useActionState, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { AddButton } from './proteinChip';
 import { MealType } from '@/lib/types';
-import { useProteinStore } from '@/providers/protein-provider';
 import { SubmitButton } from './submitButton';
 import useSound from 'use-sound';
+import { useMutation } from 'convex/react';
+import { api } from '../../convex/_generated/api';
 
 export default function AddEntryModal({
-  meal,
+  initialMeal,
   date,
 }: {
-  meal: MealType;
+  initialMeal: MealType;
   date: string;
 }) {
+  type ItemType = { index: number; food_name: string; protein_grams?: number };
   const [open, setOpen] = useState(false);
-  const [items, setItems] = useState([
-    { index: 0, name: '', protes: undefined },
+  const [meal, setMeal] = useState(initialMeal);
+  const [items, setItems] = useState<ItemType[]>([
+    { index: 0, food_name: '', protein_grams: undefined },
   ]);
 
   const formRef = useRef<HTMLFormElement>(null);
 
   const resetAndClose = () => {
-    setItems([{ index: 0, name: '', protes: undefined }]);
+    setItems([{ index: 0, food_name: '', protein_grams: undefined }]);
     setOpen(false);
   };
 
-  const { addEntry } = useProteinStore(state => state);
+  const addEntry = useMutation(api.entries.add);
 
-  const initialState = { success: false, data: [], error: null };
+  const handleAddEntries = (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const [, formAction] = useActionState(
-    async (prevState: CreateEntriesActionState, formData: FormData) => {
-      const result = await createEntries(prevState, formData);
+    items.forEach(item =>
+      addEntry({
+        date,
+        meal,
+        food_name: item.food_name,
+        protein_grams: Number(item.protein_grams),
+      })
+    );
 
-      if (result.success) {
-        // Handle success
-        // console.log(result);
-        result.data?.forEach(item => {
-          addEntry(item);
-        });
-        // console.log('Form submitted and state updated!');
-        resetAndClose();
-      }
-
-      return result;
-    },
-    initialState
-  );
+    resetAndClose();
+  };
 
   const [boopSound] = useSound('/sounds/boop.wav');
   const [cancelSound] = useSound('/sounds/snikt.wav');
@@ -99,12 +92,15 @@ export default function AddEntryModal({
             </div>
           </DialogPrimitive.Title>
           <form
-            action={formAction}
+            onSubmit={handleAddEntries}
             className="flex flex-col gap-4 px-4 pb-4"
             ref={formRef}
           >
             <input type="hidden" name="date" value={date} />
-            <MealPicker mealValue={meal || 'breakfast'} />
+            <MealPicker
+              mealValue={meal || 'breakfast'}
+              setMealValue={setMeal}
+            />
             <div className="flex flex-col gap-2">
               <div className="grid grid-cols-10 gap-1">
                 <span className="col-span-7 uppercase text-xs font-semibold tracking-widest opacity-80">
@@ -121,12 +117,22 @@ export default function AddEntryModal({
                     className="col-span-7"
                     required
                     autoFocus={index === items[items.length - 1].index}
+                    onChange={e => {
+                      const newItems = items;
+                      newItems[index].food_name = e.target.value;
+                      setItems(newItems);
+                    }}
                   />
                   <Input
                     type="number"
                     name={`amount`}
                     className="col-span-2 font-mono"
                     required
+                    onChange={e => {
+                      const newItems = items;
+                      newItems[index].protein_grams = Number(e.target.value);
+                      setItems(newItems);
+                    }}
                     min={0}
                     step={1}
                   />
@@ -148,7 +154,7 @@ export default function AddEntryModal({
                   ...items,
                   {
                     index: items[items.length - 1].index + 1,
-                    name: '',
+                    food_name: '',
                     protes: undefined,
                   },
                 ])
