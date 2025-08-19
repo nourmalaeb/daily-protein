@@ -10,4 +10,4 @@ Building a simple Typescript app for tracking daily protein intake.
 - CSS: [Tailwind](https://tailwindcss.com/)
 - Typography: [Albert Sans](https://fonts.google.com/specimen/Albert+Sans) and [MD IO](https://io.mass-driver.com/)
 - Icons: [Lucide](https://lucide.dev/)
-- State management: [Zustand](https://zustand.docs.pmnd.rs/)
+- State management: [Zustand](https://zustand.docs.pmnd.rs/) and [Immer](https://github.com/immerjs/immer)
