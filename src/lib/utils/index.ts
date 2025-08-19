@@ -134,15 +134,15 @@ export const fetchInitialState = async (
 }> => {
   const { data: entriesData } = await getAllEntries(supabase, user);
   if (!entriesData) {
-    console.log('no entries data - fetchEntries');
+    // console.log('no entries data - fetchEntries');
   }
   const { data: goalsData } = await getDailyGoals(supabase, user);
   if (!goalsData) {
-    console.log('no goals data - fetchEntries');
+    // console.log('no goals data - fetchEntries');
   }
   const { data: preferencesData } = await getUserPreferences(supabase, user);
   if (!preferencesData) {
-    console.log('no preferences data - fetchEntries');
+    // console.log('no preferences data - fetchEntries');
   }
   const goals = goalsData || [];
   const entries = entriesData || [];

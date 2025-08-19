@@ -3,9 +3,14 @@
 import { RadioInput } from '@/components/radioGroup';
 import { Laptop, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import useSound from 'use-sound';
 
 export const ColorModeSelector = () => {
   const { theme, setTheme } = useTheme();
+  const [clickSound] = useSound('/sounds/thuthunk.wav', {
+    volume: 0.5,
+    html5: true,
+  });
 
   return (
     <>
@@ -41,7 +46,10 @@ export const ColorModeSelector = () => {
           },
         ]}
         defaultValue={theme}
-        onChange={e => setTheme(e.target.value)}
+        onChange={e => {
+          clickSound();
+          setTheme(e.target.value);
+        }}
       />
     </>
   );

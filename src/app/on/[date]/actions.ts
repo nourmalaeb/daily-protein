@@ -40,7 +40,7 @@ export async function createEntries(
       _creationTime: Date.now(),
     }));
 
-  console.log(itemsToSave(rawItems));
+  // console.log(itemsToSave(rawItems));
 
   const { data, error } = await supabase
     .from('protein_entries')

@@ -16,8 +16,8 @@ const ColorModeSelector = dynamic(() =>
 );
 
 export const AppHeader = ({ user }: { user?: User }) => {
-  const [goHomesound] = useSound('/sounds/gohome.wav', {
-    playbackRate: 0.625,
+  const [goHomesound] = useSound('/sounds/boop.wav', {
+    playbackRate: 1.25,
     volume: 0.75,
     html5: true,
   });
@@ -45,9 +45,17 @@ export const NavDialog = ({
 }: {
   preferences: UserPreferences;
 }) => {
+  const [thunkSound] = useSound('/sounds/thuthunk.wav', {
+    volume: 0.5,
+    html5: true,
+  });
+  const [closeSound] = useSound('/sounds/light-click.wav', {
+    volume: 0.5,
+    html5: true,
+  });
   return (
     <DialogPrimitive.Root>
-      <DialogPrimitive.Trigger>
+      <DialogPrimitive.Trigger onPointerDown={() => thunkSound()}>
         <Settings2 size={20} />
       </DialogPrimitive.Trigger>
       <DialogPrimitive.Portal>
@@ -65,7 +73,11 @@ export const NavDialog = ({
             <div className="font-bold flex justify-between p-4 bg-background dark:bg-background-dark sticky top-0 z-10">
               <h2 className="text-xl">Preferences</h2>
               <DialogPrimitive.Close asChild>
-                <Button type="button" className="size-7 !p-0">
+                <Button
+                  type="button"
+                  className="size-7 !p-0"
+                  onPointerDown={() => closeSound()}
+                >
                   <X size={16} />
                 </Button>
               </DialogPrimitive.Close>

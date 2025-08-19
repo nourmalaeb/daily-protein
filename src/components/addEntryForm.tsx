@@ -58,10 +58,18 @@ export default function AddEntryModal({
     initialState
   );
 
-  const [boopSound] = useSound('/sounds/boop.wav');
-  const [cancelSound] = useSound('/sounds/snikt.wav');
-  const [sparkleSound] = useSound('/sounds/sparkle.wav');
-  const [errorSound] = useSound('/sounds/cancel.wav');
+  const [boopSound] = useSound('/sounds/boop.wav', {
+    volume: 0.5,
+    html5: true,
+  });
+  const [cancelSound] = useSound('/sounds/light-click.wav', {
+    volume: 0.5,
+    html5: true,
+  });
+  const [errorSound] = useSound('/sounds/cancel.wav', {
+    volume: 0.5,
+    html5: true,
+  });
 
   return (
     <DialogPrimitive.Root
@@ -168,9 +176,7 @@ export default function AddEntryModal({
               <SubmitButton
                 label="Save"
                 onPointerDown={() =>
-                  formRef.current?.checkValidity()
-                    ? sparkleSound()
-                    : errorSound()
+                  formRef.current?.checkValidity() ? boopSound() : errorSound()
                 }
               />
             </div>

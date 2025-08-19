@@ -56,9 +56,8 @@ export default function EditEntryModal({
 
     if (result.success) {
       // Handle success
-      console.log('Form submitted and state updated!');
       await deleteEntry(Number(formData.get('id')));
-      console.log('Form submitted and state updated!');
+      // console.log('Form submitted and state updated!');
       setOpen(false);
       setShowConfirm(false);
     }
@@ -67,7 +66,7 @@ export default function EditEntryModal({
   const [boopSound] = useSound('/sounds/boop.wav', {
     playbackRate: 1.25,
   });
-  const [cancelSound] = useSound('/sounds/snikt.wav', {
+  const [cancelSound] = useSound('/sounds/light-click.wav', {
     volume: 0.5,
     html5: true,
   });

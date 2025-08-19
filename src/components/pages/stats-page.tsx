@@ -16,9 +16,9 @@ export function StatsPage({ user }: { user: User }) {
   const { days, _hasHydrated, fetchEntries } = useProteinStore(state => state);
 
   const refreshData = useCallback(() => {
-    console.log('visibilitychange');
+    // console.log('visibilitychange');
     if (document.visibilityState === 'visible') {
-      console.log('refreshing data');
+      // console.log('refreshing data');
       fetchEntries();
     }
   }, [fetchEntries]);
@@ -47,7 +47,7 @@ export function StatsPage({ user }: { user: User }) {
   };
 
   const [clickSound] = useSound('/sounds/light-click.wav', {
-    volume: 0.625,
+    volume: 0.5,
     html5: true,
   });
 

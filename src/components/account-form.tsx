@@ -29,7 +29,7 @@ export default function AccountForm({
       const result = await updatePreferences(prevState, formData);
       if (result.data) {
         // Handle success
-        console.log(result);
+        // console.log(result);
         updateGoal(result.data.goalData);
         updatePreference(result.data.preferenceData);
       }

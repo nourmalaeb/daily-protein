@@ -122,7 +122,7 @@ export const updatePreferences = async (
 
   const { goal, date } = createUpdatePreferencesFormSchema.parse(formData);
 
-  console.log({ goal, date });
+  // console.log({ goal, date });
 
   // Update the user's goal
   const { data: goalPreferenceData, error: goalError } = await supabase

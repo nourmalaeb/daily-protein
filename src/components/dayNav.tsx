@@ -14,7 +14,7 @@ const DayNav = ({ currentDate }: { currentDate: string }) => {
   const prevDate = dayjs(currentDate).subtract(1, 'd').format('YYYY-MM-DD');
   // console.log({ currentDate, nextDate, prevDate });
   const [buttonClickSound] = useSound('/sounds/lightClick.wav');
-  const [todayClickSound] = useSound('/sounds/brightClick.wav', {
+  const [todayClickSound] = useSound('/sounds/light-click.wav', {
     volume: 0.5,
     html5: true,
   });
